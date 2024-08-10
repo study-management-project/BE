@@ -1,35 +1,34 @@
 package com.fisa.study.management.domain.room.service;
 
+import com.fisa.study.management.domain.room.dto.RoomRequestDTO;
 import com.fisa.study.management.domain.room.entity.Room;
 import com.fisa.study.management.domain.room.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class RoomService {
-
-
-    @Autowired
-    private RoomRepository roomRepository;
+    private final RoomRepository roomRepository;
 
     public List<Room> getAllRooms() {
         return roomRepository.findAll();
     }
 
-    public String getRoomContents(Long id) {
-        Room room = roomRepository.findById(id).orElse(null);
-        return room == null ? "" : room.getContent();
+    public ResponseEntity<Room> getRoomContents(Long id) {
+        Optional<Room> room = roomRepository.findById(id);
+        if (room.isPresent()) return ResponseEntity.ok(room.get());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    public Room createRoom(String name) {
-        Room room = new Room();
-        room.setName(name);
-        room.setContent("");
-        return roomRepository.save(room);
+    public ResponseEntity<Room> createRoom(RoomRequestDTO roomRequestDTO) {
+        Room room = roomRequestDTO.toEntity();
+        return ResponseEntity.ok(roomRepository.save(room));
     }
 
     public Room updateRoom(Long id, String content) {

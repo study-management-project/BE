@@ -1,40 +1,36 @@
 package com.fisa.study.management.domain.room.controller;
 
+import com.fisa.study.management.domain.room.dto.RoomRequestDTO;
 import com.fisa.study.management.domain.room.entity.Room;
 import com.fisa.study.management.domain.room.service.RoomService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/room")
+@RequestMapping("/api")
+@Slf4j
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class RoomController {
 
-    @Autowired
-    private RoomService roomService;
+    private final RoomService roomService;
 
-    @GetMapping
+    @GetMapping("/rooms")
     public List<Room> getAllRooms() {
         return roomService.getAllRooms();
     }
 
-    @PostMapping("/{name}")
-    public String addRoom(@PathVariable String name) {
-        roomService.createRoom(name);
-        return "ok";
+    @PostMapping("/room")
+    public ResponseEntity<Room> createRoom(@RequestBody RoomRequestDTO roomRequestDTO) {
+        return roomService.createRoom(roomRequestDTO);
     }
 
-    @GetMapping("/{id}")
-    public String getRoomById(@PathVariable Long id) {
+    @GetMapping("/room/{id}")
+    public ResponseEntity<Room> getRoomById(@PathVariable Long id) {
         return roomService.getRoomContents(id);
-    }
-
-    @MessageMapping("/room/{id}/update")
-    @SendTo("/topic/room/{id}")
-    public Room updateRoom(@DestinationVariable Long id, String content) {
-        return roomService.updateRoom(id, content);
     }
 }

@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class TextMessage {
-    private String roomId;
+    private Long roomId;
     private String content;
 }
