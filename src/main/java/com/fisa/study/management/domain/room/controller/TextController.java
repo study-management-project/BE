@@ -45,6 +45,8 @@ public class TextController {
         // 캐시 업데이트
         cacheMap.put(roomId, newContent);
 
+        // 현재 방의 구독자 수 확인
+
         // 업데이트된 content를 topic 구독자들에게 뿌림
         sendingOperations.convertAndSend("/topic/" + roomId, newContent);
     }

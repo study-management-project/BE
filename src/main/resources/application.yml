@@ -1,3 +1,6 @@
 spring:
   profiles:
-    active: rasp-local
+    active: local
+    # local : local to local
+    # rasp : local to rasp
+    # rasp-local(jar 배포 시 사용) : rasp to rasp
