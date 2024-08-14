@@ -1,4 +1,4 @@
-package com.fisa.study.management.config;
+package com.fisa.study.management.global.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
