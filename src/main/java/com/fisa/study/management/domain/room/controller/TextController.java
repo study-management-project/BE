@@ -10,6 +10,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Controller
@@ -19,11 +20,11 @@ public class TextController {
 
     private final SimpMessageSendingOperations sendingOperations;
     private final RoomService roomService;
-    private ConcurrentHashMap<Long, String> cacheMap = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<UUID, String> cacheMap = new ConcurrentHashMap<>();
 
     @MessageMapping("/send-text")
     public void handleTextMessage(@Payload TextMessage message) {
-        Long roomId = message.getRoomId();
+        UUID roomId = message.getUuid();
         String newContent = message.getContent();
 
         // 캐시에서 현재 콘텐츠를 가져옴
