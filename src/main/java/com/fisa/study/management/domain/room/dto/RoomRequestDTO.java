@@ -3,6 +3,8 @@ package com.fisa.study.management.domain.room.dto;
 import com.fisa.study.management.domain.room.entity.Room;
 import lombok.*;
 
+import java.util.UUID;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -14,8 +16,8 @@ public class RoomRequestDTO {
     public Room toEntity() {
         return Room.builder()
                 .name(name)
-                .description(description)
                 .content("")
+                .uuid(UUID.randomUUID())
                 .build();
     }
 }
