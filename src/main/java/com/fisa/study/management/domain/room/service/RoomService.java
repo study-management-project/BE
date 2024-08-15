@@ -10,9 +10,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor
 public class RoomService {
     private final RoomRepository roomRepository;
 
@@ -20,19 +21,20 @@ public class RoomService {
         return roomRepository.findAll();
     }
 
-    public ResponseEntity<Room> getRoomContents(Long id) {
-        Optional<Room> room = roomRepository.findById(id);
+    public ResponseEntity<?> getRoomContents(UUID uuid) {
+        Optional<Room> room = roomRepository.findByUuid(uuid);
         if (room.isPresent()) return ResponseEntity.ok(room.get());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    public ResponseEntity<Room> createRoom(RoomRequestDTO roomRequestDTO) {
+    public String createRoom(RoomRequestDTO roomRequestDTO) {
         Room room = roomRequestDTO.toEntity();
-        return ResponseEntity.ok(roomRepository.save(room));
+        roomRepository.save(room);
+        return "성공";
     }
 
-    public Room updateRoom(Long id, String content) {
-        Room room = roomRepository.findById(id).orElse(null);
+    public Room updateRoom(UUID uuid, String content) {
+        Room room = roomRepository.findByUuid(uuid).orElse(null);
         if (room != null) {
             room.setContent(content);
             return roomRepository.save(room);

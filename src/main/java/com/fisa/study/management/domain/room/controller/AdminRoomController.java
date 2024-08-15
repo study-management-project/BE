@@ -1,0 +1,31 @@
+package com.fisa.study.management.domain.room.controller;
+
+import com.fisa.study.management.domain.room.dto.RoomRequestDTO;
+import com.fisa.study.management.domain.room.entity.Room;
+import com.fisa.study.management.domain.room.service.RoomService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController
+@RequiredArgsConstructor
+public class AdminRoomController {
+
+    private final RoomService roomService;
+
+    // 방 조회 (자신에게 묶인 거 가져오도록 수정해야 함)
+    @GetMapping("/rooms")
+    public List<Room> getAllRooms() {
+        return roomService.getAllRooms();
+    }
+
+    // 방 생성
+    @PostMapping("/room")
+    public String createRoom(@RequestBody RoomRequestDTO roomRequestDTO) {
+        return roomService.createRoom(roomRequestDTO);
+    }
+}
