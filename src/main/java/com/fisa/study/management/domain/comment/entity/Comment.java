@@ -1,5 +1,6 @@
 package com.fisa.study.management.domain.comment.entity;
 
+
 import com.fisa.study.management.domain.room.entity.Room;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -30,7 +31,7 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "room_id")
-    private Room roomId;
+    private Room room;
 
     @PrePersist
     public void prePersist() {

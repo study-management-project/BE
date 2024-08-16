@@ -1,5 +1,7 @@
 package com.fisa.study.management.domain.room.service;
 
+import com.fisa.study.management.domain.comment.entity.Comment;
+import com.fisa.study.management.domain.comment.repository.CommentRepository;
 import com.fisa.study.management.domain.room.dto.RoomRequestDTO;
 import com.fisa.study.management.domain.room.entity.Room;
 import com.fisa.study.management.domain.room.repository.RoomRepository;
@@ -8,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,4 +43,6 @@ public class RoomService {
         }
         return null;
     }
+
+
 }

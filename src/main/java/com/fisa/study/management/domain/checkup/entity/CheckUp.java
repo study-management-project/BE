@@ -28,7 +28,7 @@ public class CheckUp {
 
     @ManyToOne
     @JoinColumn(name = "room_id")
-    private Room roomId;
+    private Room room;
 
     @PrePersist
     private void setDefaultValues() {

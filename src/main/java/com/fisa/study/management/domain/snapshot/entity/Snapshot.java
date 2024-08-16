@@ -22,12 +22,19 @@ public class Snapshot {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @CreatedDate
+//    @CreatedDate
     private LocalDateTime date;
 
     private String content;
     @ManyToOne
     @JoinColumn(name = "room_id")
-    private Room roomId;
+    private Room room;
+
+
+    @PrePersist
+    public void prePersist() {
+        LocalDateTime now = LocalDateTime.now();
+        this.date = now;
+    }
 }
 
