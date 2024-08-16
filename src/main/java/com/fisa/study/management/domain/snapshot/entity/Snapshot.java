@@ -29,5 +29,12 @@ public class Snapshot extends BaseTimeEntity {
     @JoinColumn(name = "room_id")
     private Room room;
 
+    public void setRoom(Room room){
+        if(this.room !=null){
+            this.room.getSnapshotList().remove(this);
+        }
+        this.room=room;
+        room.getSnapshotList().add(this);
+    }
 }
 

@@ -1,8 +1,8 @@
 package com.fisa.study.management.domain.snapshot.controller;
 
 
-import com.fisa.study.management.domain.snapshot.dto.SnapshotDTO;
-import com.fisa.study.management.domain.snapshot.entity.Snapshot;
+import com.fisa.study.management.domain.snapshot.dto.SendSnapshotDTO;
+import com.fisa.study.management.domain.snapshot.dto.RegSnapshotDTO;
 import com.fisa.study.management.domain.snapshot.service.SnapshotService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +13,6 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,19 +20,25 @@ import java.util.Optional;
 @RequestMapping("/room")
 public class SnapshotController {
     private final SnapshotService snapshotService;
-    @GetMapping("/{roomId}")
-    public void getFirst(@PathVariable Long roomId, Model model){
-        List<SnapshotDTO> snapshotDTOList= snapshotService.getSnapshotFromRoomFirst(roomId);
+    @GetMapping("/{roomId}/snapshot")
+    public List<LocalDate> getFirst(@PathVariable Long roomId, Model model){
+        List<SendSnapshotDTO> sendSnapshotDTOList = snapshotService.getSnapshotFromRoomFirst(roomId);
         List<LocalDate> localDateList= snapshotService.getCreatedDatesByRoomId(roomId);
         Map<String, Object> attributes=new HashMap<>();
-        attributes.put("snapshotDTOList", snapshotDTOList);
+        attributes.put("snapshotDTOList", sendSnapshotDTOList);
         attributes.put("localDateList", localDateList);
         model.addAllAttributes(attributes);
+        return localDateList;
     }
+    @GetMapping("/{rooId}/snapshot/register")
+    public void regSnapshot(@PathVariable Long roomId, @RequestBody RegSnapshotDTO regSnapshotDTO){
+        snapshotService.regSnapshot(roomId, regSnapshotDTO);
+    }
+
     @PostMapping("/{roomId}/{selectDate}")
-    public void regSnapshot(@PathVariable Long roomId,@PathVariable LocalDate selectDate, Model model){
-        List<SnapshotDTO> snapshotDTOList= snapshotService.getSnapshotFromRoomSelectDate(roomId, selectDate);
-        model.addAttribute("snapshotDTOList", snapshotDTOList);
+    public void getSnapshotByDate(@PathVariable Long roomId,@PathVariable LocalDate selectDate, Model model){
+        List<SendSnapshotDTO> sendSnapshotDTOList = snapshotService.getSnapshotFromRoomSelectDate(roomId, selectDate);
+        model.addAttribute("snapshotDTOList", sendSnapshotDTOList);
     }
 }
 
