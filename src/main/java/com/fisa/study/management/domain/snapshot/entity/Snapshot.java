@@ -1,6 +1,7 @@
 package com.fisa.study.management.domain.snapshot.entity;
 
 import com.fisa.study.management.domain.room.entity.Room;
+import com.fisa.study.management.global.base.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,25 +17,17 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Snapshot {
+public class Snapshot extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @CreatedDate
-    private LocalDateTime date;
-
     private String content;
+
     @ManyToOne
     @JoinColumn(name = "room_id")
     private Room room;
 
-
-    @PrePersist
-    public void prePersist() {
-        LocalDateTime now = LocalDateTime.now();
-        this.date = now;
-    }
 }
 

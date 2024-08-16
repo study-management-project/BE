@@ -14,4 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class SnapshotDTO {
     private String content;
+
+    private LocalDateTime createDate;
+
 }
