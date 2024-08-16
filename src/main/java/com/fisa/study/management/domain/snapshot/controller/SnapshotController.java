@@ -21,24 +21,24 @@ import java.util.Map;
 public class SnapshotController {
     private final SnapshotService snapshotService;
     @GetMapping("/{roomId}/snapshot")
-    public List<LocalDate> getFirst(@PathVariable Long roomId, Model model){
+    public Map<String, Object>  getFirst(@PathVariable Long roomId){
         List<SendSnapshotDTO> sendSnapshotDTOList = snapshotService.getSnapshotFromRoomFirst(roomId);
         List<LocalDate> localDateList= snapshotService.getCreatedDatesByRoomId(roomId);
         Map<String, Object> attributes=new HashMap<>();
         attributes.put("snapshotDTOList", sendSnapshotDTOList);
         attributes.put("localDateList", localDateList);
-        model.addAllAttributes(attributes);
-        return localDateList;
+        return attributes;
     }
-    @GetMapping("/{rooId}/snapshot/register")
+    @PostMapping("/{roomId}/snapshot/register")
     public void regSnapshot(@PathVariable Long roomId, @RequestBody RegSnapshotDTO regSnapshotDTO){
         snapshotService.regSnapshot(roomId, regSnapshotDTO);
     }
 
-    @PostMapping("/{roomId}/{selectDate}")
-    public void getSnapshotByDate(@PathVariable Long roomId,@PathVariable LocalDate selectDate, Model model){
-        List<SendSnapshotDTO> sendSnapshotDTOList = snapshotService.getSnapshotFromRoomSelectDate(roomId, selectDate);
-        model.addAttribute("snapshotDTOList", sendSnapshotDTOList);
+    @GetMapping("/{roomId}/snapshot/{selectDate}")
+    public List<SendSnapshotDTO>  getSnapshotByDate(@PathVariable Long roomId,@PathVariable String selectDate){
+        LocalDate localDate = LocalDate.parse(selectDate);
+
+        return snapshotService.getSnapshotFromRoomSelectDate(roomId, localDate);
     }
 }
 
