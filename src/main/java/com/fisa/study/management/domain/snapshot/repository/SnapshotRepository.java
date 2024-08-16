@@ -1,6 +1,7 @@
 package com.fisa.study.management.domain.snapshot.repository;
 
 import com.fisa.study.management.domain.room.entity.Room;
+import com.fisa.study.management.domain.snapshot.dto.SendSnapshotDTO;
 import com.fisa.study.management.domain.snapshot.entity.Snapshot;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,15 +12,16 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface SnapshotRepository extends JpaRepository<Snapshot,Long> {
-    @Query("select s from Snapshot s where s.room.id = :roomId and s.createdDate between :startDate and :endDate")
-    List<Snapshot> findSnapshotsByCreatedDate(Long roomId, LocalDateTime startDate, LocalDateTime endDate);
 
+    List<Snapshot> findAllByRoom_Id(Long room_id);
 
+    Snapshot findTopByOrderByRoom_IdDesc(Long roomId);
 
-    List<Snapshot> findSnapshotsByRoom_IdAndCreatedDateBetween(Long roomId, LocalDateTime startDate, LocalDateTime endDate);
-
-    @Query("select s.createdDate from Snapshot s where s.room.id = :roomId")
-    List<LocalDateTime> findCreatedDateByRoom_Id(@Param("roomId") Long roomId);
+//    @Query("select s.createdDate from Snapshot s where s.room.id = :roomId")
+//    List<LocalDateTime> findCreatedDateByRoom_Id(@Param("roomId") Long roomId);
+//List<Snapshot> findSnapshotsByRoom_IdAndCreatedDateBetween(Long roomId, LocalDateTime startDate, LocalDateTime endDate);
+//@Query("select s from Snapshot s where s.room.id = :roomId and s.createdDate between :startDate and :endDate")
+//List<Snapshot> findSnapshotsByCreatedDate(Long roomId, LocalDateTime startDate, LocalDateTime endDate);
 
 
 
