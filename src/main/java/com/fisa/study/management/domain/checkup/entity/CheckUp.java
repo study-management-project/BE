@@ -20,7 +20,6 @@ public class CheckUp {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     private String title ;
 
     @Embedded
@@ -30,16 +29,18 @@ public class CheckUp {
     @JoinColumn(name = "room_id")
     private Room room;
 
-    @PrePersist
-    private void setDefaultValues() {
-        if (this.title == null || this.title.isEmpty()) {
-            this.title = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
-        }
-    }
     private void addO(){
         this.ox.addO();
     }
     private void addX(){
         this.ox.addX();
+    }
+
+    public void setRoom(Room room){
+        if(this.room !=null){
+            this.room.getCheckUpList().remove(this);
+        }
+        this.room=room;
+        room.getCheckUpList().add(this);
     }
 }
