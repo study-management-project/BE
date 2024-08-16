@@ -2,6 +2,7 @@ package com.fisa.study.management.domain.comment.entity;
 
 
 import com.fisa.study.management.domain.room.entity.Room;
+import com.fisa.study.management.global.base.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,14 +19,12 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class Comment {
+public class Comment extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @CreatedDate
-    private LocalDateTime date;
 
     private String content;
 
@@ -33,10 +32,5 @@ public class Comment {
     @JoinColumn(name = "room_id")
     private Room room;
 
-    @PrePersist
-    public void prePersist() {
-        LocalDateTime now = LocalDateTime.now();
-        this.date = now;
-    }
 }
 

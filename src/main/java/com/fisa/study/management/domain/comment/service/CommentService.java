@@ -29,18 +29,17 @@ public class CommentService {
         return ResponseEntity.ok(commentRepository.save(comment));
     }
 
+    public List<Comment> getCommentsByRoomIdAndSelectDate(Long id, LocalDate selectDate){
+
+        return commentRepository.findByRoomIdAndDate(id,selectDate);
+    }
 
     Comment dtoToEntityWithId(Long roomId,CommentDTO commentDTO){
         return Comment.builder()
-                .date(commentDTO.getDate())
                 .content(commentDTO.getContent())
                 .room(roomRepository.findById(roomId).get())
                 .build();
 
-    }
-    public List<Comment> getCommentsByRoomIdAndSelectDate(Long id, LocalDate selectDate){
-
-        return commentRepository.findByRoomIdAndDate(id,selectDate);
     }
 
 }

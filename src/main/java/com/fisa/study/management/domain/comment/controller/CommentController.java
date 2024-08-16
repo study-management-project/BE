@@ -14,7 +14,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/rooms")
+@RequestMapping("/room")
 @Slf4j
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class CommentController {
