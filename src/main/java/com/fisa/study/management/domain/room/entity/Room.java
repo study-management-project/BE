@@ -3,6 +3,7 @@ package com.fisa.study.management.domain.room.entity;
 import com.fisa.study.management.domain.checkup.entity.CheckUp;
 
 import com.fisa.study.management.domain.comment.entity.Comment;
+import com.fisa.study.management.domain.member.entity.Member;
 import com.fisa.study.management.domain.snapshot.entity.Snapshot;
 import jakarta.persistence.*;
 import lombok.*;
@@ -41,6 +42,7 @@ public class Room {
 
     @OneToMany(mappedBy = "room",fetch = FetchType.LAZY)
     @Builder.Default
+    //joinfetch
 //    @BatchSize(size = 20)
     private List<Comment> commentList= new ArrayList<>();
 
@@ -48,10 +50,9 @@ public class Room {
     @Builder.Default
 //    @BatchSize(size = 20)
     private List<CheckUp> checkUpList= new ArrayList<>();
-
-//    @ManyToOne
-//    @JoinColumn(name = "member_id")
-//    private Member member;
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     public void addSnapshot(Snapshot snapshot) {
         this.snapshotList.add(snapshot);
