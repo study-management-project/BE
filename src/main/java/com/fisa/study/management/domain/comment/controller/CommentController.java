@@ -3,6 +3,7 @@ package com.fisa.study.management.domain.comment.controller;
 import com.fisa.study.management.domain.comment.dto.CommentDTO;
 import com.fisa.study.management.domain.comment.entity.Comment;
 import com.fisa.study.management.domain.comment.service.CommentService;
+import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,17 +12,25 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 
 @RestController
-@RequestMapping("/room")
+@RequestMapping("/room/{uuid}/comment")
 @Slf4j
 @RequiredArgsConstructor
 public class CommentController {
     private final CommentService commentService;
 
-//    @GetMapping("/{id}/addComment")
-//    public ResponseEntity<Comment>
+    @GetMapping("/")
+    public List<CommentDTO> getCommentsByRoomId(@PathVariable UUID uuid){
+        return commentService.getAllCommentByRoomId(uuid);
+    }
+
+    @PostMapping("/register")
+    public void registerCommentForRoom(@PathVariable UUID uuid,@RequestBody CommentDTO commentDTO){
+        commentService.regCommentByRoomId(uuid,commentDTO);
+    }
 
 //    @GetMapping("/{roomId}/comments")
 //    public List<Comment> getAllComment(@PathVariable Long roomId){

@@ -14,13 +14,51 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CommentService {
     private final CommentRepository commentRepository;
     private final RoomRepository roomRepository;
-//    public List<Comment> getAllCommentFromRoom(Long roomId){
+
+    public List<CommentDTO> getAllCommentByRoomId(UUID uuid){
+        Optional<Room> _room =roomRepository.findByUuid(uuid);
+        if (_room.isEmpty()){
+            throw new Error("Room with ID " + uuid + " not found.");
+            //에러 처리 고민
+        }
+        List<Comment> commentList = commentRepository.findAllByRoom_Id(_room.get().getId());
+        return commentList.stream().map(this::EntityToDTO).collect(Collectors.toList());
+    }
+    public void regCommentByRoomId(UUID uuid,CommentDTO commentDTO){
+        Optional<Room> _room =roomRepository.findByUuid(uuid);
+        if (_room.isEmpty()){
+            throw new Error("Room with ID " + uuid + " not found.");
+            //에러 처리 고민
+        }
+        commentRepository.save(DTOToEntityWithRoom(_room.get(),commentDTO));
+    }
+
+
+    Comment DTOToEntityWithRoom(Room room,CommentDTO commentDTO){
+        Comment comment= Comment.builder()
+                .content(commentDTO.getContent())
+                .room(room)
+                .build();
+        comment.setRoom(room);
+        return comment;
+
+    }
+    CommentDTO EntityToDTO(Comment comment){
+        return CommentDTO.builder()
+                .content(comment.getContent())
+                .build();
+    }
+
+    //    public List<Comment> getAllCommentFromRoom(Long roomId){
 //        return commentRepository.findByRoomId(roomId);
 //    }
 //    public ResponseEntity<Comment> createComment(Long roomId,CommentDTO commentDTO) {
@@ -34,12 +72,5 @@ public class CommentService {
 //        return commentRepository.findByRoomIdAndDate(id,selectDate);
 //    }
 
-    Comment dtoToEntityWithId(Long roomId,CommentDTO commentDTO){
-        return Comment.builder()
-                .content(commentDTO.getContent())
-                .room(roomRepository.findById(roomId).get())
-                .build();
-
-    }
 
 }

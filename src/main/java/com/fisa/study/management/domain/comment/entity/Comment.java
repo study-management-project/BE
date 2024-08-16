@@ -20,17 +20,22 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 public class Comment extends BaseTimeEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     private String content;
-
     @ManyToOne
     @JoinColumn(name = "room_id")
     private Room room;
+
+    public void setRoom(Room room){
+        if(this.room !=null){
+            this.room.getCommentList().remove(this);
+        }
+        this.room=room;
+        room.getCommentList().add(this);
+    }
 
 }
 
