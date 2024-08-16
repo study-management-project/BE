@@ -16,22 +16,22 @@ import java.util.List;
 @RestController
 @RequestMapping("/room")
 @Slf4j
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@RequiredArgsConstructor
 public class CommentController {
     private final CommentService commentService;
 
 //    @GetMapping("/{id}/addComment")
 //    public ResponseEntity<Comment>
 
-    @GetMapping("/{roomId}/comments")
-    public List<Comment> getAllComment(@PathVariable Long roomId){
-        return commentService.getAllCommentFromRoom(roomId);
-
-    }
-    @PostMapping("/{roomId}/addComment")
-    public ResponseEntity<Comment> createComment(@PathVariable Long roomId, @RequestBody CommentDTO commentDTO){
-
-        return commentService.createComment(roomId,commentDTO);
-    }
+//    @GetMapping("/{roomId}/comments")
+//    public List<Comment> getAllComment(@PathVariable Long roomId){
+//        return commentService.getAllCommentFromRoom(roomId);
+//
+//    }
+//    @PostMapping("/{roomId}/addComment")
+//    public ResponseEntity<Comment> createComment(@PathVariable Long roomId, @RequestBody CommentDTO commentDTO){
+//
+//        return commentService.createComment(roomId,commentDTO);
+//    }
 
 }

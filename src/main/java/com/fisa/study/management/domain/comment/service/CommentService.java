@@ -20,19 +20,19 @@ import java.util.List;
 public class CommentService {
     private final CommentRepository commentRepository;
     private final RoomRepository roomRepository;
-    public List<Comment> getAllCommentFromRoom(Long roomId){
-        return commentRepository.findByRoomId(roomId);
-    }
-    public ResponseEntity<Comment> createComment(Long roomId,CommentDTO commentDTO) {
-
-        Comment comment= dtoToEntityWithId(roomId,commentDTO);
-        return ResponseEntity.ok(commentRepository.save(comment));
-    }
-
-    public List<Comment> getCommentsByRoomIdAndSelectDate(Long id, LocalDate selectDate){
-
-        return commentRepository.findByRoomIdAndDate(id,selectDate);
-    }
+//    public List<Comment> getAllCommentFromRoom(Long roomId){
+//        return commentRepository.findByRoomId(roomId);
+//    }
+//    public ResponseEntity<Comment> createComment(Long roomId,CommentDTO commentDTO) {
+//
+//        Comment comment= dtoToEntityWithId(roomId,commentDTO);
+//        return ResponseEntity.ok(commentRepository.save(comment));
+//    }
+//
+//    public List<Comment> getCommentsByRoomIdAndSelectDate(Long id, LocalDate selectDate){
+//
+//        return commentRepository.findByRoomIdAndDate(id,selectDate);
+//    }
 
     Comment dtoToEntityWithId(Long roomId,CommentDTO commentDTO){
         return Comment.builder()
