@@ -23,10 +23,4 @@ public class UserRoomController {
     public ResponseEntity<?> getRoomByUuId(@PathVariable UUID uuid) {
         return roomService.getRoomContents(uuid);
     }
-
-//    @GetMapping("/room/{uuid}/subscribers")
-//    public ResponseEntity<Integer> getSubscriberCountByRoomId(@PathVariable String uuid) {
-//        int count = webSocketEventListener.getSubscriberCount(uuid);
-//        return ResponseEntity.ok(count);
-//    }
 }

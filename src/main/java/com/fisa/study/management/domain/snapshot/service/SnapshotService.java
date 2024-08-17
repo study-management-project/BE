@@ -37,7 +37,7 @@ public class SnapshotService {
     public SendSnapshotDTO getLastOne(UUID uuid){
         Room room= roomRepository.findByUuid(uuid).orElseThrow();
 
-        Snapshot snapshot= snapshotRepository.findTopByRoomIdOrderByRoomIdDesc(room.getId());
+        Snapshot snapshot= snapshotRepository.findTopByRoomIdOrderByIdDesc(room.getId());
         return SendSnapshotDTO.builder()
                 .content(snapshot.getContent())
                 .createDate(snapshot.getCreatedDate())

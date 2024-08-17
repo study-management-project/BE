@@ -1,5 +1,6 @@
 package com.fisa.study.management.domain.room.dto;
 
+import com.fisa.study.management.domain.member.entity.Member;
 import com.fisa.study.management.domain.room.entity.Room;
 import lombok.*;
 
@@ -13,12 +14,13 @@ public class RoomRequestDTO {
     private String name;
     private String description;
 
-    public Room toEntity() {
+    public Room toEntity(Member member) {
         return Room.builder()
                 .name(name)
                 .description(description)
                 .content("")
                 .uuid(UUID.randomUUID())
+                .member(member)
                 .build();
     }
 }

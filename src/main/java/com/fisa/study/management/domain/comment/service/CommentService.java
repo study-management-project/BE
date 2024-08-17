@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CommentService {
     private final CommentRepository commentRepository;
@@ -30,12 +32,12 @@ public class CommentService {
         List<Comment> commentList = commentRepository.findAllByRoomId(room.getId());
         return commentList.stream().map(this::EntityToDTO).collect(Collectors.toList());
     }
+
     public void regCommentByRoomId(UUID uuid,CommentDTO commentDTO){
         Room room= roomRepository.findByUuid(uuid).orElseThrow();
 
         commentRepository.save(DTOToEntityWithRoom(room,commentDTO));
     }
-
 
     Comment DTOToEntityWithRoom(Room room,CommentDTO commentDTO){
         Comment comment= Comment.builder()
@@ -46,6 +48,7 @@ public class CommentService {
         return comment;
 
     }
+
     CommentDTO EntityToDTO(Comment comment){
         return CommentDTO.builder()
                 .content(comment.getContent())
