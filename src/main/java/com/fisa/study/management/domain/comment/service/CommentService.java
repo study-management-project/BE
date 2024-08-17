@@ -25,21 +25,15 @@ public class CommentService {
     private final RoomRepository roomRepository;
 
     public List<CommentDTO> getAllCommentByRoomId(UUID uuid){
-        Optional<Room> _room =roomRepository.findByUuid(uuid);
-        if (_room.isEmpty()){
-            throw new Error("Room with ID " + uuid + " not found.");
-            //에러 처리 고민
-        }
-        List<Comment> commentList = commentRepository.findAllByRoom_Id(_room.get().getId());
+        Room room= roomRepository.findByUuid(uuid).orElseThrow();
+
+        List<Comment> commentList = commentRepository.findAllByRoomId(room.getId());
         return commentList.stream().map(this::EntityToDTO).collect(Collectors.toList());
     }
     public void regCommentByRoomId(UUID uuid,CommentDTO commentDTO){
-        Optional<Room> _room =roomRepository.findByUuid(uuid);
-        if (_room.isEmpty()){
-            throw new Error("Room with ID " + uuid + " not found.");
-            //에러 처리 고민
-        }
-        commentRepository.save(DTOToEntityWithRoom(_room.get(),commentDTO));
+        Room room= roomRepository.findByUuid(uuid).orElseThrow();
+
+        commentRepository.save(DTOToEntityWithRoom(room,commentDTO));
     }
 
 

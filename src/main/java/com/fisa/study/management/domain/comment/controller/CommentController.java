@@ -22,7 +22,7 @@ import java.util.UUID;
 public class CommentController {
     private final CommentService commentService;
 
-    @GetMapping("/")
+    @GetMapping("")
     public List<CommentDTO> getCommentsByRoomId(@PathVariable UUID uuid){
         return commentService.getAllCommentByRoomId(uuid);
     }
