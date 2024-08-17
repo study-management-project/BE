@@ -11,9 +11,9 @@ public class OX {
     private int X=0;
 
     public void addO() {
-        this.O++;
+        this.O+=1;
     }
     public void addX() {
-        this.X++;
+        this.X+=1;
     }
 }
