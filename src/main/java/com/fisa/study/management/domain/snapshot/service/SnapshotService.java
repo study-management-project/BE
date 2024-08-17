@@ -24,29 +24,20 @@ public class SnapshotService {
     private final RoomRepository roomRepository;
 
     public List<SendSnapshotDTO> getSnapshotAll(UUID uuid){
-        Optional<Room> _room =roomRepository.findByUuid(uuid);
-        if (_room.isEmpty()){
-            throw new Error("Room with ID " + uuid + " not found.");
-        }
+        Room room= roomRepository.findByUuid(uuid).orElseThrow();
 
-        return snapshotRepository.findAllByRoom_Id(_room.get().getId()).stream().map(this::EntityToSendSnapshotDTO).collect(Collectors.toList());
+        return snapshotRepository.findByRoomId(room.getId()).stream().map(this::EntityToSendSnapshotDTO).collect(Collectors.toList());
     }
 
     public void regSnapshot(UUID uuid, RegSnapshotDTO regSnapshotDTO){
-        Optional<Room> _room =roomRepository.findByUuid(uuid);
-        if (_room.isEmpty()){
-            throw new Error("Room with ID " + uuid + " not found.");
-            //에러 처리 고민
-        }
-        snapshotRepository.save(regSnapshotDTOToEntity(_room.get(), regSnapshotDTO));
+        Room room= roomRepository.findByUuid(uuid).orElseThrow();
+
+        snapshotRepository.save(regSnapshotDTOToEntity(room, regSnapshotDTO));
     }
     public SendSnapshotDTO getLastOne(UUID uuid){
-        Optional<Room> _room =roomRepository.findByUuid(uuid);
-        if (_room.isEmpty()){
-            throw new Error("Room with ID " + uuid + " not found.");
-            //에러 처리 고민
-        }
-        Snapshot snapshot= snapshotRepository.findTopByOrderByRoom_IdDesc(_room.get().getId());
+        Room room= roomRepository.findByUuid(uuid).orElseThrow();
+
+        Snapshot snapshot= snapshotRepository.findTopByRoomIdOrderByRoomIdDesc(room.getId());
         return SendSnapshotDTO.builder()
                 .content(snapshot.getContent())
                 .createDate(snapshot.getCreatedDate())
