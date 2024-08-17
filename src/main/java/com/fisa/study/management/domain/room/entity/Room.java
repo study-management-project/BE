@@ -54,17 +54,4 @@ public class Room {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    public void addSnapshot(Snapshot snapshot) {
-        this.snapshotList.add(snapshot);
-    }
-    public void addComment(Comment comment) {
-        this.commentList.add(comment);
-    }
-    public void removeSnapshot(Snapshot snapshot) {
-        this.snapshotList.remove(snapshot);
-    }
-    public void removeComment(Comment comment) {
-        this.commentList.remove(comment);
-    }
-
 }
