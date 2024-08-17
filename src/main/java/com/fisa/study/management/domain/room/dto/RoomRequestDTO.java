@@ -16,6 +16,7 @@ public class RoomRequestDTO {
     public Room toEntity() {
         return Room.builder()
                 .name(name)
+                .description(description)
                 .content("")
                 .uuid(UUID.randomUUID())
                 .build();
