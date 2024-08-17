@@ -23,16 +23,17 @@ public class CheckUp {
     private String title ;
 
     @Embedded
-    private OX ox;
+    @Builder.Default
+    private OX ox=new OX();
 
     @ManyToOne
     @JoinColumn(name = "room_id")
     private Room room;
 
-    private void addO(){
+    public void addO(){
         this.ox.addO();
     }
-    private void addX(){
+    public void addX(){
         this.ox.addX();
     }
 

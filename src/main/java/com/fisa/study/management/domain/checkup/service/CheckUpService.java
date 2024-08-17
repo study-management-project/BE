@@ -6,7 +6,9 @@ import com.fisa.study.management.domain.checkup.entity.CheckUp;
 import com.fisa.study.management.domain.checkup.repository.CheckUpRepository;
 import com.fisa.study.management.domain.room.entity.Room;
 import com.fisa.study.management.domain.room.repository.RoomRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -14,22 +16,37 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
+@Slf4j
 public class CheckUpService {
     private final CheckUpRepository checkUpRepository;
     private final RoomRepository roomRepository;
 
     public Long registerCheckUpForRoom(UUID uuid, ReceiveCheckUpDTO receiveCheckUpDTO){
-        Optional<Room> _room =roomRepository.findByUuid(uuid);
-        if (_room.isEmpty()){
-            throw new Error("Room with ID " + uuid + " not found.");
-            //에러 처리 고민
-        }
-        return checkUpRepository.save(DTOToEntityWithRoom(_room.get(),receiveCheckUpDTO)).getId();
+        Room room= roomRepository.findByUuid(uuid).orElseThrow();
+
+        return checkUpRepository.save(DTOToEntityWithRoom(room,receiveCheckUpDTO)).getId();
     }
 
     public SendCheckUpDTO getCheckUpResult(Long checkupId){
-        CheckUp checkUp= checkUpRepository.findById(checkupId).get();
+        CheckUp checkUp =checkUpRepository.findById(checkupId).orElseThrow();
         return EntityToDTO(checkUp);
+    }
+    public void resentCheckUpOIncrease(UUID uuid){
+        Room room= roomRepository.findByUuid(uuid).orElseThrow();
+
+        CheckUp checkUp= checkUpRepository.findTopByRoomIdOrderByRoomIdDesc(room.getId());
+        checkUp.addO();
+        checkUpRepository.save(checkUp);
+        log.info(String.valueOf(checkUp.getOx().getO()));
+    }
+    public void resentCheckUpXIncrease(UUID uuid){
+        Room room= roomRepository.findByUuid(uuid).orElseThrow();
+
+        CheckUp checkUp= checkUpRepository.findTopByRoomIdOrderByRoomIdDesc(room.getId());
+        checkUp.addX();
+        checkUpRepository.save(checkUp);
+        log.info(String.valueOf(checkUp.getOx().getO()));
     }
     CheckUp DTOToEntityWithRoom(Room room, ReceiveCheckUpDTO receiveCheckUpDTO){
         CheckUp checkUp= CheckUp.builder()
