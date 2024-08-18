@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -40,7 +41,7 @@ public class CheckUpService {
         return EntityToDTO(_checkUp.get());
     }
 
-    public void resentCheckUpOIncrease(UUID uuid){
+    public String resentCheckUpOIncrease(UUID uuid){
         Optional<Room> _room =roomRepository.findByUuid(uuid);
         if (_room.isEmpty()){
             return "room이 없습니다";
@@ -52,7 +53,7 @@ public class CheckUpService {
         return "O증가 성공";
     }
 
-    public void resentCheckUpXIncrease(UUID uuid){
+    public String resentCheckUpXIncrease(UUID uuid){
         Optional<Room> _room =roomRepository.findByUuid(uuid);
         if (_room.isEmpty()){
             return "room이 없습니다";
