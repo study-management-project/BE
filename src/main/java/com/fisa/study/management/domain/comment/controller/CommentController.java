@@ -28,8 +28,8 @@ public class CommentController {
     }
 
     @PostMapping("/register")
-    public void registerCommentForRoom(@PathVariable UUID uuid,@RequestBody CommentDTO commentDTO){
-        commentService.regCommentByRoomId(uuid,commentDTO);
+    public String registerCommentForRoom(@PathVariable UUID uuid,@RequestBody CommentDTO commentDTO){
+        return commentService.regCommentByRoomId(uuid,commentDTO);
     }
 
 //    @GetMapping("/{roomId}/comments")

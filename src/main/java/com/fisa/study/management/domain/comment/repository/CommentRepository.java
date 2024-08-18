@@ -15,6 +15,6 @@ public interface CommentRepository extends JpaRepository<Comment,Long> {
 //    @Query("SELECT c FROM Comment c WHERE c.room = :room AND  = :selectDate")
 //    List<Comment> findByRoomIdAndDate( Long roomId, LocalDate selectDate);
 
-    List<Comment> findAllByRoomId(Long room_id);
+    List<Comment> findAllByRoomIdOrderByIdDesc(Long room_id);
 
 }

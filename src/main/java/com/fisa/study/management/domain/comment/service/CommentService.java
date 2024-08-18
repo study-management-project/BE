@@ -25,15 +25,22 @@ public class CommentService {
     private final RoomRepository roomRepository;
 
     public List<CommentDTO> getAllCommentByRoomId(UUID uuid){
-        Room room= roomRepository.findByUuid(uuid).orElseThrow();
-
-        List<Comment> commentList = commentRepository.findAllByRoomId(room.getId());
+        Optional<Room> _room =roomRepository.findByUuid(uuid);
+        if (_room.isEmpty()){
+            return null;
+            //에러 처리 고민
+        }
+        List<Comment> commentList = commentRepository.findAllByRoomIdOrderByIdDesc(_room.get().getId());
         return commentList.stream().map(this::EntityToDTO).collect(Collectors.toList());
     }
-    public void regCommentByRoomId(UUID uuid,CommentDTO commentDTO){
-        Room room= roomRepository.findByUuid(uuid).orElseThrow();
-
-        commentRepository.save(DTOToEntityWithRoom(room,commentDTO));
+    public String regCommentByRoomId(UUID uuid,CommentDTO commentDTO){
+        Optional<Room> _room =roomRepository.findByUuid(uuid);
+        if (_room.isEmpty()){
+            return "room이 없습니다";
+            //에러 처리 고민
+        }
+        commentRepository.save(DTOToEntityWithRoom(_room.get(),commentDTO));
+        return "코멘트 등록 성공";
     }
 
 
