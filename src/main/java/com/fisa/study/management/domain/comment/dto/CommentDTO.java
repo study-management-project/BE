@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class CommentDTO {
 
-
     private String content;
 
 }

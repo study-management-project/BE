@@ -1,5 +1,6 @@
 package com.fisa.study.management.domain.room.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fisa.study.management.domain.checkup.entity.CheckUp;
 
 import com.fisa.study.management.domain.comment.entity.Comment;
@@ -37,19 +38,17 @@ public class Room {
 
     @OneToMany(mappedBy = "room",fetch = FetchType.LAZY)
     @Builder.Default
-//    @BatchSize(size = 20)
     private List<Snapshot> snapshotList= new ArrayList<>();
 
     @OneToMany(mappedBy = "room",fetch = FetchType.LAZY)
     @Builder.Default
-    //joinfetch
-//    @BatchSize(size = 20)
     private List<Comment> commentList= new ArrayList<>();
 
     @OneToMany(mappedBy = "room",fetch = FetchType.LAZY)
     @Builder.Default
 //    @BatchSize(size = 20)
     private List<CheckUp> checkUpList= new ArrayList<>();
+
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;

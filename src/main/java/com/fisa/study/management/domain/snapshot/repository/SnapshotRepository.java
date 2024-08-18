@@ -16,8 +16,7 @@ public interface SnapshotRepository extends JpaRepository<Snapshot,Long> {
 
     List<Snapshot> findByRoomId(Long roomId);
 
-//    @Query("SELECT s FROM Snapshot s WHERE s.room.id = :roomId ORDER BY s.room.id DESC")
-    Snapshot findTopByRoomIdOrderByRoomIdDesc(Long roomId);
+    Snapshot findTopByRoomIdOrderByIdDesc(Long roomId);
 
 //    @Query("select s.createdDate from Snapshot s where s.room.id = :roomId")
 //    List<LocalDateTime> findCreatedDateByRoom_Id(@Param("roomId") Long roomId);

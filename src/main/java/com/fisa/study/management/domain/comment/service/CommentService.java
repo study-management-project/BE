@@ -7,10 +7,12 @@ import com.fisa.study.management.domain.comment.repository.CommentRepository;
 import com.fisa.study.management.domain.room.dto.RoomRequestDTO;
 import com.fisa.study.management.domain.room.entity.Room;
 import com.fisa.study.management.domain.room.repository.RoomRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,21 +21,21 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CommentService {
     private final CommentRepository commentRepository;
     private final RoomRepository roomRepository;
 
-    public List<CommentDTO> getAllCommentByRoomId(UUID uuid){
-        Room room= roomRepository.findByUuid(uuid).orElseThrow();
-
-        List<Comment> commentList = commentRepository.findAllByRoomId(room.getId());
+    public List<CommentDTO> getAllCommentByRoomId(UUID uuid) throws IllegalAccessException {
+        Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
+        List<Comment> commentList = commentRepository.findAllByRoomIdOrderByIdDesc(room.getId());
         return commentList.stream().map(this::EntityToDTO).collect(Collectors.toList());
     }
-    public void regCommentByRoomId(UUID uuid,CommentDTO commentDTO){
-        Room room= roomRepository.findByUuid(uuid).orElseThrow();
-
+    public String regCommentByRoomId(UUID uuid,CommentDTO commentDTO) throws IllegalAccessException {
+        Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
         commentRepository.save(DTOToEntityWithRoom(room,commentDTO));
+        return "코멘트 등록 성공";
     }
 
 

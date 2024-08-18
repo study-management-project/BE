@@ -23,13 +23,13 @@ public class CommentController {
     private final CommentService commentService;
 
     @GetMapping("")
-    public List<CommentDTO> getCommentsByRoomId(@PathVariable UUID uuid){
+    public List<CommentDTO> getCommentsByRoomId(@PathVariable UUID uuid) throws IllegalAccessException {
         return commentService.getAllCommentByRoomId(uuid);
     }
 
     @PostMapping("/register")
-    public void registerCommentForRoom(@PathVariable UUID uuid,@RequestBody CommentDTO commentDTO){
-        commentService.regCommentByRoomId(uuid,commentDTO);
+    public String registerCommentForRoom(@PathVariable UUID uuid,@RequestBody CommentDTO commentDTO) throws IllegalAccessException {
+        return commentService.regCommentByRoomId(uuid,commentDTO);
     }
 
 //    @GetMapping("/{roomId}/comments")
