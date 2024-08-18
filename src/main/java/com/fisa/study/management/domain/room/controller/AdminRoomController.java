@@ -1,8 +1,10 @@
 package com.fisa.study.management.domain.room.controller;
 
 import com.fisa.study.management.domain.room.dto.RoomRequestDTO;
+import com.fisa.study.management.domain.room.dto.RoomResponseByAdminDTO;
 import com.fisa.study.management.domain.room.entity.Room;
 import com.fisa.study.management.domain.room.service.RoomService;
+import com.fisa.study.management.global.argumentresolver.Login;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,13 +21,13 @@ public class AdminRoomController {
 
     // 방 조회 (자신에게 묶인 거 가져오도록 수정해야 함)
     @GetMapping("/rooms")
-    public List<Room> getAllRooms() {
-        return roomService.getAllRooms();
+    public List<RoomResponseByAdminDTO> getAllRooms(@Login Long userId) {
+        return roomService.getAllRoomsByUserId(userId);
     }
 
     // 방 생성
     @PostMapping("/room")
-    public String createRoom(@RequestBody RoomRequestDTO roomRequestDTO) {
-        return roomService.createRoom(roomRequestDTO);
+    public String createRoom(@Login Long userId,  @RequestBody RoomRequestDTO roomRequestDTO) {
+        return roomService.createRoom(userId, roomRequestDTO);
     }
 }
