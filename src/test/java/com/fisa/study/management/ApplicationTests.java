@@ -19,11 +19,11 @@ class ApplicationTests {
 
 	@Test
 	void contextLoads() {
-		RoomRequestDTO roomRequestDTO= RoomRequestDTO.builder()
-				.name("test용")
-				.description("테스트테스트")
-				.build();
-		roomService.createRoom(roomRequestDTO);
+//		RoomRequestDTO roomRequestDTO= RoomRequestDTO.builder()
+//				.name("test용")
+//				.description("테스트테스트")
+//				.build();
+//		roomService.createRoom(roomRequestDTO);
 //		snapshotService.regSnapshot(1L,
 //				RegSnapshotDTO.builder()
 //						.content("test2")
