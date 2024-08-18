@@ -2,10 +2,12 @@ package com.fisa.study.management.domain.checkup.entity;
 
 import com.fisa.study.management.domain.room.entity.Room;
 import com.fisa.study.management.domain.snapshot.entity.Snapshot;
+import com.fisa.study.management.global.base.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class CheckUp {
+public class CheckUp extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -43,5 +45,14 @@ public class CheckUp {
         }
         this.room=room;
         room.getCheckUpList().add(this);
+    }
+
+    @PrePersist
+    public void onPrePersist() {
+        if (this.title == null) {
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+            this.title = LocalDateTime.now().format(formatter);
+        }
     }
 }

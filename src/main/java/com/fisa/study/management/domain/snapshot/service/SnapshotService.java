@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -23,26 +24,32 @@ public class SnapshotService {
     private final SnapshotRepository snapshotRepository;
     private final RoomRepository roomRepository;
 
-    public List<SendSnapshotDTO> getSnapshotAll(UUID uuid){
-        Room room= roomRepository.findByUuid(uuid).orElseThrow();
-
-        return snapshotRepository.findByRoomId(room.getId()).stream().map(this::EntityToSendSnapshotDTO).collect(Collectors.toList());
-    }
-
-    public String regSnapshot(UUID uuid, RegSnapshotDTO regSnapshotDTO){
+    public List<SendSnapshotDTO> getSnapshotAll(UUID uuid) throws IllegalAccessException {
         Optional<Room> _room =roomRepository.findByUuid(uuid);
         if (_room.isEmpty()){
-            return "room이 없습니다";
+            throw  new IllegalAccessException("room이 없습니다.");
             //에러 처리 고민
         }
+        return snapshotRepository.findByRoomId(_room.get().getId()).stream().map(this::EntityToSendSnapshotDTO).collect(Collectors.toList());
+    }
 
-        snapshotRepository.save(regSnapshotDTOToEntity(_room.get(), regSnapshotDTO));
+    public String regSnapshot(Long userId,UUID uuid, RegSnapshotDTO regSnapshotDTO) throws IllegalAccessException {
+        Room room= roomRepository.findByUuid(uuid).orElseThrow();
+        if (!Objects.equals(room.getMember().getId(), userId)) {
+            throw new IllegalAccessException("권한이 없습니다.");
+        }
+
+
+        snapshotRepository.save(regSnapshotDTOToEntity(room, regSnapshotDTO));
         return "스냅샷 등록완료";
     }
-    public SendSnapshotDTO getLastOne(UUID uuid){
-        Room room= roomRepository.findByUuid(uuid).orElseThrow();
-
-        Snapshot snapshot= snapshotRepository.findTopByRoomIdOrderByIdDesc(room.getId());
+    public SendSnapshotDTO getLastOne(UUID uuid) throws IllegalAccessException {
+        Optional<Room> _room =roomRepository.findByUuid(uuid);
+        if (_room.isEmpty()){
+            throw  new IllegalAccessException("room이 없습니다.");
+            //에러 처리 고민
+        }
+        Snapshot snapshot= snapshotRepository.findTopByRoomIdOrderByIdDesc(_room.get().getId());
         return SendSnapshotDTO.builder()
                 .content(snapshot.getContent())
                 .createDate(snapshot.getCreatedDate())

@@ -26,19 +26,19 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final RoomRepository roomRepository;
 
-    public List<CommentDTO> getAllCommentByRoomId(UUID uuid){
+    public List<CommentDTO> getAllCommentByRoomId(UUID uuid) throws IllegalAccessException {
         Optional<Room> _room =roomRepository.findByUuid(uuid);
         if (_room.isEmpty()){
-            return null;
+            throw  new IllegalAccessException("room이 없습니다.");
             //에러 처리 고민
         }
         List<Comment> commentList = commentRepository.findAllByRoomIdOrderByIdDesc(_room.get().getId());
         return commentList.stream().map(this::EntityToDTO).collect(Collectors.toList());
     }
-    public String regCommentByRoomId(UUID uuid,CommentDTO commentDTO){
+    public String regCommentByRoomId(UUID uuid,CommentDTO commentDTO) throws IllegalAccessException {
         Optional<Room> _room =roomRepository.findByUuid(uuid);
         if (_room.isEmpty()){
-            return "room이 없습니다";
+            throw  new IllegalAccessException("room이 없습니다.");
             //에러 처리 고민
         }
         commentRepository.save(DTOToEntityWithRoom(_room.get(),commentDTO));
