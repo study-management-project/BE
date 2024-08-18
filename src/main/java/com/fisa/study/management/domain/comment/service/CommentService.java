@@ -7,6 +7,7 @@ import com.fisa.study.management.domain.comment.repository.CommentRepository;
 import com.fisa.study.management.domain.room.dto.RoomRequestDTO;
 import com.fisa.study.management.domain.room.entity.Room;
 import com.fisa.study.management.domain.room.repository.RoomRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,21 +28,13 @@ public class CommentService {
     private final RoomRepository roomRepository;
 
     public List<CommentDTO> getAllCommentByRoomId(UUID uuid) throws IllegalAccessException {
-        Optional<Room> _room =roomRepository.findByUuid(uuid);
-        if (_room.isEmpty()){
-            throw  new IllegalAccessException("room이 없습니다.");
-            //에러 처리 고민
-        }
-        List<Comment> commentList = commentRepository.findAllByRoomIdOrderByIdDesc(_room.get().getId());
+        Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
+        List<Comment> commentList = commentRepository.findAllByRoomIdOrderByIdDesc(room.getId());
         return commentList.stream().map(this::EntityToDTO).collect(Collectors.toList());
     }
     public String regCommentByRoomId(UUID uuid,CommentDTO commentDTO) throws IllegalAccessException {
-        Optional<Room> _room =roomRepository.findByUuid(uuid);
-        if (_room.isEmpty()){
-            throw  new IllegalAccessException("room이 없습니다.");
-            //에러 처리 고민
-        }
-        commentRepository.save(DTOToEntityWithRoom(_room.get(),commentDTO));
+        Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
+        commentRepository.save(DTOToEntityWithRoom(room,commentDTO));
         return "코멘트 등록 성공";
     }
 

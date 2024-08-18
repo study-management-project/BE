@@ -6,6 +6,7 @@ import com.fisa.study.management.domain.checkup.entity.CheckUp;
 import com.fisa.study.management.domain.checkup.repository.CheckUpRepository;
 import com.fisa.study.management.domain.room.entity.Room;
 import com.fisa.study.management.domain.room.repository.RoomRepository;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +25,7 @@ public class CheckUpService {
     private final RoomRepository roomRepository;
 
     public Long registerCheckUpForRoom(Long userId, UUID uuid, ReceiveCheckUpDTO receiveCheckUpDTO) throws Exception {
-        Room room= roomRepository.findByUuid(uuid).orElseThrow();
+        Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
         if (!Objects.equals(room.getMember().getId(), userId)) {
             throw new IllegalAccessException("권한이 없습니다.");
         }
@@ -33,34 +34,26 @@ public class CheckUpService {
 
 
     public SendCheckUpDTO getCheckUpResult(Long userId,UUID uuid,Long checkupId) throws IllegalAccessException {
-        Room room= roomRepository.findByUuid(uuid).orElseThrow();
+        Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
         if (!Objects.equals(room.getMember().getId(), userId)) {
             throw new IllegalAccessException("권한이 없습니다.");
         }
-        Optional<CheckUp> _checkUp =checkUpRepository.findById(checkupId);
-        if(_checkUp.isEmpty()){
-            throw new IllegalAccessException("해당 설문이 없습니다");
-        }
-        return EntityToDTO(_checkUp.get());
+
+        CheckUp checkUp= checkUpRepository.findById(checkupId).orElseThrow(() -> new EntityNotFoundException("Room not found"));
+
+        return EntityToDTO(checkUp);
     }
-    public String resentCheckUpOIncrease(UUID uuid) throws IllegalAccessException {
-        Optional<Room> _room =roomRepository.findByUuid(uuid);
-        if (_room.isEmpty()){
-            throw  new IllegalAccessException("room이 없습니다.");
-            //에러 처리 고민
-        }
-        CheckUp checkUp= checkUpRepository.findTopByRoomIdOrderByIdDesc(_room.get().getId());
+    public String resentCheckUpOIncrease(UUID uuid)  {
+
+        Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
+        CheckUp checkUp= checkUpRepository.findTopByRoomIdOrderByIdDesc(room.getId());
         checkUp.addO();
         checkUpRepository.save(checkUp);
         return "O증가 성공";
     }
-    public String resentCheckUpXIncrease(UUID uuid) throws IllegalAccessException {
-        Optional<Room> _room =roomRepository.findByUuid(uuid);
-        if (_room.isEmpty()){
-            throw  new IllegalAccessException("room이 없습니다.");
-            //에러 처리 고민
-        }
-        CheckUp checkUp= checkUpRepository.findTopByRoomIdOrderByIdDesc(_room.get().getId());
+    public String resentCheckUpXIncrease(UUID uuid)  {
+        Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
+        CheckUp checkUp= checkUpRepository.findTopByRoomIdOrderByIdDesc(room.getId());
         checkUp.addX();
         checkUpRepository.save(checkUp);
         return "X증가 성공";
