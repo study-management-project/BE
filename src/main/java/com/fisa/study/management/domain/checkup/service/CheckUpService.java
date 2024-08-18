@@ -32,9 +32,16 @@ public class CheckUpService {
     }
 
 
-    public SendCheckUpDTO getCheckUpResult(Long checkupId){
-        CheckUp checkUp =checkUpRepository.findById(checkupId).orElseThrow();
-        return EntityToDTO(checkUp);
+    public SendCheckUpDTO getCheckUpResult(Long userId,UUID uuid,Long checkupId) throws IllegalAccessException {
+        Room room= roomRepository.findByUuid(uuid).orElseThrow();
+        if (!Objects.equals(room.getMember().getId(), userId)) {
+            throw new IllegalAccessException("권한이 없습니다.");
+        }
+        Optional<CheckUp> _checkUp =checkUpRepository.findById(checkupId);
+        if(_checkUp.isEmpty()){
+            throw new IllegalAccessException("해당 설문이 없습니다");
+        }
+        return EntityToDTO(_checkUp.get());
     }
     public String resentCheckUpOIncrease(UUID uuid) throws IllegalAccessException {
         Optional<Room> _room =roomRepository.findByUuid(uuid);
