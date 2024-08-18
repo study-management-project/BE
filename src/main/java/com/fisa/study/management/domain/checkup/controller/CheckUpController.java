@@ -16,22 +16,21 @@ import java.util.UUID;
 public class CheckUpController {
     private final CheckUpService checkUpService;
     @PostMapping("/register")
-    public Long registerCheckUpForRoom(@PathVariable UUID uuid, @RequestBody ReceiveCheckUpDTO receiveCheckUpDTO){
+    public Long registerCheckUpForRoom(@PathVariable UUID uuid, @RequestBody ReceiveCheckUpDTO receiveCheckUpDTO) throws Exception{
         log.info(receiveCheckUpDTO.toString());
         return checkUpService.registerCheckUpForRoom(uuid, receiveCheckUpDTO);
     }
-
     @GetMapping("/endTime/{checkupId}")
     public SendCheckUpDTO sendCheckUpResult( @PathVariable String uuid,@PathVariable Long checkupId){
         return checkUpService.getCheckUpResult(checkupId);
     }
     @GetMapping("/OK")
-    public void OIncrease(@PathVariable UUID uuid){
-        checkUpService.resentCheckUpOIncrease(uuid);
+    public String OIncrease(@PathVariable UUID uuid){
+        return checkUpService.resentCheckUpOIncrease(uuid);
     }
     @GetMapping("/NO")
-    public void XIncrease(@PathVariable UUID uuid){
-        checkUpService.resentCheckUpXIncrease(uuid);
+    public String XIncrease(@PathVariable UUID uuid){
+        return checkUpService.resentCheckUpXIncrease(uuid);
     }
 
 

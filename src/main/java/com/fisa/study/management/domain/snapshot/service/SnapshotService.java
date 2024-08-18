@@ -29,15 +29,20 @@ public class SnapshotService {
         return snapshotRepository.findByRoomId(room.getId()).stream().map(this::EntityToSendSnapshotDTO).collect(Collectors.toList());
     }
 
-    public void regSnapshot(UUID uuid, RegSnapshotDTO regSnapshotDTO){
-        Room room= roomRepository.findByUuid(uuid).orElseThrow();
+    public String regSnapshot(UUID uuid, RegSnapshotDTO regSnapshotDTO){
+        Optional<Room> _room =roomRepository.findByUuid(uuid);
+        if (_room.isEmpty()){
+            return "room이 없습니다";
+            //에러 처리 고민
+        }
 
-        snapshotRepository.save(regSnapshotDTOToEntity(room, regSnapshotDTO));
+        snapshotRepository.save(regSnapshotDTOToEntity(_room.get(), regSnapshotDTO));
+        return "스냅샷 등록완료";
     }
     public SendSnapshotDTO getLastOne(UUID uuid){
         Room room= roomRepository.findByUuid(uuid).orElseThrow();
 
-        Snapshot snapshot= snapshotRepository.findTopByRoomIdOrderByRoomIdDesc(room.getId());
+        Snapshot snapshot= snapshotRepository.findTopByRoomIdOrderByIdDesc(room.getId());
         return SendSnapshotDTO.builder()
                 .content(snapshot.getContent())
                 .createDate(snapshot.getCreatedDate())

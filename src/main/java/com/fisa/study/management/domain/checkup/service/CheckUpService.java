@@ -22,31 +22,44 @@ public class CheckUpService {
     private final CheckUpRepository checkUpRepository;
     private final RoomRepository roomRepository;
 
-    public Long registerCheckUpForRoom(UUID uuid, ReceiveCheckUpDTO receiveCheckUpDTO){
-        Room room= roomRepository.findByUuid(uuid).orElseThrow();
-
-        return checkUpRepository.save(DTOToEntityWithRoom(room,receiveCheckUpDTO)).getId();
+    public Long registerCheckUpForRoom(UUID uuid, ReceiveCheckUpDTO receiveCheckUpDTO)throws Exception{
+        Optional<Room> _room =roomRepository.findByUuid(uuid);
+        if (_room.isEmpty()){
+            throw  new IllegalAccessException("권한이 없습니다.");
+            //에러 처리 고민
+        }
+        return checkUpRepository.save(DTOToEntityWithRoom(_room.get(),receiveCheckUpDTO)).getId();
     }
 
     public SendCheckUpDTO getCheckUpResult(Long checkupId){
-        CheckUp checkUp =checkUpRepository.findById(checkupId).orElseThrow();
-        return EntityToDTO(checkUp);
+        Optional<CheckUp> _checkUp =checkUpRepository.findById(checkupId);
+        if (_checkUp.isEmpty()){
+            return null;
+            //에러 처리 고민
+        }
+        return EntityToDTO(_checkUp.get());
     }
-    public void resentCheckUpOIncrease(UUID uuid){
-        Room room= roomRepository.findByUuid(uuid).orElseThrow();
-
-        CheckUp checkUp= checkUpRepository.findTopByRoomIdOrderByRoomIdDesc(room.getId());
+    public String resentCheckUpOIncrease(UUID uuid){
+        Optional<Room> _room =roomRepository.findByUuid(uuid);
+        if (_room.isEmpty()){
+            return "room이 없습니다";
+            //에러 처리 고민
+        }
+        CheckUp checkUp= checkUpRepository.findTopByRoomIdOrderByIdDesc(_room.get().getId());
         checkUp.addO();
         checkUpRepository.save(checkUp);
-        log.info(String.valueOf(checkUp.getOx().getO()));
+        return "O증가 성공";
     }
-    public void resentCheckUpXIncrease(UUID uuid){
-        Room room= roomRepository.findByUuid(uuid).orElseThrow();
-
-        CheckUp checkUp= checkUpRepository.findTopByRoomIdOrderByRoomIdDesc(room.getId());
+    public String resentCheckUpXIncrease(UUID uuid){
+        Optional<Room> _room =roomRepository.findByUuid(uuid);
+        if (_room.isEmpty()){
+            return "room이 없습니다";
+            //에러 처리 고민
+        }
+        CheckUp checkUp= checkUpRepository.findTopByRoomIdOrderByIdDesc(_room.get().getId());
         checkUp.addX();
         checkUpRepository.save(checkUp);
-        log.info(String.valueOf(checkUp.getOx().getO()));
+        return "X증가 성공";
     }
     CheckUp DTOToEntityWithRoom(Room room, ReceiveCheckUpDTO receiveCheckUpDTO){
         CheckUp checkUp= CheckUp.builder()

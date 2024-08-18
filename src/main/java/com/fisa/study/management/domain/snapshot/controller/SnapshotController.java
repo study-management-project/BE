@@ -29,8 +29,8 @@ public class SnapshotController {
 //        return attributes;
     }
     @PostMapping("/register")
-    public void registerSnapshotForRoom(@PathVariable UUID uuid, @RequestBody RegSnapshotDTO regSnapshotDTO){
-        snapshotService.regSnapshot(uuid, regSnapshotDTO);
+    public String registerSnapshotForRoom(@PathVariable UUID uuid, @RequestBody RegSnapshotDTO regSnapshotDTO){
+        return snapshotService.regSnapshot(uuid, regSnapshotDTO);
     }
     // 최신한개 보내기
     @GetMapping("/last")
