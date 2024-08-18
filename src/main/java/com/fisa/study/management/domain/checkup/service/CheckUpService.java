@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -22,22 +23,19 @@ public class CheckUpService {
     private final CheckUpRepository checkUpRepository;
     private final RoomRepository roomRepository;
 
-    public Long registerCheckUpForRoom(UUID uuid, ReceiveCheckUpDTO receiveCheckUpDTO)throws IllegalAccessException{
-        Optional<Room> _room =roomRepository.findByUuid(uuid);
-        if (_room.isEmpty()){
-            throw  new IllegalAccessException("room이 없습니다.");
-            //에러 처리 고민
+    public Long registerCheckUpForRoom(Long userId, UUID uuid, ReceiveCheckUpDTO receiveCheckUpDTO) throws Exception {
+        Room room= roomRepository.findByUuid(uuid).orElseThrow();
+        if (!Objects.equals(room.getMember().getId(), userId)) {
+            throw new IllegalAccessException("권한이 없습니다.");
         }
-        return checkUpRepository.save(DTOToEntityWithRoom(_room.get(),receiveCheckUpDTO)).getId();
+
+        return checkUpRepository.save(DTOToEntityWithRoom(room,receiveCheckUpDTO)).getId();
     }
 
-    public SendCheckUpDTO getCheckUpResult(Long checkupId) throws IllegalAccessException {
-        Optional<CheckUp> _checkUp =checkUpRepository.findById(checkupId);
-        if (_checkUp.isEmpty()){
-            throw  new IllegalAccessException("checkup이 없습니다.");
-            //에러 처리 고민
-        }
-        return EntityToDTO(_checkUp.get());
+
+    public SendCheckUpDTO getCheckUpResult(Long checkupId){
+        CheckUp checkUp =checkUpRepository.findById(checkupId).orElseThrow();
+        return EntityToDTO(checkUp);
     }
     public String resentCheckUpOIncrease(UUID uuid) throws IllegalAccessException {
         Optional<Room> _room =roomRepository.findByUuid(uuid);
@@ -48,9 +46,9 @@ public class CheckUpService {
         CheckUp checkUp= checkUpRepository.findTopByRoomIdOrderByIdDesc(_room.get().getId());
         checkUp.addO();
         checkUpRepository.save(checkUp);
-        return "O증가 성공";
+        log.info(String.valueOf(checkUp.getOx().getO()));
     }
-    public String resentCheckUpXIncrease(UUID uuid) throws IllegalAccessException {
+    public void resentCheckUpXIncrease(UUID uuid) throws IllegalAccessException {
         Optional<Room> _room =roomRepository.findByUuid(uuid);
         if (_room.isEmpty()){
             throw  new IllegalAccessException("room이 없습니다.");
@@ -59,7 +57,7 @@ public class CheckUpService {
         CheckUp checkUp= checkUpRepository.findTopByRoomIdOrderByIdDesc(_room.get().getId());
         checkUp.addX();
         checkUpRepository.save(checkUp);
-        return "X증가 성공";
+        log.info(String.valueOf(checkUp.getOx().getO()));
     }
     CheckUp DTOToEntityWithRoom(Room room, ReceiveCheckUpDTO receiveCheckUpDTO){
         CheckUp checkUp= CheckUp.builder()

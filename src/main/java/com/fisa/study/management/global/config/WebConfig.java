@@ -36,6 +36,7 @@ public class WebConfig implements WebMvcConfigurer {
                         "/register",
                         "/error", "/*.ico",
                         "/room/**",
+                        "/ws",
                         "/**"); // 임시로 전체 허용
     }
 }
