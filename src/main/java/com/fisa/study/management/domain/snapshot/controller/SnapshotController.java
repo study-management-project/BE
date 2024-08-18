@@ -19,7 +19,7 @@ public class SnapshotController {
     private final SnapshotService snapshotService;
 
     @GetMapping("/")
-    public List<SendSnapshotDTO> getSnapshotsByRoomId(@PathVariable UUID uuid){
+    public List<SendSnapshotDTO> getSnapshotsByRoomId(@PathVariable UUID uuid) throws IllegalAccessException {
         return snapshotService.getSnapshotAll(uuid);
 //        List<SendSnapshotDTO> sendSnapshotDTOList = snapshotService.getSnapshotFromRoomFirst(roomId);
 //        List<LocalDate> localDateList= snapshotService.getCreatedDatesByRoomId(roomId);
@@ -28,13 +28,14 @@ public class SnapshotController {
 //        attributes.put("localDateList", localDateList);
 //        return attributes;
     }
+    //login
     @PostMapping("/register")
-    public String registerSnapshotForRoom(@PathVariable UUID uuid, @RequestBody RegSnapshotDTO regSnapshotDTO){
+    public String registerSnapshotForRoom(@PathVariable UUID uuid, @RequestBody RegSnapshotDTO regSnapshotDTO) throws IllegalAccessException {
         return snapshotService.regSnapshot(uuid, regSnapshotDTO);
     }
     // 최신한개 보내기
     @GetMapping("/last")
-    public SendSnapshotDTO sendLastOne(@PathVariable UUID uuid){
+    public SendSnapshotDTO sendLastOne(@PathVariable UUID uuid) throws IllegalAccessException {
         return snapshotService.getLastOne(uuid);
     }
 

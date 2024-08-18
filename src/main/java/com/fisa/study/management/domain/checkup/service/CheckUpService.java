@@ -22,27 +22,27 @@ public class CheckUpService {
     private final CheckUpRepository checkUpRepository;
     private final RoomRepository roomRepository;
 
-    public Long registerCheckUpForRoom(UUID uuid, ReceiveCheckUpDTO receiveCheckUpDTO)throws Exception{
+    public Long registerCheckUpForRoom(UUID uuid, ReceiveCheckUpDTO receiveCheckUpDTO)throws IllegalAccessException{
         Optional<Room> _room =roomRepository.findByUuid(uuid);
         if (_room.isEmpty()){
-            throw  new IllegalAccessException("권한이 없습니다.");
+            throw  new IllegalAccessException("room이 없습니다.");
             //에러 처리 고민
         }
         return checkUpRepository.save(DTOToEntityWithRoom(_room.get(),receiveCheckUpDTO)).getId();
     }
 
-    public SendCheckUpDTO getCheckUpResult(Long checkupId){
+    public SendCheckUpDTO getCheckUpResult(Long checkupId) throws IllegalAccessException {
         Optional<CheckUp> _checkUp =checkUpRepository.findById(checkupId);
         if (_checkUp.isEmpty()){
-            return null;
+            throw  new IllegalAccessException("checkup이 없습니다.");
             //에러 처리 고민
         }
         return EntityToDTO(_checkUp.get());
     }
-    public String resentCheckUpOIncrease(UUID uuid){
+    public String resentCheckUpOIncrease(UUID uuid) throws IllegalAccessException {
         Optional<Room> _room =roomRepository.findByUuid(uuid);
         if (_room.isEmpty()){
-            return "room이 없습니다";
+            throw  new IllegalAccessException("room이 없습니다.");
             //에러 처리 고민
         }
         CheckUp checkUp= checkUpRepository.findTopByRoomIdOrderByIdDesc(_room.get().getId());
@@ -50,10 +50,10 @@ public class CheckUpService {
         checkUpRepository.save(checkUp);
         return "O증가 성공";
     }
-    public String resentCheckUpXIncrease(UUID uuid){
+    public String resentCheckUpXIncrease(UUID uuid) throws IllegalAccessException {
         Optional<Room> _room =roomRepository.findByUuid(uuid);
         if (_room.isEmpty()){
-            return "room이 없습니다";
+            throw  new IllegalAccessException("room이 없습니다.");
             //에러 처리 고민
         }
         CheckUp checkUp= checkUpRepository.findTopByRoomIdOrderByIdDesc(_room.get().getId());

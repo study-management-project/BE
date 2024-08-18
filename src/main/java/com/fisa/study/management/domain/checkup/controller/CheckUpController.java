@@ -15,23 +15,23 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CheckUpController {
     private final CheckUpService checkUpService;
+    //login
     @PostMapping("/register")
-    public Long registerCheckUpForRoom(@PathVariable UUID uuid, @RequestBody ReceiveCheckUpDTO receiveCheckUpDTO) throws Exception{
+    public Long registerCheckUpForRoom(@PathVariable UUID uuid, @RequestBody ReceiveCheckUpDTO receiveCheckUpDTO) throws IllegalAccessException{
         log.info(receiveCheckUpDTO.toString());
         return checkUpService.registerCheckUpForRoom(uuid, receiveCheckUpDTO);
     }
+    //login
     @GetMapping("/endTime/{checkupId}")
-    public SendCheckUpDTO sendCheckUpResult( @PathVariable String uuid,@PathVariable Long checkupId){
+    public SendCheckUpDTO sendCheckUpResult( @PathVariable String uuid,@PathVariable Long checkupId) throws IllegalAccessException {
         return checkUpService.getCheckUpResult(checkupId);
     }
     @GetMapping("/OK")
-    public String OIncrease(@PathVariable UUID uuid){
+    public String OIncrease(@PathVariable UUID uuid)throws IllegalAccessException{
         return checkUpService.resentCheckUpOIncrease(uuid);
     }
     @GetMapping("/NO")
-    public String XIncrease(@PathVariable UUID uuid){
+    public String XIncrease(@PathVariable UUID uuid)throws IllegalAccessException{
         return checkUpService.resentCheckUpXIncrease(uuid);
     }
-
-
 }
