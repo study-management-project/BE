@@ -28,7 +28,6 @@ public class CheckUpService {
         if (!Objects.equals(room.getMember().getId(), userId)) {
             throw new IllegalAccessException("권한이 없습니다.");
         }
-
         return checkUpRepository.save(DTOToEntityWithRoom(room,receiveCheckUpDTO)).getId();
     }
 
@@ -46,9 +45,9 @@ public class CheckUpService {
         CheckUp checkUp= checkUpRepository.findTopByRoomIdOrderByIdDesc(_room.get().getId());
         checkUp.addO();
         checkUpRepository.save(checkUp);
-        log.info(String.valueOf(checkUp.getOx().getO()));
+        return "O증가 성공";
     }
-    public void resentCheckUpXIncrease(UUID uuid) throws IllegalAccessException {
+    public String resentCheckUpXIncrease(UUID uuid) throws IllegalAccessException {
         Optional<Room> _room =roomRepository.findByUuid(uuid);
         if (_room.isEmpty()){
             throw  new IllegalAccessException("room이 없습니다.");
@@ -57,7 +56,7 @@ public class CheckUpService {
         CheckUp checkUp= checkUpRepository.findTopByRoomIdOrderByIdDesc(_room.get().getId());
         checkUp.addX();
         checkUpRepository.save(checkUp);
-        log.info(String.valueOf(checkUp.getOx().getO()));
+        return "X증가 성공";
     }
     CheckUp DTOToEntityWithRoom(Room room, ReceiveCheckUpDTO receiveCheckUpDTO){
         CheckUp checkUp= CheckUp.builder()

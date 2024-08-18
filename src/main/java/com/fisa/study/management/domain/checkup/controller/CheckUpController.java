@@ -30,14 +30,14 @@ public class CheckUpController {
     @GetMapping("/endTime/{checkupId}")
     public SendCheckUpDTO sendCheckUpResult(@PathVariable String uuid, @PathVariable Long checkupId){
         return checkUpService.getCheckUpResult(checkupId);
-        return null;
+
     }
 
 
     @GetMapping("/OK")
     public String OIncrease(@PathVariable UUID uuid)throws IllegalAccessException{
         return checkUpService.resentCheckUpOIncrease(uuid);
-        return null;
+
     }
 
     @GetMapping("/NO")
