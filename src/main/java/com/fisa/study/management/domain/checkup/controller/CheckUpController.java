@@ -37,13 +37,13 @@ public class CheckUpController {
 
 
     @GetMapping("/OK")
-    public String OIncrease(@PathVariable UUID uuid)throws IllegalAccessException{
+    public String OIncrease(@PathVariable UUID uuid){
         return checkUpService.resentCheckUpOIncrease(uuid);
 
     }
 
     @GetMapping("/NO")
-    public String XIncrease(@PathVariable UUID uuid)throws IllegalAccessException{
+    public String XIncrease(@PathVariable UUID uuid){
         return checkUpService.resentCheckUpXIncrease(uuid);
     }
 
