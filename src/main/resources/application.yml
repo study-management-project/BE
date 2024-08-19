@@ -7,4 +7,5 @@ server:
     session:
       cookie:
         name: JSESSIONID
+        same-site: none
       timeout: 5h

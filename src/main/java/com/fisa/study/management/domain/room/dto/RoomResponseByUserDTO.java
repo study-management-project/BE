@@ -23,6 +23,6 @@ public class RoomResponseByUserDTO {
     private String description;
     private String content;
     private List<SendSnapshotDTO> snapshotList;
-    private List<CommentDTO> commentList;
+    private List<String> commentList;
     private ResponseFirstCheckUpDTO checkUp;
 }

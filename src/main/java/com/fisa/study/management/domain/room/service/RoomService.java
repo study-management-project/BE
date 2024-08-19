@@ -76,8 +76,10 @@ public class RoomService {
                 .orElseThrow(() -> new EntityNotFoundException("Room not found"));
         List<SendSnapshotDTO> sendSnapshotDTOS = room.getSnapshotList().stream()
                 .map(this::EntityToSendSnapshotDTO).toList();
-        List<CommentDTO> commentDTOS = room2.getCommentList().stream()
-                .map(this::CommentEntityToDTO).toList();
+        List<String> commentDTOS = room2.getCommentList()
+                .stream()
+                .map(Comment::getContent).
+                toList();
 
         CheckUp checkUp = checkUpRepository.findTopByRoomIdOrderByIdDesc(room.getId());
 
