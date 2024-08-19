@@ -1,8 +1,13 @@
-package com.fisa.study.management.domain.room.controller;
+package com.fisa.study.management.domain.websocket;
 
-import com.fisa.study.management.domain.room.dto.TextMessage;
+import com.fisa.study.management.domain.comment.dto.CommentDTO;
+import com.fisa.study.management.domain.comment.service.CommentService;
+import com.fisa.study.management.domain.room.dto.CodeDTO;
 import com.fisa.study.management.domain.room.entity.Room;
 import com.fisa.study.management.domain.room.service.RoomService;
+import com.fisa.study.management.domain.snapshot.dto.RegSnapshotDTO;
+import com.fisa.study.management.domain.snapshot.service.SnapshotService;
+import com.fisa.study.management.global.argumentresolver.Login;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -16,16 +21,18 @@ import java.util.concurrent.ConcurrentHashMap;
 @Controller
 @Slf4j
 @RequiredArgsConstructor
-public class TextController {
+public class StompController {
 
     private final SimpMessageSendingOperations sendingOperations;
     private final RoomService roomService;
+    private final CommentService commentService;
+    private final SnapshotService snapshotService;
     private ConcurrentHashMap<UUID, String> cacheMap = new ConcurrentHashMap<>();
 
-    @MessageMapping("/send-text")
-    public void handleTextMessage(@Payload TextMessage message) {
-        UUID roomId = message.getUuid();
-        String newContent = message.getContent();
+    @MessageMapping("/share-code")
+    public void shareCode(@Payload CodeDTO dto) {
+        UUID roomId = dto.getUuid();
+        String newContent = dto.getContent();
 
         // 캐시에서 현재 콘텐츠를 가져옴
         String cachedContent = cacheMap.get(roomId);
@@ -33,7 +40,7 @@ public class TextController {
         if (cachedContent != null && cachedContent.equals(newContent)) {
             // 캐시 히트: 캐시된 내용과 동일하면 바로 반환
             log.info("Cache Hit");
-            sendingOperations.convertAndSend("/topic/" + roomId, cachedContent);
+            sendingOperations.convertAndSend("/topic/" + roomId + "/code/", cachedContent);
             return;
         }
 
@@ -49,6 +56,18 @@ public class TextController {
         // 현재 방의 구독자 수 확인
 
         // 업데이트된 content를 topic 구독자들에게 뿌림
-        sendingOperations.convertAndSend("/topic/" + roomId, newContent);
+        sendingOperations.convertAndSend("/topic/" + roomId + "/code", newContent);
+    }
+
+    @MessageMapping("/share-comment")
+    public void shareComment(@Payload CommentDTO dto) {
+        commentService.regCommentByRoomId(dto);
+        sendingOperations.convertAndSend("/topic/" + dto.getUuid() + "/comment", dto.getContent());
+    }
+
+    @MessageMapping("/share-snapshot")
+    public void shareSnapshot(@Login Long userId, @Payload RegSnapshotDTO dto) throws IllegalAccessException {
+        snapshotService.regSnapshot(userId, dto);
+        sendingOperations.convertAndSend("/topic/" + dto.getUuid() + "/snapshot", dto);
     }
 }

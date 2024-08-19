@@ -1,6 +1,5 @@
 package com.fisa.study.management.domain.member.entity;
 
-import com.fisa.study.management.domain.checkup.entity.CheckUp;
 import com.fisa.study.management.domain.room.entity.Room;
 import jakarta.persistence.*;
 import lombok.*;

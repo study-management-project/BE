@@ -27,14 +27,17 @@ import java.util.stream.Collectors;
 public class CommentService {
     private final CommentRepository commentRepository;
     private final RoomService roomService;
+    private final RoomRepository roomRepository;
 
     public List<CommentDTO> getAllCommentByRoomId(UUID uuid)  {
         Room room= roomService.getRoomByUUID(uuid);
         List<Comment> commentList = commentRepository.findAllByRoomIdOrderByIdDesc(room.getId());
         return commentList.stream().map(this::EntityToDTO).collect(Collectors.toList());
     }
-    public String regCommentByRoomId(UUID uuid,CommentDTO commentDTO)  {
-        Room room= roomService.getRoomByUUID(uuid);
+
+    public String regCommentByRoomId(CommentDTO commentDTO)  {
+        Room room = roomRepository.findByUuid(commentDTO.getUuid())
+                .orElseThrow(() -> new EntityNotFoundException("Room Not Found"));
         commentRepository.save(DTOToEntityWithRoom(room,commentDTO));
         return "코멘트 등록 성공";
     }

@@ -27,11 +27,6 @@ public class CommentController {
         return commentService.getAllCommentByRoomId(uuid);
     }
 
-    @PostMapping("/register")
-    public String registerCommentForRoom(@PathVariable UUID uuid,@RequestBody CommentDTO commentDTO) throws IllegalAccessException {
-        return commentService.regCommentByRoomId(uuid,commentDTO);
-    }
-
 //    @GetMapping("/{roomId}/comments")
 //    public List<Comment> getAllComment(@PathVariable Long roomId){
 //        return commentService.getAllCommentFromRoom(roomId);

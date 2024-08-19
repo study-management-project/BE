@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -28,7 +27,6 @@ public class CheckUpService {
     public CheckUp getCheckUpTopByRoomId(Long roomId){
         return checkUpRepository.findTopByRoomIdOrderByIdDesc(roomId);
     }
-
 
     public Long registerCheckUpForRoom(Long userId, UUID uuid, ReceiveCheckUpDTO receiveCheckUpDTO) throws Exception {
         Room room= roomService.getRoomByUUID(uuid);

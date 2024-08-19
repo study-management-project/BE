@@ -31,13 +31,13 @@ public class SnapshotService {
         return snapshotRepository.findByRoomId(room.getId()).stream().map(this::EntityToSendSnapshotDTO).collect(Collectors.toList());
     }
 
-    public String regSnapshot(Long userId,UUID uuid, RegSnapshotDTO regSnapshotDTO) throws IllegalAccessException {
-        Room room= roomService.getRoomByUUID(uuid);
+    public LocalDateTime regSnapshot(Long userId, RegSnapshotDTO dto) throws IllegalAccessException {
+        Room room= roomService.getRoomByUUID(dto.getUuid());
         if (!Objects.equals(room.getMember().getId(), userId)) {
             throw new IllegalAccessException("권한이 없습니다.");
         }
-        snapshotRepository.save(regSnapshotDTOToEntity(room, regSnapshotDTO));
-        return "스냅샷 등록완료";
+        Snapshot snapshot = snapshotRepository.save(regSnapshotDTOToEntity(room, dto));
+        return snapshot.getCreatedDate();
     }
     public SendSnapshotDTO getLastOne(UUID uuid) {
         Room room= roomService.getRoomByUUID(uuid);

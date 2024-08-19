@@ -19,14 +19,14 @@ public class MemberController {
     private final MemberService memberService;
 
     // login Check
-    @GetMapping("/check")
-    public String loginArgumentResolver(
-            @Login Member loginMember) {
-        if (loginMember == null) {
-            return "인증 실패";
-        }
-        return "인증 성공 : " + loginMember.getUsername();
-    }
+//    @GetMapping("/check")
+//    public String loginArgumentResolver(
+//            @Login Member loginMember) {
+//        if (loginMember == null) {
+//            return "인증 실패";
+//        }
+//        return "인증 성공 : " + loginMember.getUsername();
+//    }
 
     @PostMapping("/register")
     public String loginArgumentResolver(@RequestBody MemberRegisterDTO requestDTO) {
@@ -55,5 +55,4 @@ public class MemberController {
 
         return "성공";
     }
-
 }
