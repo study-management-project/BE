@@ -7,6 +7,7 @@ import com.fisa.study.management.domain.comment.repository.CommentRepository;
 import com.fisa.study.management.domain.room.dto.RoomRequestDTO;
 import com.fisa.study.management.domain.room.entity.Room;
 import com.fisa.study.management.domain.room.repository.RoomRepository;
+import com.fisa.study.management.domain.room.service.RoomService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,15 +26,15 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CommentService {
     private final CommentRepository commentRepository;
-    private final RoomRepository roomRepository;
+    private final RoomService roomService;
 
-    public List<CommentDTO> getAllCommentByRoomId(UUID uuid) throws IllegalAccessException {
-        Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
+    public List<CommentDTO> getAllCommentByRoomId(UUID uuid)  {
+        Room room= roomService.getRoomByUUID(uuid);
         List<Comment> commentList = commentRepository.findAllByRoomIdOrderByIdDesc(room.getId());
         return commentList.stream().map(this::EntityToDTO).collect(Collectors.toList());
     }
-    public String regCommentByRoomId(UUID uuid,CommentDTO commentDTO) throws IllegalAccessException {
-        Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
+    public String regCommentByRoomId(UUID uuid,CommentDTO commentDTO)  {
+        Room room= roomService.getRoomByUUID(uuid);
         commentRepository.save(DTOToEntityWithRoom(room,commentDTO));
         return "코멘트 등록 성공";
     }

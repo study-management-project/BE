@@ -4,6 +4,7 @@ import com.fisa.study.management.domain.checkup.dto.ResponseFirstCheckUpDTO;
 import com.fisa.study.management.domain.checkup.dto.SendCheckUpDTO;
 import com.fisa.study.management.domain.checkup.entity.CheckUp;
 import com.fisa.study.management.domain.checkup.repository.CheckUpRepository;
+import com.fisa.study.management.domain.checkup.service.CheckUpService;
 import com.fisa.study.management.domain.comment.dto.CommentDTO;
 import com.fisa.study.management.domain.comment.entity.Comment;
 import com.fisa.study.management.domain.comment.repository.CommentRepository;
@@ -37,9 +38,11 @@ import java.util.stream.Collectors;
 public class RoomService {
     private final RoomRepository roomRepository;
     private final MemberRepository memberRepository;
-    private final SnapshotService snapshotService;
-    private final CheckUpRepository checkUpRepository;
+    private final CheckUpService checkUpService;
 
+    public Room getRoomByUUID(UUID uuid){
+        return roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
+    }
 
     public List<RoomResponseByAdminDTO> getAllRoomsByUserId(Long userId) {
         return roomRepository.findByAdminId(userId);
@@ -76,7 +79,7 @@ public class RoomService {
         List<CommentDTO> commentDTOS = room2.getCommentList().stream()
                 .map(this::CommentEntityToDTO).toList();
 
-        CheckUp checkUp =checkUpRepository.findTopByRoomIdOrderByIdDesc(room.getId());
+        CheckUp checkUp = checkUpService.getCheckUpTopByRoomId(room.getId());
 
         return RoomResponseByUserDTO.builder()
                 .name(room.getName())

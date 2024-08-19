@@ -2,6 +2,7 @@ package com.fisa.study.management.domain.snapshot.service;
 
 import com.fisa.study.management.domain.room.entity.Room;
 import com.fisa.study.management.domain.room.repository.RoomRepository;
+import com.fisa.study.management.domain.room.service.RoomService;
 import com.fisa.study.management.domain.snapshot.dto.SendSnapshotDTO;
 import com.fisa.study.management.domain.snapshot.dto.RegSnapshotDTO;
 import com.fisa.study.management.domain.snapshot.entity.Snapshot;
@@ -23,15 +24,15 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SnapshotService {
     private final SnapshotRepository snapshotRepository;
-    private final RoomRepository roomRepository;
+    private final RoomService roomService;
 
     public List<SendSnapshotDTO> getSnapshotAll(UUID uuid)  {
-        Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
+        Room room= roomService.getRoomByUUID(uuid);
         return snapshotRepository.findByRoomId(room.getId()).stream().map(this::EntityToSendSnapshotDTO).collect(Collectors.toList());
     }
 
     public String regSnapshot(Long userId,UUID uuid, RegSnapshotDTO regSnapshotDTO) throws IllegalAccessException {
-        Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
+        Room room= roomService.getRoomByUUID(uuid);
         if (!Objects.equals(room.getMember().getId(), userId)) {
             throw new IllegalAccessException("권한이 없습니다.");
         }
@@ -39,7 +40,7 @@ public class SnapshotService {
         return "스냅샷 등록완료";
     }
     public SendSnapshotDTO getLastOne(UUID uuid) {
-        Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
+        Room room= roomService.getRoomByUUID(uuid);
         Snapshot snapshot= snapshotRepository.findTopByRoomIdOrderByIdDesc(room.getId());
         return SendSnapshotDTO.builder()
                 .content(snapshot.getContent())
