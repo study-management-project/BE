@@ -24,15 +24,15 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SnapshotService {
     private final SnapshotRepository snapshotRepository;
-    private final RoomService roomService;
+    private final RoomRepository roomRepository;
 
     public List<SendSnapshotDTO> getSnapshotAll(UUID uuid)  {
-        Room room= roomService.getRoomByUUID(uuid);
+        Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
         return snapshotRepository.findByRoomId(room.getId()).stream().map(this::EntityToSendSnapshotDTO).collect(Collectors.toList());
     }
 
     public LocalDateTime regSnapshot(Long userId, RegSnapshotDTO dto) throws IllegalAccessException {
-        Room room= roomService.getRoomByUUID(dto.getUuid());
+        Room room= roomRepository.findByUuid(dto.getUuid()).orElseThrow(() -> new EntityNotFoundException("Room not found"));
         if (!Objects.equals(room.getMember().getId(), userId)) {
             throw new IllegalAccessException("권한이 없습니다.");
         }
@@ -40,7 +40,7 @@ public class SnapshotService {
         return snapshot.getCreatedDate();
     }
     public SendSnapshotDTO getLastOne(UUID uuid) {
-        Room room= roomService.getRoomByUUID(uuid);
+        Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
         Snapshot snapshot= snapshotRepository.findTopByRoomIdOrderByIdDesc(room.getId());
         return SendSnapshotDTO.builder()
                 .content(snapshot.getContent())

@@ -22,14 +22,14 @@ import java.util.UUID;
 @Slf4j
 public class CheckUpService {
     private final CheckUpRepository checkUpRepository;
-    private final RoomService roomService;
+    private final RoomRepository roomRepository;
 
     public CheckUp getCheckUpTopByRoomId(Long roomId){
         return checkUpRepository.findTopByRoomIdOrderByIdDesc(roomId);
     }
 
     public Long registerCheckUpForRoom(Long userId, UUID uuid, ReceiveCheckUpDTO receiveCheckUpDTO) throws Exception {
-        Room room= roomService.getRoomByUUID(uuid);
+        Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
         if (!Objects.equals(room.getMember().getId(), userId)) {
             throw new IllegalAccessException("권한이 없습니다.");
         }
@@ -38,7 +38,7 @@ public class CheckUpService {
 
 
     public SendCheckUpDTO getCheckUpResult(Long userId,UUID uuid,Long checkupId) throws IllegalAccessException {
-        Room room= roomService.getRoomByUUID(uuid);
+        Room room=roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
         if (!Objects.equals(room.getMember().getId(), userId)) {
             throw new IllegalAccessException("권한이 없습니다.");
         }
@@ -49,14 +49,14 @@ public class CheckUpService {
     }
     public String resentCheckUpOIncrease(UUID uuid)  {
 
-        Room room= roomService.getRoomByUUID(uuid);
+        Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
         CheckUp checkUp= checkUpRepository.findTopByRoomIdOrderByIdDesc(room.getId());
         checkUp.addO();
         checkUpRepository.save(checkUp);
         return "O증가 성공";
     }
     public String resentCheckUpXIncrease(UUID uuid)  {
-        Room room= roomService.getRoomByUUID(uuid);
+        Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
         CheckUp checkUp= checkUpRepository.findTopByRoomIdOrderByIdDesc(room.getId());
         checkUp.addX();
         checkUpRepository.save(checkUp);

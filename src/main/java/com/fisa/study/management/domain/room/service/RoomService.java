@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 public class RoomService {
     private final RoomRepository roomRepository;
     private final MemberRepository memberRepository;
-    private final CheckUpService checkUpService;
+    private final CheckUpRepository checkUpRepository;
 
     public Room getRoomByUUID(UUID uuid){
         return roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
@@ -79,7 +79,7 @@ public class RoomService {
         List<CommentDTO> commentDTOS = room2.getCommentList().stream()
                 .map(this::CommentEntityToDTO).toList();
 
-        CheckUp checkUp = checkUpService.getCheckUpTopByRoomId(room.getId());
+        CheckUp checkUp = checkUpRepository.findTopByRoomIdOrderByIdDesc(room.getId());
 
         return RoomResponseByUserDTO.builder()
                 .name(room.getName())

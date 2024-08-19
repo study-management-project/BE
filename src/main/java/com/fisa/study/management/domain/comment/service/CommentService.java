@@ -26,11 +26,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CommentService {
     private final CommentRepository commentRepository;
-    private final RoomService roomService;
+
     private final RoomRepository roomRepository;
 
     public List<CommentDTO> getAllCommentByRoomId(UUID uuid)  {
-        Room room= roomService.getRoomByUUID(uuid);
+        Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
         List<Comment> commentList = commentRepository.findAllByRoomIdOrderByIdDesc(room.getId());
         return commentList.stream().map(this::EntityToDTO).collect(Collectors.toList());
     }
