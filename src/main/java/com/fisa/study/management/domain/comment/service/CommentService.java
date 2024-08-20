@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class CommentService {
     private final CommentRepository commentRepository;
-
     private final RoomRepository roomRepository;
 
     public List<CommentDTO> getAllCommentByRoomId(UUID uuid)  {

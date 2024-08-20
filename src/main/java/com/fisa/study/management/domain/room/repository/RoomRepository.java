@@ -27,7 +27,5 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
 
     @Query("SELECT r FROM Room r LEFT JOIN FETCH r.commentList WHERE r.uuid = :uuid")
     Optional<Room> findByUuidWithComments(@Param("uuid") UUID uuid);
-
-
 }
 

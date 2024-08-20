@@ -29,8 +29,11 @@ public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
         HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
         HttpSession session = request.getSession(false);
 
+        System.out.println(session.getAttribute(SessionConst.LOGIN_MEMBER));
         if (session == null) {
             return null;
+        } else {
+            System.out.println(session.getAttribute(SessionConst.LOGIN_MEMBER));
         }
 
         return session.getAttribute(SessionConst.LOGIN_MEMBER);
