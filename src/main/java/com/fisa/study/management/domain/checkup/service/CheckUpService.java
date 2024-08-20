@@ -25,7 +25,7 @@ public class CheckUpService {
     private final RoomRepository roomRepository;
 
     public CheckUp getCheckUpTopByRoomId(Long roomId){
-        return checkUpRepository.findTopByRoomIdOrderByIdDesc(roomId);
+        return checkUpRepository.findTopByRoomIdOrderByIdDesc(roomId).orElseThrow(() -> new EntityNotFoundException("checkup not found"));
     }
 
     public Long registerCheckUpForRoom(Long userId, UUID uuid, ReceiveCheckUpDTO receiveCheckUpDTO) throws Exception {
@@ -50,14 +50,14 @@ public class CheckUpService {
     public String resentCheckUpOIncrease(UUID uuid)  {
 
         Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
-        CheckUp checkUp= checkUpRepository.findTopByRoomIdOrderByIdDesc(room.getId());
+        CheckUp checkUp= checkUpRepository.findTopByRoomIdOrderByIdDesc(room.getId()).orElseThrow(() -> new EntityNotFoundException("Checkup not found"));
         checkUp.addO();
         checkUpRepository.save(checkUp);
         return "O증가 성공";
     }
     public String resentCheckUpXIncrease(UUID uuid)  {
         Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
-        CheckUp checkUp= checkUpRepository.findTopByRoomIdOrderByIdDesc(room.getId());
+        CheckUp checkUp= checkUpRepository.findTopByRoomIdOrderByIdDesc(room.getId()).orElseThrow(() -> new EntityNotFoundException("Checkup not found"));
         checkUp.addX();
         checkUpRepository.save(checkUp);
         return "X증가 성공";

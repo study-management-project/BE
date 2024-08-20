@@ -79,15 +79,22 @@ public class RoomService {
         List<CommentDTO> commentDTOS = room2.getCommentList().stream()
                 .map(this::CommentEntityToDTO).toList();
 
-        CheckUp checkUp = checkUpRepository.findTopByRoomIdOrderByIdDesc(room.getId());
-
+        Optional<CheckUp> _checkUp = checkUpRepository.findTopByRoomIdOrderByIdDesc(room.getId());
+        ResponseFirstCheckUpDTO checkUpDTO = null;
+        if (_checkUp.isPresent()){
+            checkUpDTO= CheckUpEntityToDTO(_checkUp.get());
+        }else {
+            checkUpDTO= ResponseFirstCheckUpDTO.builder()
+                    .title("현재 질문이 없습니다")
+                    .build();
+        }
         return RoomResponseByUserDTO.builder()
                 .name(room.getName())
                 .description(room.getDescription())
                 .content(room.getContent())
                 .snapshotList(sendSnapshotDTOS)
                 .commentList(commentDTOS)
-                .checkUp(CheckUpEntityToDTO(checkUp))
+                .checkUp(checkUpDTO)
                 .build();
     }
 
