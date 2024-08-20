@@ -56,8 +56,8 @@ public class RoomService {
         }
         Member member = optionalMember.get();
         Room room = roomRequestDTO.toEntity(member);
-        roomRepository.save(room);
-        return "성공";
+        Room savedRoom = roomRepository.save(room);
+        return savedRoom.getUuid().toString();
     }
 
     public Room updateRoom(UUID uuid, String content) {
