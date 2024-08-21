@@ -15,22 +15,23 @@ import com.fisa.study.management.domain.snapshot.dto.RegSnapshotDTO;
 import com.fisa.study.management.domain.snapshot.service.SnapshotService;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.sql.DataSource;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @SpringBootTest
 @Transactional
 @Rollback(value = false)
 @Slf4j
+@TestInstance(TestInstance.Lifecycle.PER_CLASS) // @BeforeAll을 인스턴스 메서드로 사용하기 위함
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class InitDummyDataTest {
 
@@ -61,6 +62,26 @@ public class InitDummyDataTest {
     private UUID uuid = UUID.fromString("bc31c700-8318-46a9-b6aa-bed717ba1663");
 
     private Long userId = 1L;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @BeforeAll
+    public void clearDatabase() {
+        // 외래 키 제약 조건 비활성화
+        jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 0;");
+
+        // 모든 테이블 이름 가져오기
+        List<String> tableNames = jdbcTemplate.queryForList("SHOW TABLES;", String.class);
+
+        // 각 테이블에 대해 TRUNCATE TABLE 실행
+        for (String tableName : tableNames) {
+            jdbcTemplate.execute("TRUNCATE TABLE " + tableName + ";");
+        }
+
+        // 외래 키 제약 조건 활성화
+        jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 1;");
+    }
 
     @Test
     @Order(1)
@@ -99,13 +120,15 @@ public class InitDummyDataTest {
     @Test
     @Order(3)
     public void insertSnapshot() throws IllegalAccessException {
-        RegSnapshotDTO dto = RegSnapshotDTO.builder()
-                .uuid(uuid)
-                .content("Select * from todo;")
-                .createDate(LocalDateTime.now())
-                .build();
-
-        snapshotService.regSnapshot(userId, dto);
+        for (int i = 1; i <= 3; i++) {
+            RegSnapshotDTO dto = RegSnapshotDTO.builder()
+                    .uuid(uuid)
+                    .title("SnapShot " + i)
+                    .content("SnapShot Content " + i)
+                    .createDate(LocalDateTime.now())
+                    .build();
+            snapshotService.regSnapshot(userId, dto);
+        }
         log.info("Order 3");
     }
 
@@ -123,10 +146,13 @@ public class InitDummyDataTest {
     @Test
     @Order(5)
     public void insertComment(){
-        CommentDTO dto= CommentDTO.builder()
-                .uuid(uuid)
-                .content("테스트용 코멘트")
-                .build();
-        commentService.regCommentByRoomId(dto);
+        for (int i = 1; i <= 3; i++) {
+            CommentDTO dto= CommentDTO.builder()
+                    .uuid(uuid)
+                    .content("테스트용 코멘트")
+                    .build();
+            commentService.regCommentByRoomId(dto);
+        }
+        log.info("Order 5");
     }
 }
