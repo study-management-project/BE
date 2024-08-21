@@ -102,6 +102,7 @@ public class RoomService {
 
     SendSnapshotDTO EntityToSendSnapshotDTO(Snapshot snapshot){
         return SendSnapshotDTO.builder()
+                .title(snapshot.getTitle())
                 .content(snapshot.getContent())
                 .createDate(snapshot.getCreatedDate())
                 .build();

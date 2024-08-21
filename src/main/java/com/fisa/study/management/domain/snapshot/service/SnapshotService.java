@@ -2,7 +2,6 @@ package com.fisa.study.management.domain.snapshot.service;
 
 import com.fisa.study.management.domain.room.entity.Room;
 import com.fisa.study.management.domain.room.repository.RoomRepository;
-import com.fisa.study.management.domain.room.service.RoomService;
 import com.fisa.study.management.domain.snapshot.dto.SendSnapshotDTO;
 import com.fisa.study.management.domain.snapshot.dto.RegSnapshotDTO;
 import com.fisa.study.management.domain.snapshot.entity.Snapshot;
@@ -12,11 +11,9 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 @Transactional
@@ -39,23 +36,18 @@ public class SnapshotService {
         Snapshot snapshot = snapshotRepository.save(regSnapshotDTOToEntity(room, dto));
         return snapshot.getCreatedDate();
     }
-    public SendSnapshotDTO getLastOne(UUID uuid) {
-        Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
-        Snapshot snapshot= snapshotRepository.findTopByRoomIdOrderByIdDesc(room.getId());
-        return SendSnapshotDTO.builder()
-                .content(snapshot.getContent())
-                .createDate(snapshot.getCreatedDate())
-                .build();
-    }
+
     SendSnapshotDTO EntityToSendSnapshotDTO(Snapshot snapshot){
         return SendSnapshotDTO.builder()
                 .content(snapshot.getContent())
                 .createDate(snapshot.getCreatedDate())
                 .build();
     }
+
     Snapshot regSnapshotDTOToEntity(Room room, RegSnapshotDTO regSnapshotDTO){
         Snapshot snapshot= Snapshot.builder()
                 .content(regSnapshotDTO.getContent())
+                .title(regSnapshotDTO.getTitle())
                 .room(room)
                 .build();
         snapshot.setRoom(room);

@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SendSnapshotDTO {
+    private String title;
     private String content;
     private LocalDateTime createDate;
 }

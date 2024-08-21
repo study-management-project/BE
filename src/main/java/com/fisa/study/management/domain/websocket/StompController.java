@@ -62,12 +62,14 @@ public class StompController {
     @MessageMapping("/share-comment")
     public void shareComment(@Payload CommentDTO dto) {
         commentService.regCommentByRoomId(dto);
+        log.info(dto.toString());
         sendingOperations.convertAndSend("/topic/" + dto.getUuid() + "/comment", dto.getContent());
     }
 
     @MessageMapping("/share-snapshot")
     public void shareSnapshot(@Login Long userId, @Payload RegSnapshotDTO dto) throws IllegalAccessException {
         snapshotService.regSnapshot(userId, dto);
+
         sendingOperations.convertAndSend("/topic/" + dto.getUuid() + "/snapshot", dto);
     }
 }
