@@ -42,22 +42,5 @@ public class CommentService {
                 .build();
         comment.setRoom(room);
         return comment;
-
     }
-
-    //    public List<Comment> getAllCommentFromRoom(Long roomId){
-//        return commentRepository.findByRoomId(roomId);
-//    }
-//    public ResponseEntity<Comment> createComment(Long roomId,CommentDTO commentDTO) {
-//
-//        Comment comment= dtoToEntityWithId(roomId,commentDTO);
-//        return ResponseEntity.ok(commentRepository.save(comment));
-//    }
-//
-//    public List<Comment> getCommentsByRoomIdAndSelectDate(Long id, LocalDate selectDate){
-//
-//        return commentRepository.findByRoomIdAndDate(id,selectDate);
-//    }
-
-
 }

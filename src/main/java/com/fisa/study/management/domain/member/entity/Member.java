@@ -35,9 +35,4 @@ public class Member{
     @OneToMany(mappedBy = "member",fetch = FetchType.LAZY)
     @Builder.Default
     private List<Room> roomList= new ArrayList<>();
-
-    public String getRoleKey(){
-        return this.role.getKey();
-    }
-
 }

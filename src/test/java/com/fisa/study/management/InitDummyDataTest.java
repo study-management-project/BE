@@ -1,6 +1,6 @@
 package com.fisa.study.management;
 
-import com.fisa.study.management.domain.checkup.dto.ReceiveCheckUpDTO;
+import com.fisa.study.management.domain.checkup.dto.CheckUpDTO;
 import com.fisa.study.management.domain.checkup.service.CheckUpService;
 import com.fisa.study.management.domain.comment.dto.CommentDTO;
 import com.fisa.study.management.domain.comment.service.CommentService;
@@ -22,8 +22,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.sql.DataSource;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -119,26 +117,27 @@ public class InitDummyDataTest {
 
     @Test
     @Order(3)
-    public void insertSnapshot() throws IllegalAccessException {
+    public void insertSnapshot() {
         for (int i = 1; i <= 3; i++) {
             RegSnapshotDTO dto = RegSnapshotDTO.builder()
                     .uuid(uuid)
                     .title("SnapShot " + i)
                     .content("SnapShot Content " + i)
                     .build();
-            snapshotService.regSnapshot(userId, dto);
+            snapshotService.regSnapshot(dto);
         }
         log.info("Order 3");
     }
 
     @Test
     @Order(4)
-    public void insertCheckup() throws Exception {
-        ReceiveCheckUpDTO dto = ReceiveCheckUpDTO.builder()
+    public void insertCheckup() {
+        CheckUpDTO dto = CheckUpDTO.builder()
+                .uuid(uuid)
                 .title("test용 checkup")
                 .build();
 
-        checkUpService.registerCheckUpForRoom(userId, uuid, dto);
+        checkUpService.registerCheckUpForRoom(dto);
         log.info("Order 4");
     }
 

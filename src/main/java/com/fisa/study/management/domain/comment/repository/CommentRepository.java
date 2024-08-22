@@ -11,11 +11,4 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment,Long> {
-    //    List<Comment> findByRoomId(Long roomId);
-//    @Query("SELECT c FROM Comment c WHERE c.room = :room AND  = :selectDate")
-//    List<Comment> findByRoomIdAndDate( Long roomId, LocalDate selectDate);
-
-//    @Query("select c from Comment c where c.room.id= :room_id order by c.room.id desc ")
-    List<Comment> findAllByRoomIdOrderByIdDesc(Long roomId);
-
 }
