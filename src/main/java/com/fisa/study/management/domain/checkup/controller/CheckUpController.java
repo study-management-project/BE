@@ -20,10 +20,9 @@ public class CheckUpController {
     private final CheckUpService checkUpService;
 
     // checkup 등록
-    //login
+    // login
     @PostMapping("/register")
     public Long registerCheckUpForRoom(@Login Long userId, @PathVariable UUID uuid, @RequestBody ReceiveCheckUpDTO receiveCheckUpDTO) throws Exception {
-        log.info(receiveCheckUpDTO.toString());
         return checkUpService.registerCheckUpForRoom(userId, uuid, receiveCheckUpDTO);
     }
 
@@ -32,7 +31,6 @@ public class CheckUpController {
     @GetMapping("/endTime/{checkupId}")
     public SendCheckUpDTO sendCheckUpResult(@Login Long userId, @PathVariable UUID uuid, @PathVariable Long checkupId)throws Exception{
         return checkUpService.getCheckUpResult(userId,uuid,checkupId);
-
     }
 
 

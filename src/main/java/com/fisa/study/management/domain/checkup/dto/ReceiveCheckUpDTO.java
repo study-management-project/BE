@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class ReceiveCheckUpDTO {
-    private String title ;
+    private String title;
 }

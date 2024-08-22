@@ -28,19 +28,12 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final RoomRepository roomRepository;
 
-    public List<CommentDTO> getAllCommentByRoomId(UUID uuid)  {
-        Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
-        List<Comment> commentList = commentRepository.findAllByRoomIdOrderByIdDesc(room.getId());
-        return commentList.stream().map(this::EntityToDTO).collect(Collectors.toList());
-    }
-
     public String regCommentByRoomId(CommentDTO commentDTO)  {
         Room room = roomRepository.findByUuid(commentDTO.getUuid())
                 .orElseThrow(() -> new EntityNotFoundException("Room Not Found"));
         commentRepository.save(DTOToEntityWithRoom(room,commentDTO));
         return "코멘트 등록 성공";
     }
-
 
     Comment DTOToEntityWithRoom(Room room,CommentDTO commentDTO){
         Comment comment= Comment.builder()
@@ -50,11 +43,6 @@ public class CommentService {
         comment.setRoom(room);
         return comment;
 
-    }
-    CommentDTO EntityToDTO(Comment comment){
-        return CommentDTO.builder()
-                .content(comment.getContent())
-                .build();
     }
 
     //    public List<Comment> getAllCommentFromRoom(Long roomId){

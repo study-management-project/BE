@@ -21,7 +21,6 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-//                .allowedOriginPatterns("*")
                 .allowedOriginPatterns("*")
                 .allowedMethods("*")
                 .allowedHeaders("*")
@@ -32,6 +31,9 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LoginCheckInterceptor())
                 .order(1)
-                .addPathPatterns("/rooms/**", "/room", "/room/**/snapshot/register");
+                .addPathPatterns("/rooms/**", "/room",
+                        "/room/**/snapshot/register",
+                        "/room/**/checkup/register",
+                        "/check");
     }
 }

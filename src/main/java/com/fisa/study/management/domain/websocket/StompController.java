@@ -6,6 +6,8 @@ import com.fisa.study.management.domain.room.dto.CodeDTO;
 import com.fisa.study.management.domain.room.entity.Room;
 import com.fisa.study.management.domain.room.service.RoomService;
 import com.fisa.study.management.domain.snapshot.dto.RegSnapshotDTO;
+import com.fisa.study.management.domain.snapshot.dto.ResSnapshotDTO;
+import com.fisa.study.management.domain.snapshot.entity.Snapshot;
 import com.fisa.study.management.domain.snapshot.service.SnapshotService;
 import com.fisa.study.management.global.argumentresolver.Login;
 import lombok.RequiredArgsConstructor;
@@ -62,12 +64,14 @@ public class StompController {
     @MessageMapping("/share-comment")
     public void shareComment(@Payload CommentDTO dto) {
         commentService.regCommentByRoomId(dto);
+        log.info(dto.toString());
         sendingOperations.convertAndSend("/topic/" + dto.getUuid() + "/comment", dto.getContent());
     }
 
     @MessageMapping("/share-snapshot")
     public void shareSnapshot(@Login Long userId, @Payload RegSnapshotDTO dto) throws IllegalAccessException {
-        snapshotService.regSnapshot(userId, dto);
-        sendingOperations.convertAndSend("/topic/" + dto.getUuid() + "/snapshot", dto);
+        Snapshot snapshot = snapshotService.regSnapshot(userId, dto);
+        ResSnapshotDTO resSnapshotDTO = snapshotService.entityToSendSnapshotDTO(snapshot);
+        sendingOperations.convertAndSend("/topic/" + dto.getUuid() + "/snapshot", resSnapshotDTO);
     }
 }
