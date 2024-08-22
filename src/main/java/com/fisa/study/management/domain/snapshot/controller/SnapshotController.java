@@ -19,14 +19,13 @@ import java.util.UUID;
 public class SnapshotController {
     private final SnapshotService snapshotService;
 
-    @GetMapping
-    public List<ResSnapshotDTO> getSnapshotsByRoomId(@PathVariable UUID uuid) {
-        return snapshotService.findCreatedDateByRoomIdAndDay(uuid);
+    @GetMapping("/{year}/{month}")
+    public Integer[] sendSnapshotByDate(@PathVariable UUID uuid,@PathVariable int year,@PathVariable int month) {
+        return snapshotService.getSnapshotDateByDate(uuid,year,month);
     }
-
-    @GetMapping("/{date}")
-    public Integer[] sendSnapshotByDate(@PathVariable UUID uuid,@PathVariable LocalDate date) {
-        return snapshotService.getSnapshotDateByDate(uuid,date);
+    @GetMapping("/{year}/{month}/{day}")
+    public List<ResSnapshotDTO> sendSnapshotByDay(@PathVariable UUID uuid, @PathVariable int year, @PathVariable int month, @PathVariable int day) {
+        return snapshotService.findSnapShotByRoomIdAndDay(uuid,year,month,day);
     }
 }
 

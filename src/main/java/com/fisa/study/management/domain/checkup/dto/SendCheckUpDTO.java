@@ -13,5 +13,4 @@ public class SendCheckUpDTO {
 
     private int O;
     private int X;
-
 }

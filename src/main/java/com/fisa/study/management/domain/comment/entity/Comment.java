@@ -36,6 +36,5 @@ public class Comment extends BaseTimeEntity {
         this.room=room;
         room.getCommentList().add(this);
     }
-
 }
 

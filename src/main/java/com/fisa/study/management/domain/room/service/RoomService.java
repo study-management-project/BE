@@ -1,6 +1,6 @@
 package com.fisa.study.management.domain.room.service;
 
-import com.fisa.study.management.domain.checkup.dto.ResponseFirstCheckUpDTO;
+import com.fisa.study.management.domain.checkup.dto.CheckUpDTO;
 import com.fisa.study.management.domain.checkup.entity.CheckUp;
 import com.fisa.study.management.domain.checkup.repository.CheckUpRepository;
 import com.fisa.study.management.domain.comment.dto.CommentDTO;
@@ -15,18 +15,16 @@ import com.fisa.study.management.domain.room.repository.RoomRepository;
 import com.fisa.study.management.domain.snapshot.dto.ResSnapshotDTO;
 import com.fisa.study.management.domain.snapshot.entity.Snapshot;
 import com.fisa.study.management.domain.snapshot.repository.SnapshotRepository;
-import com.fisa.study.management.domain.snapshot.service.SnapshotService;
-import com.fisa.study.management.global.argumentresolver.Login;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -70,30 +68,30 @@ public class RoomService {
 
         Room room = roomRepository.findByUuidWithComments(uuid)
                 .orElseThrow(() -> new EntityNotFoundException("Room not found"));
-
-        List<ResSnapshotDTO> resSnapshotDTOS = snapshotRepository.findCreatedDateByRoomIdAndDay(room.getId(), LocalDate.now()).stream()
-                .map(this::EntityToSendSnapshotDTO).toList();
+        LocalDate now =LocalDate.now();
+        int year= now.getYear();
+        int month= now.getMonthValue();
+        int day= now.getDayOfMonth();
         List<String> commentDTOS = room.getCommentList()
                 .stream()
                 .map(Comment::getContent).
                 toList();
 
-        Optional<CheckUp> _checkUp = checkUpRepository.findTopByRoomIdOrderByIdDesc(room.getId());
-        ResponseFirstCheckUpDTO checkUpDTO = null;
-        if (_checkUp.isPresent()){
-            checkUpDTO= CheckUpEntityToDTO(_checkUp.get());
-        }else {
-            checkUpDTO= ResponseFirstCheckUpDTO.builder()
-                    .title("현재 질문이 없습니다")
-                    .build();
-        }
+        List<ResSnapshotDTO> resSnapshotDTOS =
+                snapshotRepository.findCreatedDateByRoomIdAndDay(room.getId(), year,month,day)
+                .stream().map(this::EntityToSendSnapshotDTO).toList();
+
+        Integer[] dayList=
+                snapshotRepository.findDistinctCreatedDatesByRoomIdAndMonth(room.getId(),year,month)
+                .stream().map(LocalDateTime::getDayOfMonth).distinct().toArray(Integer[]::new);
+
         return RoomResponseByUserDTO.builder()
                 .name(room.getName())
                 .description(room.getDescription())
                 .content(room.getContent())
                 .snapshotList(resSnapshotDTOS)
                 .commentList(commentDTOS)
-                .checkUp(checkUpDTO)
+                .haveSnapshotDate(dayList)
                 .build();
     }
 
@@ -104,15 +102,4 @@ public class RoomService {
                 .createdDate(snapshot.getCreatedDate())
                 .build();
     }
-    CommentDTO CommentEntityToDTO(Comment comment){
-        return CommentDTO.builder()
-                .content(comment.getContent())
-                .build();
-    }
-    ResponseFirstCheckUpDTO CheckUpEntityToDTO(CheckUp checkUp){
-        return  ResponseFirstCheckUpDTO.builder()
-                .title(checkUp.getTitle())
-                .build();
-    }
-
 }
