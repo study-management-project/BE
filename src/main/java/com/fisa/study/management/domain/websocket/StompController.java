@@ -69,8 +69,8 @@ public class StompController {
     }
 
     @MessageMapping("/share-snapshot")
-    public void shareSnapshot(@Login Long userId, @Payload RegSnapshotDTO dto) throws IllegalAccessException {
-        Snapshot snapshot = snapshotService.regSnapshot(userId, dto);
+    public void shareSnapshot(@Payload RegSnapshotDTO dto) {
+        Snapshot snapshot = snapshotService.regSnapshot(dto);
         ResSnapshotDTO resSnapshotDTO = snapshotService.entityToSendSnapshotDTO(snapshot);
         sendingOperations.convertAndSend("/topic/" + dto.getUuid() + "/snapshot", resSnapshotDTO);
     }

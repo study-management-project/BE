@@ -30,11 +30,8 @@ public class SnapshotService {
                 .map(this::entityToSendSnapshotDTO).collect(Collectors.toList());
     }
 
-    public Snapshot regSnapshot(Long userId, RegSnapshotDTO dto) throws IllegalAccessException {
+    public Snapshot regSnapshot(RegSnapshotDTO dto) {
         Room room= roomRepository.findByUuid(dto.getUuid()).orElseThrow(() -> new EntityNotFoundException("Room not found"));
-        if (!Objects.equals(room.getMember().getId(), userId)) {
-            throw new IllegalAccessException("권한이 없습니다.");
-        }
         return snapshotRepository.save(regSnapshotDTOToEntity(room, dto));
     }
 

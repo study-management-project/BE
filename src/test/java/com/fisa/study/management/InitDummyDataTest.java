@@ -126,7 +126,7 @@ public class InitDummyDataTest {
                     .title("SnapShot " + i)
                     .content("SnapShot Content " + i)
                     .build();
-            snapshotService.regSnapshot(userId, dto);
+            snapshotService.regSnapshot(dto);
         }
         log.info("Order 3");
     }
