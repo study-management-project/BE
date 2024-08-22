@@ -1,5 +1,7 @@
 package com.fisa.study.management.domain.websocket;
 
+import com.fisa.study.management.domain.checkup.dto.CheckUpDTO;
+import com.fisa.study.management.domain.checkup.service.CheckUpService;
 import com.fisa.study.management.domain.comment.dto.CommentDTO;
 import com.fisa.study.management.domain.comment.service.CommentService;
 import com.fisa.study.management.domain.room.dto.CodeDTO;
@@ -29,6 +31,7 @@ public class StompController {
     private final RoomService roomService;
     private final CommentService commentService;
     private final SnapshotService snapshotService;
+    private final CheckUpService checkUpService;
     private ConcurrentHashMap<UUID, String> cacheMap = new ConcurrentHashMap<>();
 
     @MessageMapping("/share-code")
@@ -76,9 +79,8 @@ public class StompController {
     }
 
     @MessageMapping("/share-checkup")
-    public void shareSnapshot(@Payload String title) {
-//        Snapshot snapshot = snapshotService.regSnapshot(dto);
-//        ResSnapshotDTO resSnapshotDTO = snapshotService.entityToSendSnapshotDTO(snapshot);
-//        sendingOperations.convertAndSend("/topic/" + dto.getUuid() + "/snapshot", title);
+    public void shareCheckUp(@Payload CheckUpDTO dto) {
+        checkUpService.registerCheckUpForRoom(dto);
+        sendingOperations.convertAndSend("/topic/" + dto.getUuid() + "/checkup", dto.getTitle());
     }
 }
