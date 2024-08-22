@@ -1,6 +1,6 @@
 package com.fisa.study.management.domain.room.service;
 
-import com.fisa.study.management.domain.checkup.dto.ResponseFirstCheckUpDTO;
+import com.fisa.study.management.domain.checkup.dto.ReceiveCheckUpDTO;
 import com.fisa.study.management.domain.checkup.entity.CheckUp;
 import com.fisa.study.management.domain.checkup.repository.CheckUpRepository;
 import com.fisa.study.management.domain.comment.dto.CommentDTO;
@@ -89,11 +89,11 @@ public class RoomService {
                 .stream().map(LocalDateTime::getDayOfMonth).distinct().toArray(Integer[]::new);
 
         Optional<CheckUp> _checkUp = checkUpRepository.findTopByRoomIdOrderByIdDesc(room.getId());
-        ResponseFirstCheckUpDTO checkUpDTO = null;
+        ReceiveCheckUpDTO checkUpDTO = null;
         if (_checkUp.isPresent()){
             checkUpDTO= CheckUpEntityToDTO(_checkUp.get());
         }else {
-            checkUpDTO= ResponseFirstCheckUpDTO.builder()
+            checkUpDTO= ReceiveCheckUpDTO.builder()
                     .title("현재 질문이 없습니다")
                     .build();
         }
@@ -120,8 +120,8 @@ public class RoomService {
                 .content(comment.getContent())
                 .build();
     }
-    ResponseFirstCheckUpDTO CheckUpEntityToDTO(CheckUp checkUp){
-        return  ResponseFirstCheckUpDTO.builder()
+    ReceiveCheckUpDTO CheckUpEntityToDTO(CheckUp checkUp){
+        return  ReceiveCheckUpDTO.builder()
                 .title(checkUp.getTitle())
                 .build();
     }

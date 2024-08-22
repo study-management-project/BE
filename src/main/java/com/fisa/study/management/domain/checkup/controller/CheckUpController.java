@@ -19,12 +19,6 @@ import java.util.UUID;
 public class CheckUpController {
     private final CheckUpService checkUpService;
 
-    // checkup 등록
-    // login
-    @PostMapping("/register")
-    public Long registerCheckUpForRoom(@Login Long userId, @PathVariable UUID uuid, @RequestBody ReceiveCheckUpDTO receiveCheckUpDTO) throws Exception {
-        return checkUpService.registerCheckUpForRoom(userId, uuid, receiveCheckUpDTO);
-    }
 
     // ox 개수 반환
     //login
