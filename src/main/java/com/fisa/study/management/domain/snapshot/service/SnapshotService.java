@@ -23,14 +23,12 @@ public class SnapshotService {
     private final SnapshotRepository snapshotRepository;
     private final RoomRepository roomRepository;
 
-
-
     public Snapshot regSnapshot(RegSnapshotDTO dto) {
         Room room= roomRepository.findByUuid(dto.getUuid()).orElseThrow(() -> new EntityNotFoundException("Room not found"));
         return snapshotRepository.save(regSnapshotDTOToEntity(room, dto));
     }
 
-    public ResSnapshotDTO entityToSendSnapshotDTO(Snapshot snapshot){
+    public ResSnapshotDTO entityToSendSnapshotDTO(Snapshot snapshot) {
         return ResSnapshotDTO.builder()
                 .title(snapshot.getTitle())
                 .content(snapshot.getContent())
@@ -49,15 +47,18 @@ public class SnapshotService {
     public List<ResSnapshotDTO> findSnapShotByRoomIdAndDay(UUID uuid,int year,int month,int day)  {
         Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
         List<Snapshot> snapshots = snapshotRepository.findCreatedDateByRoomIdAndDay(room.getId(),year,month,day);
-        return snapshots.stream().map(this::EntityToSendSnapshotDTO).collect(Collectors.toList());
+        return snapshots.stream().map(this::EntityToResSnapShotDTO).collect(Collectors.toList());
     }
-    ResSnapshotDTO EntityToSendSnapshotDTO(Snapshot snapshot){
+
+    ResSnapshotDTO EntityToResSnapShotDTO(Snapshot snapshot) {
         return ResSnapshotDTO.builder()
+                .title(snapshot.getTitle())
                 .content(snapshot.getContent())
                 .createdDate(snapshot.getCreatedDate())
                 .build();
     }
-    Snapshot regSnapshotDTOToEntity(Room room, RegSnapshotDTO regSnapshotDTO){
+
+    Snapshot regSnapshotDTOToEntity(Room room, RegSnapshotDTO regSnapshotDTO) {
         Snapshot snapshot= Snapshot.builder()
                 .content(regSnapshotDTO.getContent())
                 .title(regSnapshotDTO.getTitle())
@@ -66,35 +67,4 @@ public class SnapshotService {
         snapshot.setRoom(room);
         return snapshot;
     }
-
-//    public List<LocalDate> getCreatedDatesByRoomId(Long roomId) {
-//        List<LocalDateTime> localDateTimes = snapshotRepository.findCreatedDateByRoom_Id(roomId);
-//        return localDateTimes.stream()
-//                .map(LocalDateTime::toLocalDate)
-//                .distinct()
-//                .collect(Collectors.toList());
-//    }
-//
-//    public List<SendSnapshotDTO> getSnapshotFromRoomSelectDate(Long roomId, LocalDate selectDate){
-//        Optional<Room> _room =roomRepository.findById(roomId);
-//        if (_room.isEmpty()){
-//            throw new Error("Room with ID " + roomId + " not found.");
-//        }
-//
-//        LocalDateTime startOfDay = selectDate.atStartOfDay();
-//        LocalDateTime endOfDay = selectDate.plusDays(1).atStartOfDay();
-//        List<Snapshot> snapshots =snapshotRepository.findSnapshotsByRoom_IdAndCreatedDateBetween(roomId,startOfDay,endOfDay);
-//        return snapshots.stream().map(this::EntityToSendSnapshotDTO).collect(Collectors.toList());
-//    }
-//public List<SendSnapshotDTO> getSnapshotFromRoomFirst(Long roomId){
-//    Optional<Room> _room =roomRepository.findById(roomId);
-//    if (_room.isEmpty()){
-//        throw new Error("Room with ID " + roomId + " not found.");
-//        //에러 처리 고민
-//    }
-//    LocalDateTime startOfDay = LocalDate.now().atStartOfDay();
-//    LocalDateTime endOfDay = startOfDay.plusDays(1);
-//    List<Snapshot> snapshots=snapshotRepository.findSnapshotsByRoom_IdAndCreatedDateBetween(roomId,startOfDay,endOfDay);
-//    return snapshots.stream().map(this::EntityToSendSnapshotDTO).collect(Collectors.toList());
-//}
 }
