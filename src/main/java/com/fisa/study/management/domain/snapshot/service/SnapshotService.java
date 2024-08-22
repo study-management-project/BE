@@ -14,10 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 @Transactional
 @Service
@@ -26,7 +23,7 @@ public class SnapshotService {
     private final SnapshotRepository snapshotRepository;
     private final RoomRepository roomRepository;
 
-    public List<ResSnapshotDTO> getSnapshotAll(UUID uuid)  {
+    public List<ResSnapshotDTO> findCreatedDateByRoomIdAndDay(UUID uuid)  {
         Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
         List<Snapshot> snapshots = snapshotRepository.findCreatedDateByRoomIdAndMonth(room.getId(),LocalDate.now());
         return snapshots.stream().map(this::EntityToSendSnapshotDTO).collect(Collectors.toList());
@@ -48,11 +45,15 @@ public class SnapshotService {
                 .build();
     }
 
-    public Integer[] getSnapshotByDate(UUID uuid, LocalDate date) {
+    public Integer[] getSnapshotDateByDate(UUID uuid, LocalDate date) {
         Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
         List<Snapshot> snapshots = snapshotRepository.findCreatedDateByRoomIdAndMonth(room.getId(),date);
-        return snapshots.stream().map(snapshot -> snapshot.getCreatedDate().getDayOfMonth()).toArray(Integer[]::new);
+        return snapshots.stream()
+                .map(snapshot -> snapshot.getCreatedDate().getDayOfMonth())
+                .distinct()
+                .toArray(Integer[]::new);
     }
+
     ResSnapshotDTO EntityToSendSnapshotDTO(Snapshot snapshot){
         return ResSnapshotDTO.builder()
                 .content(snapshot.getContent())

@@ -19,7 +19,11 @@ public interface SnapshotRepository extends JpaRepository<Snapshot,Long> {
             "and FUNCTION('MONTH', s.createdDate) = FUNCTION('MONTH', :localDate)"+
             "and FUNCTION('YEAR', s.createdDate) = FUNCTION('YEAR', :localDate) ")
     List<Snapshot> findCreatedDateByRoomIdAndMonth(@Param("roomId") Long roomId, @Param("localDate") LocalDate localDate);
-
+    @Query("select s from Snapshot s where s.room.id = :roomId " +
+            "and FUNCTION('MONTH', s.createdDate) = FUNCTION('MONTH', :localDate)"+
+            "and FUNCTION('YEAR', s.createdDate) = FUNCTION('YEAR', :localDate) "+
+            "and FUNCTION('DAY', s.createdDate) = FUNCTION('DAY', :localDate) ")
+    List<Snapshot> findCreatedDateByRoomIdAndDay(@Param("roomId") Long roomId, @Param("localDate") LocalDate localDate);
 //List<Snapshot> findSnapshotsByRoom_IdAndCreatedDateBetween(Long roomId, LocalDateTime startDate, LocalDateTime endDate);
 //@Query("select s from Snapshot s where s.room.id = :roomId and s.createdDate between :startDate and :endDate")
 //List<Snapshot> findSnapshotsByCreatedDate(Long roomId, LocalDateTime startDate, LocalDateTime endDate);

@@ -21,12 +21,12 @@ public class SnapshotController {
 
     @GetMapping
     public List<ResSnapshotDTO> getSnapshotsByRoomId(@PathVariable UUID uuid) {
-        return snapshotService.getSnapshotAll(uuid);
+        return snapshotService.findCreatedDateByRoomIdAndDay(uuid);
     }
 
     @GetMapping("/{date}")
     public Integer[] sendSnapshotByDate(@PathVariable UUID uuid,@PathVariable LocalDate date) {
-        return snapshotService.getSnapshotByDate(uuid,date);
+        return snapshotService.getSnapshotDateByDate(uuid,date);
     }
 }
 
