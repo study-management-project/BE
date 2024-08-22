@@ -119,14 +119,14 @@ public class InitDummyDataTest {
 
     @Test
     @Order(3)
-    public void insertSnapshot() throws IllegalAccessException {
+    public void insertSnapshot() {
         for (int i = 1; i <= 3; i++) {
             RegSnapshotDTO dto = RegSnapshotDTO.builder()
                     .uuid(uuid)
                     .title("SnapShot " + i)
                     .content("SnapShot Content " + i)
                     .build();
-            snapshotService.regSnapshot(userId, dto);
+            snapshotService.regSnapshot(dto);
         }
         log.info("Order 3");
     }

@@ -19,8 +19,6 @@ import java.util.UUID;
 public class SnapshotController {
     private final SnapshotService snapshotService;
 
-
-
     @GetMapping("/{year}/{month}")
     public Integer[] sendSnapshotByDate(@PathVariable UUID uuid,@PathVariable int year,@PathVariable int month) {
         return snapshotService.getSnapshotDateByDate(uuid,year,month);
