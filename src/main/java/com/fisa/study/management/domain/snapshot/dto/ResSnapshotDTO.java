@@ -8,8 +8,8 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SendSnapshotDTO {
+public class ResSnapshotDTO {
     private String title;
     private String content;
-    private LocalDateTime createDate;
+    private LocalDateTime createdDate;
 }

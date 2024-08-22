@@ -10,6 +10,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
+@ToString(exclude = {"password", "roomList"})
 @Builder
 @Entity
 public class Member{

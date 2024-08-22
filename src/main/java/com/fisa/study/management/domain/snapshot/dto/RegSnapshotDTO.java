@@ -16,5 +16,4 @@ public class RegSnapshotDTO {
     private UUID uuid;
     private String title;
     private String content;
-    private LocalDateTime createDate;
 }

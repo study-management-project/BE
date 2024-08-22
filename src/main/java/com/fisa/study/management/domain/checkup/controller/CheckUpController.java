@@ -23,7 +23,6 @@ public class CheckUpController {
     // login
     @PostMapping("/register")
     public Long registerCheckUpForRoom(@Login Long userId, @PathVariable UUID uuid, @RequestBody ReceiveCheckUpDTO receiveCheckUpDTO) throws Exception {
-        log.info(receiveCheckUpDTO.toString());
         return checkUpService.registerCheckUpForRoom(userId, uuid, receiveCheckUpDTO);
     }
 
