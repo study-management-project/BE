@@ -23,11 +23,7 @@ public class SnapshotService {
     private final SnapshotRepository snapshotRepository;
     private final RoomRepository roomRepository;
 
-    public List<ResSnapshotDTO> findCreatedDateByRoomIdAndDay(UUID uuid)  {
-        Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
-        List<Snapshot> snapshots = snapshotRepository.findCreatedDateByRoomIdAndMonth(room.getId(),LocalDate.now());
-        return snapshots.stream().map(this::EntityToSendSnapshotDTO).collect(Collectors.toList());
-    }
+
 
     public Snapshot regSnapshot(RegSnapshotDTO dto) {
         Room room= roomRepository.findByUuid(dto.getUuid()).orElseThrow(() -> new EntityNotFoundException("Room not found"));
@@ -42,15 +38,19 @@ public class SnapshotService {
                 .build();
     }
 
-    public Integer[] getSnapshotDateByDate(UUID uuid, LocalDate date) {
+    public Integer[] getSnapshotDateByDate(UUID uuid, int year,int month) {
         Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
-        List<Snapshot> snapshots = snapshotRepository.findCreatedDateByRoomIdAndMonth(room.getId(),date);
-        return snapshots.stream()
-                .map(snapshot -> snapshot.getCreatedDate().getDayOfMonth())
-                .distinct()
-                .toArray(Integer[]::new);
+        return  snapshotRepository
+                .findDistinctCreatedDatesByRoomIdAndMonth(room.getId(),year,month)
+                .stream().map(LocalDateTime::getDayOfMonth).distinct().toArray(Integer[]::new);
+
     }
 
+    public List<ResSnapshotDTO> findSnapShotByRoomIdAndDay(UUID uuid,int year,int month,int day)  {
+        Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
+        List<Snapshot> snapshots = snapshotRepository.findCreatedDateByRoomIdAndDay(room.getId(),year,month,day);
+        return snapshots.stream().map(this::EntityToSendSnapshotDTO).collect(Collectors.toList());
+    }
     ResSnapshotDTO EntityToSendSnapshotDTO(Snapshot snapshot){
         return ResSnapshotDTO.builder()
                 .content(snapshot.getContent())
