@@ -1,6 +1,13 @@
 spring:
   profiles:
     active: local
-    # local : local to local
-    # rasp : local to rasp
-    # rasp-local(jar 배포 시 사용) : rasp to rasp
+
+server:
+  servlet:
+    session:
+      cookie:
+        name: JSESSIONID
+        same-site: none
+        http-only: true
+        secure: true
+      timeout: 5h

@@ -1,11 +1,16 @@
 package com.fisa.study.management.domain.member.entity;
 
+import com.fisa.study.management.domain.room.entity.Room;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
+@ToString(exclude = {"password", "roomList"})
 @Builder
 @Entity
 public class Member{
@@ -26,6 +31,10 @@ public class Member{
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
+
+    @OneToMany(mappedBy = "member",fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<Room> roomList= new ArrayList<>();
 
     public String getRoleKey(){
         return this.role.getKey();
