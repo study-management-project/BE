@@ -131,12 +131,13 @@ public class InitDummyDataTest {
 
     @Test
     @Order(4)
-    public void insertCheckup() throws Exception {
+    public void insertCheckup() {
         CheckUpDTO dto = CheckUpDTO.builder()
+                .uuid(uuid)
                 .title("test용 checkup")
                 .build();
 
-        checkUpService.registerCheckUpForRoom(userId, uuid, dto);
+        checkUpService.registerCheckUpForRoom(dto);
         log.info("Order 4");
     }
 
