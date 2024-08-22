@@ -8,4 +8,6 @@ server:
       cookie:
         name: JSESSIONID
         same-site: none
+        http-only: true
+        secure: true
       timeout: 5h
