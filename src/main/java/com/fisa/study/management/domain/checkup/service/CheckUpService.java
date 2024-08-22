@@ -31,13 +31,13 @@ public class CheckUpService {
         return checkUpRepository.save(DTOToEntityWithRoom(room, checkUpDTO)).getId();
     }
 
-    public SendCheckUpDTO getCheckUpResult(Long userId,UUID uuid,Long checkupId) throws IllegalAccessException {
+    public SendCheckUpDTO getCheckUpResult(Long userId,UUID uuid) throws IllegalAccessException {
         Room room=roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
         if (!Objects.equals(room.getMember().getId(), userId)) {
             throw new IllegalAccessException("권한이 없습니다.");
         }
 
-        CheckUp checkUp= checkUpRepository.findById(checkupId).orElseThrow(() -> new EntityNotFoundException("Room not found"));
+        CheckUp checkUp= checkUpRepository.findTopByRoomUuidOrderByIdDesc(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
 
         return EntityToDTO(checkUp);
     }
