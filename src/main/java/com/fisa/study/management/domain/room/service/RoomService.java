@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -70,13 +71,22 @@ public class RoomService {
 
         Room room = roomRepository.findByUuidWithComments(uuid)
                 .orElseThrow(() -> new EntityNotFoundException("Room not found"));
-
-        List<ResSnapshotDTO> resSnapshotDTOS = snapshotRepository.findCreatedDateByRoomIdAndDay(room.getId(), LocalDate.now()).stream()
-                .map(this::EntityToSendSnapshotDTO).toList();
+        LocalDate now =LocalDate.now();
+        int year= now.getYear();
+        int month= now.getMonthValue();
+        int day= now.getDayOfMonth();
         List<String> commentDTOS = room.getCommentList()
                 .stream()
                 .map(Comment::getContent).
                 toList();
+
+        List<ResSnapshotDTO> resSnapshotDTOS =
+                snapshotRepository.findCreatedDateByRoomIdAndDay(room.getId(), year,month,day)
+                .stream().map(this::EntityToSendSnapshotDTO).toList();
+
+        Integer[] dayList=
+                snapshotRepository.findDistinctCreatedDatesByRoomIdAndMonth(room.getId(),year,month)
+                .stream().map(LocalDateTime::getDayOfMonth).distinct().toArray(Integer[]::new);
 
         Optional<CheckUp> _checkUp = checkUpRepository.findTopByRoomIdOrderByIdDesc(room.getId());
         ResponseFirstCheckUpDTO checkUpDTO = null;
@@ -93,6 +103,7 @@ public class RoomService {
                 .content(room.getContent())
                 .snapshotList(resSnapshotDTOS)
                 .commentList(commentDTOS)
+                .haveSnapshotDate(dayList)
                 .checkUp(checkUpDTO)
                 .build();
     }
