@@ -1,12 +1,11 @@
 package com.fisa.study.management.domain.checkup.service;
 
-import com.fisa.study.management.domain.checkup.dto.ReceiveCheckUpDTO;
+import com.fisa.study.management.domain.checkup.dto.CheckUpDTO;
 import com.fisa.study.management.domain.checkup.dto.SendCheckUpDTO;
 import com.fisa.study.management.domain.checkup.entity.CheckUp;
 import com.fisa.study.management.domain.checkup.repository.CheckUpRepository;
 import com.fisa.study.management.domain.room.entity.Room;
 import com.fisa.study.management.domain.room.repository.RoomRepository;
-import com.fisa.study.management.domain.room.service.RoomService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -28,12 +27,12 @@ public class CheckUpService {
         return checkUpRepository.findTopByRoomIdOrderByIdDesc(roomId).orElseThrow(() -> new EntityNotFoundException("checkup not found"));
     }
 
-    public Long registerCheckUpForRoom(Long userId, UUID uuid, ReceiveCheckUpDTO receiveCheckUpDTO) throws Exception {
+    public Long registerCheckUpForRoom(Long userId, UUID uuid, CheckUpDTO checkUpDTO) throws Exception {
         Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
         if (!Objects.equals(room.getMember().getId(), userId)) {
             throw new IllegalAccessException("권한이 없습니다.");
         }
-        return checkUpRepository.save(DTOToEntityWithRoom(room,receiveCheckUpDTO)).getId();
+        return checkUpRepository.save(DTOToEntityWithRoom(room, checkUpDTO)).getId();
     }
 
 
@@ -62,9 +61,9 @@ public class CheckUpService {
         checkUpRepository.save(checkUp);
         return "X증가 성공";
     }
-    CheckUp DTOToEntityWithRoom(Room room, ReceiveCheckUpDTO receiveCheckUpDTO){
+    CheckUp DTOToEntityWithRoom(Room room, CheckUpDTO checkUpDTO){
         CheckUp checkUp= CheckUp.builder()
-                .title(receiveCheckUpDTO.getTitle())
+                .title(checkUpDTO.getTitle())
                 .build();
         checkUp.setRoom(room);
         return checkUp;

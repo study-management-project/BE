@@ -11,7 +11,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ReceiveCheckUpDTO {
+public class CheckUpDTO {
     private UUID uuid;
     private String title;
 }

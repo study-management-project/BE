@@ -29,13 +29,6 @@ public interface SnapshotRepository extends JpaRepository<Snapshot,Long> {
             "WHERE s.room.id = :roomId " +
             "AND FUNCTION('MONTH', s.createdDate) = :month " +
             "AND FUNCTION('YEAR', s.createdDate) = :year")
-    List<LocalDateTime> findDistinctCreatedDatesByRoomIdAndMonth(@Param("roomId") Long roomId,
-                                                                 @Param("year") int year,
-                                                                 @Param("month") int month);
-//List<Snapshot> findSnapshotsByRoom_IdAndCreatedDateBetween(Long roomId, LocalDateTime startDate, LocalDateTime endDate);
-//@Query("select s from Snapshot s where s.room.id = :roomId and s.createdDate between :startDate and :endDate")
-//List<Snapshot> findSnapshotsByCreatedDate(Long roomId, LocalDateTime startDate, LocalDateTime endDate);
-
-//날짜를 integer 배열로
-
+    List<LocalDateTime> findDistinctCreatedDatesByRoomIdAndMonth
+            (@Param("roomId") Long roomId, @Param("year") int year,@Param("month") int month);
 }

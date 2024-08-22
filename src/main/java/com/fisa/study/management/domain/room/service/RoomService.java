@@ -1,6 +1,6 @@
 package com.fisa.study.management.domain.room.service;
 
-import com.fisa.study.management.domain.checkup.dto.ReceiveCheckUpDTO;
+import com.fisa.study.management.domain.checkup.dto.CheckUpDTO;
 import com.fisa.study.management.domain.checkup.entity.CheckUp;
 import com.fisa.study.management.domain.checkup.repository.CheckUpRepository;
 import com.fisa.study.management.domain.comment.dto.CommentDTO;
@@ -15,8 +15,6 @@ import com.fisa.study.management.domain.room.repository.RoomRepository;
 import com.fisa.study.management.domain.snapshot.dto.ResSnapshotDTO;
 import com.fisa.study.management.domain.snapshot.entity.Snapshot;
 import com.fisa.study.management.domain.snapshot.repository.SnapshotRepository;
-import com.fisa.study.management.domain.snapshot.service.SnapshotService;
-import com.fisa.study.management.global.argumentresolver.Login;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,7 +25,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -89,11 +86,11 @@ public class RoomService {
                 .stream().map(LocalDateTime::getDayOfMonth).distinct().toArray(Integer[]::new);
 
         Optional<CheckUp> _checkUp = checkUpRepository.findTopByRoomIdOrderByIdDesc(room.getId());
-        ReceiveCheckUpDTO checkUpDTO = null;
+        CheckUpDTO checkUpDTO = null;
         if (_checkUp.isPresent()){
             checkUpDTO= CheckUpEntityToDTO(_checkUp.get());
         }else {
-            checkUpDTO= ReceiveCheckUpDTO.builder()
+            checkUpDTO= CheckUpDTO.builder()
                     .title("현재 질문이 없습니다")
                     .build();
         }
@@ -115,15 +112,10 @@ public class RoomService {
                 .createdDate(snapshot.getCreatedDate())
                 .build();
     }
-    CommentDTO CommentEntityToDTO(Comment comment){
-        return CommentDTO.builder()
-                .content(comment.getContent())
-                .build();
-    }
-    ReceiveCheckUpDTO CheckUpEntityToDTO(CheckUp checkUp){
-        return  ReceiveCheckUpDTO.builder()
+
+    CheckUpDTO CheckUpEntityToDTO(CheckUp checkUp){
+        return  CheckUpDTO.builder()
                 .title(checkUp.getTitle())
                 .build();
     }
-
 }

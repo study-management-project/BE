@@ -1,6 +1,6 @@
 package com.fisa.study.management;
 
-import com.fisa.study.management.domain.checkup.dto.ReceiveCheckUpDTO;
+import com.fisa.study.management.domain.checkup.dto.CheckUpDTO;
 import com.fisa.study.management.domain.checkup.service.CheckUpService;
 import com.fisa.study.management.domain.comment.dto.CommentDTO;
 import com.fisa.study.management.domain.comment.service.CommentService;
@@ -22,8 +22,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.sql.DataSource;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -134,7 +132,7 @@ public class InitDummyDataTest {
     @Test
     @Order(4)
     public void insertCheckup() throws Exception {
-        ReceiveCheckUpDTO dto = ReceiveCheckUpDTO.builder()
+        CheckUpDTO dto = CheckUpDTO.builder()
                 .title("test용 checkup")
                 .build();
 

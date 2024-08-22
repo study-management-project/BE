@@ -1,6 +1,6 @@
 package com.fisa.study.management.domain.room.dto;
 
-import com.fisa.study.management.domain.checkup.dto.ReceiveCheckUpDTO;
+import com.fisa.study.management.domain.checkup.dto.CheckUpDTO;
 import com.fisa.study.management.domain.snapshot.dto.ResSnapshotDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,6 +20,6 @@ public class RoomResponseByUserDTO {
     private String content;
     private List<ResSnapshotDTO> snapshotList;
     private List<String> commentList;
-    private ReceiveCheckUpDTO checkUp;
+    private CheckUpDTO checkUp;
     private Integer[] haveSnapshotDate;
 }
