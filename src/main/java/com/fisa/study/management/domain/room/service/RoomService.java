@@ -71,7 +71,7 @@ public class RoomService {
         Room room = roomRepository.findByUuidWithComments(uuid)
                 .orElseThrow(() -> new EntityNotFoundException("Room not found"));
 
-        List<SendSnapshotDTO> sendSnapshotDTOS = snapshotRepository.findCreatedDateByRoomIdAndMonth(room.getId(), LocalDate.now()).stream()
+        List<ResSnapshotDTO> resSnapshotDTOS = snapshotRepository.findCreatedDateByRoomIdAndMonth(room.getId(), LocalDate.now()).stream()
                 .map(this::EntityToSendSnapshotDTO).toList();
         List<String> commentDTOS = room.getCommentList()
                 .stream()
