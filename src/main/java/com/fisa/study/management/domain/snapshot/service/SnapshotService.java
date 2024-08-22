@@ -2,6 +2,7 @@ package com.fisa.study.management.domain.snapshot.service;
 
 import com.fisa.study.management.domain.room.entity.Room;
 import com.fisa.study.management.domain.room.repository.RoomRepository;
+import com.fisa.study.management.domain.room.service.RoomService;
 import com.fisa.study.management.domain.snapshot.dto.ResSnapshotDTO;
 import com.fisa.study.management.domain.snapshot.dto.RegSnapshotDTO;
 import com.fisa.study.management.domain.snapshot.entity.Snapshot;
@@ -11,10 +12,9 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 @Transactional
 @Service
@@ -23,11 +23,10 @@ public class SnapshotService {
     private final SnapshotRepository snapshotRepository;
     private final RoomRepository roomRepository;
 
-    public List<ResSnapshotDTO> getSnapshotAll(UUID uuid)  {
+    public List<ResSnapshotDTO> findCreatedDateByRoomIdAndDay(UUID uuid)  {
         Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
-        return snapshotRepository.findByRoomId(room.getId())
-                .stream()
-                .map(this::entityToSendSnapshotDTO).collect(Collectors.toList());
+        List<Snapshot> snapshots = snapshotRepository.findCreatedDateByRoomIdAndMonth(room.getId(),LocalDate.now());
+        return snapshots.stream().map(this::EntityToSendSnapshotDTO).collect(Collectors.toList());
     }
 
     public Snapshot regSnapshot(Long userId, RegSnapshotDTO dto) throws IllegalAccessException {
@@ -46,7 +45,22 @@ public class SnapshotService {
                 .build();
     }
 
-    public Snapshot regSnapshotDTOToEntity(Room room, RegSnapshotDTO regSnapshotDTO){
+    public Integer[] getSnapshotDateByDate(UUID uuid, LocalDate date) {
+        Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
+        List<Snapshot> snapshots = snapshotRepository.findCreatedDateByRoomIdAndMonth(room.getId(),date);
+        return snapshots.stream()
+                .map(snapshot -> snapshot.getCreatedDate().getDayOfMonth())
+                .distinct()
+                .toArray(Integer[]::new);
+    }
+
+    ResSnapshotDTO EntityToSendSnapshotDTO(Snapshot snapshot){
+        return ResSnapshotDTO.builder()
+                .content(snapshot.getContent())
+                .createdDate(snapshot.getCreatedDate())
+                .build();
+    }
+    Snapshot regSnapshotDTOToEntity(Room room, RegSnapshotDTO regSnapshotDTO){
         Snapshot snapshot= Snapshot.builder()
                 .content(regSnapshotDTO.getContent())
                 .title(regSnapshotDTO.getTitle())

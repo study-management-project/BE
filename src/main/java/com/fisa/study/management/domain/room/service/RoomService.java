@@ -14,14 +14,19 @@ import com.fisa.study.management.domain.room.entity.Room;
 import com.fisa.study.management.domain.room.repository.RoomRepository;
 import com.fisa.study.management.domain.snapshot.dto.ResSnapshotDTO;
 import com.fisa.study.management.domain.snapshot.entity.Snapshot;
+import com.fisa.study.management.domain.snapshot.repository.SnapshotRepository;
+import com.fisa.study.management.domain.snapshot.service.SnapshotService;
+import com.fisa.study.management.global.argumentresolver.Login;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -30,6 +35,7 @@ public class RoomService {
     private final RoomRepository roomRepository;
     private final MemberRepository memberRepository;
     private final CheckUpRepository checkUpRepository;
+    private final SnapshotRepository snapshotRepository;
 
     public Room getRoomByUUID(UUID uuid){
         return roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
@@ -61,13 +67,13 @@ public class RoomService {
     }
 
     public RoomResponseByUserDTO getRoomDetails(UUID uuid){
-        Room room = roomRepository.findByUuidWithSnapshots(uuid)
+
+        Room room = roomRepository.findByUuidWithComments(uuid)
                 .orElseThrow(() -> new EntityNotFoundException("Room not found"));
-        Room room2 = roomRepository.findByUuidWithComments(uuid)
-                .orElseThrow(() -> new EntityNotFoundException("Room not found"));
-        List<ResSnapshotDTO> resSnapshotDTOS = room.getSnapshotList().stream()
+
+        List<ResSnapshotDTO> resSnapshotDTOS = snapshotRepository.findCreatedDateByRoomIdAndDay(room.getId(), LocalDate.now()).stream()
                 .map(this::EntityToSendSnapshotDTO).toList();
-        List<String> commentDTOS = room2.getCommentList()
+        List<String> commentDTOS = room.getCommentList()
                 .stream()
                 .map(Comment::getContent).
                 toList();

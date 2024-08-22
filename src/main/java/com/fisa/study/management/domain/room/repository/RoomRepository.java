@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -22,8 +23,10 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
             "FROM Room r WHERE r.member.id = :adminId")
     List<RoomResponseByAdminDTO> findByAdminId(@Param("adminId") Long adminId);
 
-    @Query("SELECT r FROM Room r LEFT JOIN FETCH r.snapshotList WHERE r.uuid = :uuid")
-    Optional<Room> findByUuidWithSnapshots(@Param("uuid") UUID uuid);
+//    @Query("SELECT r FROM Room r LEFT JOIN FETCH r.snapshotList WHERE r.uuid = :uuid ")
+//    Optional<Room> findByUuidWithSnapshots(@Param("uuid") UUID uuid, @Param("date")LocalDate date);
+
+
 
     @Query("SELECT r FROM Room r LEFT JOIN FETCH r.commentList WHERE r.uuid = :uuid")
     Optional<Room> findByUuidWithComments(@Param("uuid") UUID uuid);
