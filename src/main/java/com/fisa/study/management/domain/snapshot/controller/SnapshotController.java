@@ -24,12 +24,6 @@ public class SnapshotController {
         return snapshotService.getSnapshotAll(uuid);
     }
 
-    // 최신한개 보내기
-    @GetMapping("/last")
-    public SendSnapshotDTO sendLastOne(@PathVariable UUID uuid)  {
-        return snapshotService.getLastOne(uuid);
-    }
-
     @GetMapping("/{date}")
     public Integer[] sendSnapshotByDate(@PathVariable UUID uuid,@PathVariable LocalDate date) {
         return snapshotService.getSnapshotByDate(uuid,date);
