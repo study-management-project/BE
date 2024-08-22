@@ -85,15 +85,6 @@ public class RoomService {
                 snapshotRepository.findDistinctCreatedDatesByRoomIdAndMonth(room.getId(),year,month)
                 .stream().map(LocalDateTime::getDayOfMonth).distinct().toArray(Integer[]::new);
 
-        Optional<CheckUp> _checkUp = checkUpRepository.findTopByRoomIdOrderByIdDesc(room.getId());
-        CheckUpDTO checkUpDTO = null;
-        if (_checkUp.isPresent()){
-            checkUpDTO= CheckUpEntityToDTO(_checkUp.get());
-        }else {
-            checkUpDTO= CheckUpDTO.builder()
-                    .title("현재 질문이 없습니다")
-                    .build();
-        }
         return RoomResponseByUserDTO.builder()
                 .name(room.getName())
                 .description(room.getDescription())
@@ -101,7 +92,6 @@ public class RoomService {
                 .snapshotList(resSnapshotDTOS)
                 .commentList(commentDTOS)
                 .haveSnapshotDate(dayList)
-                .checkUp(checkUpDTO)
                 .build();
     }
 
@@ -110,12 +100,6 @@ public class RoomService {
                 .title(snapshot.getTitle())
                 .content(snapshot.getContent())
                 .createdDate(snapshot.getCreatedDate())
-                .build();
-    }
-
-    CheckUpDTO CheckUpEntityToDTO(CheckUp checkUp){
-        return  CheckUpDTO.builder()
-                .title(checkUp.getTitle())
                 .build();
     }
 }

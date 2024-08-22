@@ -16,25 +16,18 @@ import java.util.UUID;
 public class CheckUpController {
     private final CheckUpService checkUpService;
 
-
-    // ox 개수 반환
-    //login
     @GetMapping("/endTime/{checkupId}")
     public SendCheckUpDTO sendCheckUpResult(@Login Long userId, @PathVariable UUID uuid, @PathVariable Long checkupId)throws Exception{
         return checkUpService.getCheckUpResult(userId,uuid,checkupId);
     }
 
-
     @GetMapping("/OK")
     public String OIncrease(@PathVariable UUID uuid){
         return checkUpService.resentCheckUpOIncrease(uuid);
-
     }
 
     @GetMapping("/NO")
     public String XIncrease(@PathVariable UUID uuid){
         return checkUpService.resentCheckUpXIncrease(uuid);
     }
-
-
 }
