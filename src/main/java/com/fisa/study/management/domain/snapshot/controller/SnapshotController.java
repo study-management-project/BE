@@ -8,6 +8,8 @@ import com.fisa.study.management.global.argumentresolver.Login;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,6 +30,11 @@ public class SnapshotController {
     @GetMapping("/last")
     public SendSnapshotDTO sendLastOne(@PathVariable UUID uuid)  {
         return snapshotService.getLastOne(uuid);
+    }
+
+    @GetMapping("/{date}")
+    public Integer[] sendSnapshotByDate(@PathVariable UUID uuid,@PathVariable LocalDate date) {
+        return snapshotService.getSnapshotByDate(uuid,date);
     }
 }
 

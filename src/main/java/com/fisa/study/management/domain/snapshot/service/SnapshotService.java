@@ -28,7 +28,8 @@ public class SnapshotService {
 
     public List<SendSnapshotDTO> getSnapshotAll(UUID uuid)  {
         Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
-        return snapshotRepository.findByRoomId(room.getId()).stream().map(this::EntityToSendSnapshotDTO).collect(Collectors.toList());
+        List<Snapshot> snapshots = snapshotRepository.findCreatedDateByRoomIdAndMonth(room.getId(),LocalDate.now());
+        return snapshots.stream().map(this::EntityToSendSnapshotDTO).collect(Collectors.toList());
     }
 
     public LocalDateTime regSnapshot(Long userId, RegSnapshotDTO dto) throws IllegalAccessException {
@@ -46,6 +47,12 @@ public class SnapshotService {
                 .content(snapshot.getContent())
                 .createDate(snapshot.getCreatedDate())
                 .build();
+    }
+
+    public Integer[] getSnapshotByDate(UUID uuid, LocalDate date) {
+        Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
+        List<Snapshot> snapshots = snapshotRepository.findCreatedDateByRoomIdAndMonth(room.getId(),date);
+        return snapshots.stream().map(snapshot -> snapshot.getCreatedDate().getDayOfMonth()).toArray(Integer[]::new);
     }
     SendSnapshotDTO EntityToSendSnapshotDTO(Snapshot snapshot){
         return SendSnapshotDTO.builder()
