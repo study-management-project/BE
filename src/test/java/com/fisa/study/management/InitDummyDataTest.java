@@ -125,7 +125,6 @@ public class InitDummyDataTest {
                     .uuid(uuid)
                     .title("SnapShot " + i)
                     .content("SnapShot Content " + i)
-                    .createDate(LocalDateTime.now())
                     .build();
             snapshotService.regSnapshot(userId, dto);
         }
