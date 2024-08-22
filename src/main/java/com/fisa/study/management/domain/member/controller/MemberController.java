@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 @RestController
@@ -48,19 +49,11 @@ public class MemberController {
     }
 
     @PostMapping("/logout")
-    public String logout(HttpServletRequest request, HttpServletResponse response) {
+    public String logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if(session != null) {
             session.invalidate();
         }
-
-        // 쿠키 삭제 (JSESSIONID 쿠키 제거)
-        Cookie cookie = new Cookie("JSESSIONID", null);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        cookie.setMaxAge(0); // 쿠키 즉시 만료
-        response.addCookie(cookie);
-
-        return "성공";
+        return "로그아웃 성공";
     }
 }
