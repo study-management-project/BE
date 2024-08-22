@@ -23,10 +23,6 @@ public class CheckUpService {
     private final CheckUpRepository checkUpRepository;
     private final RoomRepository roomRepository;
 
-    public CheckUp getCheckUpTopByRoomId(Long roomId){
-        return checkUpRepository.findTopByRoomIdOrderByIdDesc(roomId).orElseThrow(() -> new EntityNotFoundException("checkup not found"));
-    }
-
     public Long registerCheckUpForRoom(Long userId, UUID uuid, CheckUpDTO checkUpDTO) throws Exception {
         Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
         if (!Objects.equals(room.getMember().getId(), userId)) {
@@ -34,7 +30,6 @@ public class CheckUpService {
         }
         return checkUpRepository.save(DTOToEntityWithRoom(room, checkUpDTO)).getId();
     }
-
 
     public SendCheckUpDTO getCheckUpResult(Long userId,UUID uuid,Long checkupId) throws IllegalAccessException {
         Room room=roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
