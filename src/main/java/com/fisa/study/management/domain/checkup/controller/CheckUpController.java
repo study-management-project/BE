@@ -16,8 +16,6 @@ import java.util.UUID;
 public class CheckUpController {
     private final CheckUpService checkUpService;
 
-
-
     @GetMapping("/OK")
     public String OIncrease(@PathVariable UUID uuid){
         return checkUpService.resentCheckUpOIncrease(uuid);
