@@ -32,6 +32,9 @@ public class CheckUp extends BaseTimeEntity {
     @JoinColumn(name = "room_id")
     private Room room;
 
+    @Setter
+    private Boolean isOpen;
+
     public void addO(){
         this.ox.addO();
     }
@@ -55,4 +58,5 @@ public class CheckUp extends BaseTimeEntity {
             this.title = LocalDateTime.now().format(formatter);
         }
     }
+
 }

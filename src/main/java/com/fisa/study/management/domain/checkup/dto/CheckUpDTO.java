@@ -14,4 +14,5 @@ import java.util.UUID;
 public class CheckUpDTO {
     private UUID uuid;
     private String title;
+    private Boolean isOpen;
 }

@@ -21,4 +21,5 @@ public class RoomResponseByUserDTO {
     private List<ResSnapshotDTO> snapshotList;
     private List<String> commentList;
     private Integer[] haveSnapshotDate;
+    private CheckUpDTO checkUpDTO;
 }
