@@ -16,10 +16,7 @@ import java.util.UUID;
 public class CheckUpController {
     private final CheckUpService checkUpService;
 
-    @GetMapping("/endTime")
-    public SendCheckUpDTO sendCheckUpResult(@Login Long userId, @PathVariable UUID uuid)throws Exception{
-        return checkUpService.getCheckUpResult(userId,uuid);
-    }
+
 
     @GetMapping("/OK")
     public String OIncrease(@PathVariable UUID uuid){

@@ -55,4 +55,8 @@ public class CheckUp extends BaseTimeEntity {
             this.title = LocalDateTime.now().format(formatter);
         }
     }
+    @Setter
+    private Boolean isOpen;
+
+
 }
