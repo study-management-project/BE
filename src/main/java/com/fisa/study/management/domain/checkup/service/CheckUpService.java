@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -23,29 +22,26 @@ public class CheckUpService {
     private final CheckUpRepository checkUpRepository;
     private final RoomRepository roomRepository;
 
-    public Long registerCheckUpForRoom(CheckUpDTO checkUpDTO) {
+    public void registerCheckUpForRoom(CheckUpDTO checkUpDTO) {
         Room room= roomRepository.findByUuid(checkUpDTO.getUuid()).orElseThrow(() -> new EntityNotFoundException("Room not found"));
-        return checkUpRepository.save(DTOToEntityWithRoom(room, checkUpDTO)).getId();
+        checkUpRepository.save(DTOToEntityWithRoom(room, checkUpDTO));
     }
 
-    public SendCheckUpDTO getCheckUpResult(Long userId,UUID uuid,Long checkupId) throws IllegalAccessException {
+    public SendCheckUpDTO getCheckUpResult(UUID uuid) {
         Room room=roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
-        if (!Objects.equals(room.getMember().getId(), userId)) {
-            throw new IllegalAccessException("권한이 없습니다.");
-        }
-
-        CheckUp checkUp= checkUpRepository.findById(checkupId).orElseThrow(() -> new EntityNotFoundException("Room not found"));
+        CheckUp checkUp= checkUpRepository.findTopByRoomUuidOrderByIdDesc(uuid).orElseThrow(() -> new EntityNotFoundException("entity not found"));
+        checkUp.setIsOpen(false);
+        checkUpRepository.save(checkUp);
         return EntityToDTO(checkUp);
     }
-
     public String resentCheckUpOIncrease(UUID uuid)  {
+
         Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
         CheckUp checkUp= checkUpRepository.findTopByRoomIdOrderByIdDesc(room.getId()).orElseThrow(() -> new EntityNotFoundException("Checkup not found"));
         checkUp.addO();
         checkUpRepository.save(checkUp);
         return "O증가 성공";
     }
-
     public String resentCheckUpXIncrease(UUID uuid)  {
         Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
         CheckUp checkUp= checkUpRepository.findTopByRoomIdOrderByIdDesc(room.getId()).orElseThrow(() -> new EntityNotFoundException("Checkup not found"));
@@ -53,15 +49,14 @@ public class CheckUpService {
         checkUpRepository.save(checkUp);
         return "X증가 성공";
     }
-
     CheckUp DTOToEntityWithRoom(Room room, CheckUpDTO checkUpDTO){
         CheckUp checkUp= CheckUp.builder()
                 .title(checkUpDTO.getTitle())
+                .isOpen(checkUpDTO.getIsOpen())
                 .build();
         checkUp.setRoom(room);
         return checkUp;
     }
-
     SendCheckUpDTO EntityToDTO(CheckUp checkUp){
         return SendCheckUpDTO.builder()
                 .O(checkUp.getOx().getO())

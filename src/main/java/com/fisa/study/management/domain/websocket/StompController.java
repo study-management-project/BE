@@ -1,6 +1,7 @@
 package com.fisa.study.management.domain.websocket;
 
 import com.fisa.study.management.domain.checkup.dto.CheckUpDTO;
+import com.fisa.study.management.domain.checkup.dto.SendCheckUpDTO;
 import com.fisa.study.management.domain.checkup.service.CheckUpService;
 import com.fisa.study.management.domain.comment.dto.CommentDTO;
 import com.fisa.study.management.domain.comment.service.CommentService;
@@ -11,12 +12,16 @@ import com.fisa.study.management.domain.snapshot.dto.RegSnapshotDTO;
 import com.fisa.study.management.domain.snapshot.dto.ResSnapshotDTO;
 import com.fisa.study.management.domain.snapshot.entity.Snapshot;
 import com.fisa.study.management.domain.snapshot.service.SnapshotService;
-import com.fisa.study.management.global.argumentresolver.Login;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.MessageHeaders;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.messaging.simp.SimpMessageType;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 import java.util.UUID;
@@ -28,6 +33,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class StompController {
 
     private final SimpMessageSendingOperations sendingOperations;
+    private final SimpMessagingTemplate messagingTemplate;
     private final RoomService roomService;
     private final CommentService commentService;
     private final SnapshotService snapshotService;
@@ -81,6 +87,19 @@ public class StompController {
     @MessageMapping("/share-checkup")
     public void shareCheckUp(@Payload CheckUpDTO dto) {
         checkUpService.registerCheckUpForRoom(dto);
-        sendingOperations.convertAndSend("/topic/" + dto.getUuid() + "/checkup", dto.getTitle());
+        sendingOperations.convertAndSend("/topic/" + dto.getUuid() + "/checkup",dto);
+    }
+    @MessageMapping("/end-checkup")
+    public void endCheckUp(@Payload CheckUpDTO dto, @Header("simpSessionId") String sessionId) {
+        SendCheckUpDTO sendCheckUpDTO= checkUpService.getCheckUpResult(dto.getUuid());
+        messagingTemplate.convertAndSendToUser(sessionId, "/queue/" + dto.getUuid() + "/result/checkup", sendCheckUpDTO,createHeaders(sessionId));
+        sendingOperations.convertAndSend("/topic/" + dto.getUuid() + "/checkup", dto);
+    }
+
+    private MessageHeaders createHeaders(String sessionId){
+        SimpMessageHeaderAccessor headerAccessor= SimpMessageHeaderAccessor.create(SimpMessageType.MESSAGE);
+        if(sessionId !=null) headerAccessor.setSessionId(sessionId);
+        headerAccessor.setLeaveMutable(true);
+        return headerAccessor.getMessageHeaders();
     }
 }

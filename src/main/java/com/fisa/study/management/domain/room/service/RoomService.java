@@ -3,7 +3,6 @@ package com.fisa.study.management.domain.room.service;
 import com.fisa.study.management.domain.checkup.dto.CheckUpDTO;
 import com.fisa.study.management.domain.checkup.entity.CheckUp;
 import com.fisa.study.management.domain.checkup.repository.CheckUpRepository;
-import com.fisa.study.management.domain.comment.dto.CommentDTO;
 import com.fisa.study.management.domain.comment.entity.Comment;
 import com.fisa.study.management.domain.member.entity.Member;
 import com.fisa.study.management.domain.member.repository.MemberRepository;
@@ -17,6 +16,7 @@ import com.fisa.study.management.domain.snapshot.entity.Snapshot;
 import com.fisa.study.management.domain.snapshot.repository.SnapshotRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -85,6 +86,9 @@ public class RoomService {
                 snapshotRepository.findDistinctCreatedDatesByRoomIdAndMonth(room.getId(),year,month)
                 .stream().map(LocalDateTime::getDayOfMonth).distinct().toArray(Integer[]::new);
 
+        Optional<CheckUp> checkUp= checkUpRepository.findTopByRoomIdOrderByIdDesc(room.getId());
+//        log.info("로그입니다"+checkUp.get().getIsOpen()+checkUp.get().getTitle());
+        CheckUpDTO checkUpDTO = EntityToTestCheckUpDTO(checkUp,room.getUuid());
         return RoomResponseByUserDTO.builder()
                 .name(room.getName())
                 .description(room.getDescription())
@@ -92,6 +96,7 @@ public class RoomService {
                 .snapshotList(resSnapshotDTOS)
                 .commentList(commentDTOS)
                 .haveSnapshotDate(dayList)
+                .checkUpDTO(checkUpDTO)
                 .build();
     }
 
@@ -101,5 +106,21 @@ public class RoomService {
                 .content(snapshot.getContent())
                 .createdDate(snapshot.getCreatedDate())
                 .build();
+    }
+    CheckUpDTO EntityToTestCheckUpDTO(Optional<CheckUp> checkUp,UUID uuid) {
+        if (checkUp.isPresent()) {
+            return CheckUpDTO.builder()
+                    .uuid(uuid)
+                    .title(checkUp.get().getTitle())
+                    .isOpen(checkUp.get().getIsOpen())
+                    .build();
+        }
+        else {
+            return CheckUpDTO.builder()
+                    .title("현재 이해도 조사가 없습니다")
+                    .uuid(uuid)
+                    .isOpen(false)
+                    .build();
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.fisa.study.management.domain.member.controller;
 
 import com.fisa.study.management.domain.member.dto.MemberLoginDTO;
 import com.fisa.study.management.domain.member.dto.MemberRegisterDTO;
+import com.fisa.study.management.domain.member.dto.MemberResponseDTO;
 import com.fisa.study.management.domain.member.entity.Member;
 import com.fisa.study.management.domain.member.repository.MemberRepository;
 import com.fisa.study.management.domain.member.service.MemberService;
@@ -13,8 +14,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.http.HttpResponse;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -43,9 +47,12 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public String loginArgumentResolver(@RequestBody MemberLoginDTO requestDTO,
-                                        HttpServletRequest request, HttpServletResponse response) {
-        return memberService.login(requestDTO, request, response);
+    public ResponseEntity<?> loginArgumentResolver(@RequestBody MemberLoginDTO requestDTO,
+                                                   HttpServletRequest request, HttpServletResponse response) {
+        MemberResponseDTO result = memberService.login(requestDTO, request, response);
+
+        if (result != null) return ResponseEntity.ok(result);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("로그인 실패");
     }
 
     @PostMapping("/logout")

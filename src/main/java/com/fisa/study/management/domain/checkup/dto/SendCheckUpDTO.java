@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class SendCheckUpDTO {
-
     private int O;
     private int X;
 }
