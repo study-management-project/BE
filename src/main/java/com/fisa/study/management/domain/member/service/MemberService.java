@@ -2,6 +2,7 @@ package com.fisa.study.management.domain.member.service;
 
 import com.fisa.study.management.domain.member.dto.MemberLoginDTO;
 import com.fisa.study.management.domain.member.dto.MemberRegisterDTO;
+import com.fisa.study.management.domain.member.dto.MemberResponseDTO;
 import com.fisa.study.management.domain.member.entity.Member;
 import com.fisa.study.management.domain.member.entity.Role;
 import com.fisa.study.management.domain.member.repository.MemberRepository;
@@ -46,7 +47,7 @@ public class MemberService {
         return "성공";
     }
 
-    public String login(MemberLoginDTO dto, HttpServletRequest request, HttpServletResponse response) {
+    public MemberResponseDTO login(MemberLoginDTO dto, HttpServletRequest request, HttpServletResponse response) {
         Optional<Member> byEmail = memberRepository.findByEmail(dto.getEmail());
         if (byEmail.isPresent()) {
             Member loginMember = byEmail.get();
@@ -55,9 +56,18 @@ public class MemberService {
                 HttpSession session = request.getSession();
                 // 세션에 로그인 회원 정보 보관
                 session.setAttribute(SessionConst.LOGIN_MEMBER, loginMember.getId());
-                return "성공";
+                return entityToResponseDTO(loginMember);
             }
         }
-        return "실패";
+        return null;
+    }
+
+    MemberResponseDTO entityToResponseDTO(Member member) {
+        return MemberResponseDTO.builder()
+                .userId(member.getId())
+                .username(member.getUsername())
+                .email(member.getEmail())
+                .role(member.getRole())
+                .build();
     }
 }
