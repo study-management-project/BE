@@ -29,6 +29,7 @@ public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
         HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
         HttpSession session = request.getSession(false);
         //세션 기간 정하기
+        session.setMaxInactiveInterval(7 * 24 * 60 * 60);
         log.info(session.toString());
 
         if (session == null) {
