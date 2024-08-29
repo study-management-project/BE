@@ -28,6 +28,7 @@ public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
         log.info("Argument Resolver 실행");
         HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
         HttpSession session = request.getSession(false);
+        //세션 기간 정하기
         log.info(session.toString());
 
         if (session == null) {

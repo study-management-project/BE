@@ -7,19 +7,22 @@ import com.fisa.study.management.domain.member.entity.Member;
 import com.fisa.study.management.domain.member.repository.MemberRepository;
 import com.fisa.study.management.domain.member.service.MemberService;
 import com.fisa.study.management.global.argumentresolver.Login;
-import com.fisa.study.management.global.session.SessionConst;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.net.http.HttpResponse;
-import java.util.Arrays;
 import java.util.Optional;
 
 @RestController
@@ -31,18 +34,37 @@ public class MemberController {
 
     // login Check
     @GetMapping("/check")
-    public String loginArgumentResolver(
-            @Login Long userId) {
-        if (userId == null) return "실패";
+    public ResponseEntity<?> loginArgumentResolver(@Login Long userId) {
+        if (userId == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 실패");
         Optional<Member> byId = memberRepository.findById(userId);
-        if (byId.isEmpty()) return "존재하지 않는 사용자 입니다.";
+        if (byId.isEmpty()) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 실패");
         Member member = byId.get();
         log.info("인증 성공 member = {}", member.toString());
-        return "성공, 유저 정보 : " + member.toString();
+        return ResponseEntity.ok("성공, 유저 정보 : " + member.toString());
     }
 
     @PostMapping("/register")
-    public String loginArgumentResolver(@RequestBody MemberRegisterDTO requestDTO) {
+    public  ResponseEntity<?> loginArgumentResolver( @RequestBody @Valid MemberRegisterDTO requestDTO, Errors errors) {
+        if (errors.hasErrors()) {
+            // 모든 에러를 검사
+            for (ObjectError error : errors.getAllErrors()) {
+                if (error instanceof FieldError fieldError) {
+                    // 필드 이름과 에러 메시지 추출
+                    String fieldName = fieldError.getField();
+                    String errorMessage = fieldError.getDefaultMessage();
+
+                    if ("password".equals(fieldName)) {
+                        return ResponseEntity.status(431).body("알맞은 비밀번호 형식을 사용하세요");
+                    } else if ("email".equals(fieldName)) {
+                        return ResponseEntity.status(433).body("알맞은 이메일 형식을 사용하세요");
+                    } else {
+                        return ResponseEntity.badRequest().body(errorMessage);
+                    }
+                } else {
+                    return ResponseEntity.badRequest().body(error.getDefaultMessage());
+                }
+            }
+        }
         return memberService.register(requestDTO);
     }
 
@@ -56,11 +78,12 @@ public class MemberController {
     }
 
     @PostMapping("/logout")
-    public String logout(HttpServletRequest request) {
+    public ResponseEntity<?> logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if(session != null) {
             session.invalidate();
         }
-        return "로그아웃 성공";
+        return ResponseEntity.ok("로그아웃 성공");
     }
 }
+

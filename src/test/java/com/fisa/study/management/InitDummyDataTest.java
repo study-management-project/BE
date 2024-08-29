@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
@@ -90,8 +91,8 @@ public class InitDummyDataTest {
                 .password("1")
                 .build();
 
-        String register = memberService.register(dto);
-        log.info("Order 1 {}", register);
+        ResponseEntity<?> register = memberService.register(dto);
+        log.info("Order 1 {}", register.toString());
     }
 
     @Test

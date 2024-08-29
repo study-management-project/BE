@@ -5,6 +5,7 @@ import com.fisa.study.management.domain.checkup.service.CheckUpService;
 import com.fisa.study.management.global.argumentresolver.Login;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -17,12 +18,12 @@ public class CheckUpController {
     private final CheckUpService checkUpService;
 
     @GetMapping("/OK")
-    public String OIncrease(@PathVariable UUID uuid){
+    public ResponseEntity<?> OIncrease(@PathVariable UUID uuid){
         return checkUpService.resentCheckUpOIncrease(uuid);
     }
 
     @GetMapping("/NO")
-    public String XIncrease(@PathVariable UUID uuid){
+    public ResponseEntity<?> XIncrease(@PathVariable UUID uuid){
         return checkUpService.resentCheckUpXIncrease(uuid);
     }
 }
