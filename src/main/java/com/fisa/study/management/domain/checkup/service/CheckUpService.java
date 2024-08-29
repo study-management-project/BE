@@ -10,6 +10,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -34,20 +35,21 @@ public class CheckUpService {
         checkUpRepository.save(checkUp);
         return EntityToDTO(checkUp);
     }
-    public String resentCheckUpOIncrease(UUID uuid)  {
+    public ResponseEntity<?> resentCheckUpOIncrease(UUID uuid)  {
 
         Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
         CheckUp checkUp= checkUpRepository.findTopByRoomIdOrderByIdDesc(room.getId()).orElseThrow(() -> new EntityNotFoundException("Checkup not found"));
         checkUp.addO();
         checkUpRepository.save(checkUp);
-        return "O증가 성공";
+        return ResponseEntity.ok("O증가 성공");
+//        return "O증가 성공";
     }
-    public String resentCheckUpXIncrease(UUID uuid)  {
+    public ResponseEntity<?> resentCheckUpXIncrease(UUID uuid)  {
         Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
         CheckUp checkUp= checkUpRepository.findTopByRoomIdOrderByIdDesc(room.getId()).orElseThrow(() -> new EntityNotFoundException("Checkup not found"));
         checkUp.addX();
         checkUpRepository.save(checkUp);
-        return "X증가 성공";
+        return ResponseEntity.ok("증가 성공");
     }
     CheckUp DTOToEntityWithRoom(Room room, CheckUpDTO checkUpDTO){
         CheckUp checkUp= CheckUp.builder()

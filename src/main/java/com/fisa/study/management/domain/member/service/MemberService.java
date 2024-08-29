@@ -14,6 +14,8 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
@@ -29,11 +31,14 @@ public class MemberService {
 
     // 회원가입
     @Transactional
-    public String register(MemberRegisterDTO dto) {
+    public ResponseEntity<?> register(MemberRegisterDTO dto) {
+        //이메일 형식, 이메일 존재 여부, 패스워드 유효성
+        // 431     ,  432          , 433
+        // 코드 4개로 성공 200  ,서버 500
+//        ResponseEntity.status(code).build();
         if (memberRepository.findByEmail(dto.getEmail()).isPresent()) {
-            return "이미 존재하는 이메일입니다.";
+            return ResponseEntity.status(432).body("이미 존재하는 이메일입니다.") ;
         }
-
         String encodedPassword = BCrypt.hashpw(dto.getPassword(), BCrypt.gensalt()); // 비밀번호 암호화
 
         Member member = Member.builder()
@@ -44,7 +49,7 @@ public class MemberService {
                 .build();
 
         memberRepository.save(member);
-        return "성공";
+        return ResponseEntity.ok("성공");
     }
 
     public MemberResponseDTO login(MemberLoginDTO dto, HttpServletRequest request, HttpServletResponse response) {

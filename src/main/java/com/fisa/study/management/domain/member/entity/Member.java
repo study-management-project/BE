@@ -2,6 +2,8 @@ package com.fisa.study.management.domain.member.entity;
 
 import com.fisa.study.management.domain.room.entity.Room;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -23,6 +25,8 @@ public class Member{
     private String username;
 
     @Column(nullable = false)
+
+
     private String password;
 
     @Column(nullable = false, unique = true)

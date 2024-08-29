@@ -17,6 +17,7 @@ import com.fisa.study.management.domain.snapshot.repository.SnapshotRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,15 +46,15 @@ public class RoomService {
     }
 
 
-    public String createRoom(Long userId, RoomRequestDTO roomRequestDTO) {
+    public ResponseEntity<?> createRoom(Long userId, RoomRequestDTO roomRequestDTO) {
         Optional<Member> optionalMember = memberRepository.findById(userId);
         if (optionalMember.isEmpty()) {
-            return "존재하지 않는 유저";
+            return ResponseEntity.badRequest().body("존재하지 않는 유저");
         }
         Member member = optionalMember.get();
         Room room = roomRequestDTO.toEntity(member);
         Room savedRoom = roomRepository.save(room);
-        return savedRoom.getUuid().toString();
+        return ResponseEntity.ok(savedRoom.getUuid().toString());
     }
 
     public Room updateRoom(UUID uuid, String content) {
