@@ -30,15 +30,12 @@ public class SnapshotService {
 
 
     public Integer[] getSnapshotDateByDate(UUID uuid, int year,int month) {
-//        Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
         return  snapshotRepository
                 .findDistinctCreatedDatesByRoomUuidAndMonth(uuid,year,month)
                 .stream().map(LocalDateTime::getDayOfMonth).distinct().toArray(Integer[]::new);
-
     }
 
     public List<ResSnapshotDTO> findSnapShotByRoomIdAndDay(UUID uuid,int year,int month,int day)  {
-//        Room room= roomRepository.findByUuid(uuid).orElseThrow(() -> new EntityNotFoundException("Room not found"));
         List<Snapshot> snapshots = snapshotRepository.findCreatedDateByRoomUuidAndDay(uuid,year,month,day);
         return snapshots.stream().map(this::EntityToResSnapShotDTO).collect(Collectors.toList());
     }

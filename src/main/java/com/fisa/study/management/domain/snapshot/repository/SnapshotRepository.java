@@ -11,14 +11,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface SnapshotRepository extends JpaRepository<Snapshot,Long> {
-
-
-
-    Snapshot findTopByRoomIdOrderByIdDesc(Long roomId);
-
-
-
-
     @Query("select s from Snapshot s where s.room.uuid = :uuid " +
             "and FUNCTION('MONTH', s.createdDate) =  :month " +
             "and FUNCTION('YEAR', s.createdDate) =  :year "+

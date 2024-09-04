@@ -32,10 +32,6 @@ public class MemberService {
     // 회원가입
     @Transactional
     public ResponseEntity<?> register(MemberRegisterDTO dto) {
-        //이메일 형식, 이메일 존재 여부, 패스워드 유효성
-        // 431     ,  432          , 433
-        // 코드 4개로 성공 200  ,서버 500
-//        ResponseEntity.status(code).build();
         if (memberRepository.findByEmail(dto.getEmail()).isPresent()) {
             return ResponseEntity.status(432).body("이미 존재하는 이메일입니다.") ;
         }

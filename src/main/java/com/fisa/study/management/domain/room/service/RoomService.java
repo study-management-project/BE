@@ -45,7 +45,6 @@ public class RoomService {
         return roomRepository.findByAdminId(userId);
     }
 
-
     public ResponseEntity<?> createRoom(Long userId, RoomRequestDTO roomRequestDTO) {
         Optional<Member> optionalMember = memberRepository.findById(userId);
         if (optionalMember.isEmpty()) {
@@ -67,41 +66,12 @@ public class RoomService {
     }
 
     public RoomResponseByUserDTO getRoomDetails(UUID uuid){
-
         Room room = roomRepository.findByUuidWithComments(uuid)
                 .orElseThrow(() -> new EntityNotFoundException("Room not found"));
-//        LocalDate now =LocalDate.now();
-//        int year= now.getYear();
-//        int month= now.getMonthValue();
-//        int day= now.getDayOfMonth();
-//        List<String> commentDTOS = room.getCommentList()
-//                .stream()
-//                .map(Comment::getContent).
-//                toList();
-//
-//        List<ResSnapshotDTO> resSnapshotDTOS =
-//                snapshotRepository.findCreatedDateByRoomIdAndDay(room.getId(), year,month,day)
-//                .stream().map(this::EntityToSendSnapshotDTO).toList();
-//
-//        Integer[] dayList=
-//                snapshotRepository.findDistinctCreatedDatesByRoomIdAndMonth(room.getId(),year,month)
-//                .stream().map(LocalDateTime::getDayOfMonth).distinct().toArray(Integer[]::new);
-
-//        Optional<CheckUp> checkUp= checkUpRepository.findTopByRoomIdOrderByIdDesc(room.getId());
-//        CheckUpDTO checkUpDTO = EntityToTestCheckUpDTO(checkUp,room.getUuid());
         return RoomResponseByUserDTO.builder()
                 .name(room.getName())
                 .description(room.getDescription())
                 .content(room.getContent())
                 .build();
     }
-
-    ResSnapshotDTO EntityToSendSnapshotDTO(Snapshot snapshot){
-        return ResSnapshotDTO.builder()
-                .title(snapshot.getTitle())
-                .content(snapshot.getContent())
-                .createdDate(snapshot.getCreatedDate())
-                .build();
-    }
-
 }
