@@ -1,18 +1,18 @@
 package com.fisa.study.management;
 
 import com.fisa.study.management.domain.checkup.dto.CheckUpDTO;
-import com.fisa.study.management.domain.checkup.service.CheckUpService;
+import com.fisa.study.management.domain.checkup.service.CheckUpServiceImpl;
 import com.fisa.study.management.domain.comment.dto.CommentDTO;
-import com.fisa.study.management.domain.comment.service.CommentService;
+import com.fisa.study.management.domain.comment.service.CommentServiceImpl;
 import com.fisa.study.management.domain.member.dto.MemberRegisterDTO;
 import com.fisa.study.management.domain.member.entity.Member;
 import com.fisa.study.management.domain.member.repository.MemberRepository;
-import com.fisa.study.management.domain.member.service.MemberService;
+import com.fisa.study.management.domain.member.service.MemberServiceImpl;
 import com.fisa.study.management.domain.room.entity.Room;
 import com.fisa.study.management.domain.room.repository.RoomRepository;
-import com.fisa.study.management.domain.room.service.RoomService;
+import com.fisa.study.management.domain.room.service.RoomServiceImpl;
 import com.fisa.study.management.domain.snapshot.dto.RegSnapshotDTO;
-import com.fisa.study.management.domain.snapshot.service.SnapshotService;
+import com.fisa.study.management.domain.snapshot.service.SnapshotServiceImpl;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
@@ -38,10 +38,10 @@ public class InitDummyDataTest {
     EntityManager em;
 
     @Autowired
-    MemberService memberService;
+    MemberServiceImpl memberService;
 
     @Autowired
-    RoomService roomService;
+    RoomServiceImpl roomService;
 
     @Autowired
     MemberRepository memberRepository;
@@ -50,13 +50,13 @@ public class InitDummyDataTest {
     private RoomRepository roomRepository;
 
     @Autowired
-    private SnapshotService snapshotService;
+    private SnapshotServiceImpl snapshotService;
 
     @Autowired
-    private CheckUpService checkUpService;
+    private CheckUpServiceImpl checkUpService;
 
     @Autowired
-    private CommentService commentService;
+    private CommentServiceImpl commentService;
 
     private UUID uuid = UUID.fromString("bc31c700-8318-46a9-b6aa-bed717ba1663");
 

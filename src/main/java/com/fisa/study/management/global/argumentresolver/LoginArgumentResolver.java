@@ -1,6 +1,5 @@
 package com.fisa.study.management.global.argumentresolver;
 
-import com.fisa.study.management.domain.member.entity.Member;
 import com.fisa.study.management.global.session.SessionConst;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -29,6 +28,7 @@ public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
         HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
         HttpSession session = request.getSession(false);
         //세션 기간 정하기
+
         log.info(session.toString());
 
         if (session == null) {

@@ -5,7 +5,7 @@ import com.fisa.study.management.domain.member.dto.MemberRegisterDTO;
 import com.fisa.study.management.domain.member.dto.MemberResponseDTO;
 import com.fisa.study.management.domain.member.entity.Member;
 import com.fisa.study.management.domain.member.repository.MemberRepository;
-import com.fisa.study.management.domain.member.service.MemberService;
+import com.fisa.study.management.domain.member.service.MemberServiceImpl;
 import com.fisa.study.management.global.argumentresolver.Login;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -29,7 +29,7 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 public class MemberController {
-    private final MemberService memberService;
+    private final MemberServiceImpl memberService;
     private final MemberRepository memberRepository;
 
     // login Check
