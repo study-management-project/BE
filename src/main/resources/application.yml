@@ -8,5 +8,5 @@ server:
       cookie:
         same-site: none
         http-only: true
-        secure: true
+        secure: false
       timeout: 5h

@@ -51,8 +51,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     public RoomResponseByUserDTO getRoomDetails(UUID uuid){
-        Room room = roomRepository.findByUuidWithComments(uuid)
-                .orElseThrow(() -> new EntityNotFoundException("Room not found"));
+        Room room = roomRepository.findByUuid(uuid).orElseThrow(()->new EntityNotFoundException("엔티티없음"));
         return RoomResponseByUserDTO.builder()
                 .name(room.getName())
                 .description(room.getDescription())
