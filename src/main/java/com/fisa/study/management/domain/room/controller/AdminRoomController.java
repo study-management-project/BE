@@ -2,8 +2,7 @@ package com.fisa.study.management.domain.room.controller;
 
 import com.fisa.study.management.domain.room.dto.RoomRequestDTO;
 import com.fisa.study.management.domain.room.dto.RoomResponseByAdminDTO;
-import com.fisa.study.management.domain.room.entity.Room;
-import com.fisa.study.management.domain.room.service.RoomService;
+import com.fisa.study.management.domain.room.service.RoomServiceImpl;
 import com.fisa.study.management.global.argumentresolver.Login;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminRoomController {
 
-    private final RoomService roomService;
+    private final RoomServiceImpl roomService;
 
     // 방 조회 (자신에게 묶인 거 가져오도록 수정해야 함)
     @GetMapping("/rooms")

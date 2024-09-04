@@ -1,9 +1,6 @@
 package com.fisa.study.management.domain.checkup.controller;
 
-import com.fisa.study.management.domain.checkup.dto.CheckUpDTO;
-import com.fisa.study.management.domain.checkup.dto.SendCheckUpDTO;
-import com.fisa.study.management.domain.checkup.service.CheckUpService;
-import com.fisa.study.management.global.argumentresolver.Login;
+import com.fisa.study.management.domain.checkup.service.CheckUpServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +13,7 @@ import java.util.UUID;
 @Slf4j
 @RequiredArgsConstructor
 public class CheckUpController {
-    private final CheckUpService checkUpService;
+    private final CheckUpServiceImpl checkUpService;
 
     @GetMapping("/get")
     public ResponseEntity<?> getCheckUp(@PathVariable UUID uuid) {

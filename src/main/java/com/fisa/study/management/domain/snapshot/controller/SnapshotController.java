@@ -2,12 +2,11 @@ package com.fisa.study.management.domain.snapshot.controller;
 
 
 import com.fisa.study.management.domain.snapshot.dto.ResSnapshotDTO;
-import com.fisa.study.management.domain.snapshot.service.SnapshotService;
+import com.fisa.study.management.domain.snapshot.service.SnapshotServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,7 +16,7 @@ import java.util.UUID;
 @Slf4j
 @RequestMapping("/room/{uuid}/snapshot")
 public class SnapshotController {
-    private final SnapshotService snapshotService;
+    private final SnapshotServiceImpl snapshotService;
 
     @GetMapping("/{year}/{month}")
     public Integer[] sendSnapshotByDate(@PathVariable UUID uuid,@PathVariable int year,@PathVariable int month) {

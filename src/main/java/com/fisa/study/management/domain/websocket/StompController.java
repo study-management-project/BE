@@ -2,16 +2,16 @@ package com.fisa.study.management.domain.websocket;
 
 import com.fisa.study.management.domain.checkup.dto.CheckUpDTO;
 import com.fisa.study.management.domain.checkup.dto.SendCheckUpDTO;
-import com.fisa.study.management.domain.checkup.service.CheckUpService;
+import com.fisa.study.management.domain.checkup.service.CheckUpServiceImpl;
 import com.fisa.study.management.domain.comment.dto.CommentDTO;
-import com.fisa.study.management.domain.comment.service.CommentService;
+import com.fisa.study.management.domain.comment.service.CommentServiceImpl;
 import com.fisa.study.management.domain.room.dto.CodeDTO;
 import com.fisa.study.management.domain.room.entity.Room;
-import com.fisa.study.management.domain.room.service.RoomService;
+import com.fisa.study.management.domain.room.service.RoomServiceImpl;
 import com.fisa.study.management.domain.snapshot.dto.RegSnapshotDTO;
 import com.fisa.study.management.domain.snapshot.dto.ResSnapshotDTO;
 import com.fisa.study.management.domain.snapshot.entity.Snapshot;
-import com.fisa.study.management.domain.snapshot.service.SnapshotService;
+import com.fisa.study.management.domain.snapshot.service.SnapshotServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.MessageHeaders;
@@ -34,10 +34,10 @@ public class StompController {
 
     private final SimpMessageSendingOperations sendingOperations;
     private final SimpMessagingTemplate messagingTemplate;
-    private final RoomService roomService;
-    private final CommentService commentService;
-    private final SnapshotService snapshotService;
-    private final CheckUpService checkUpService;
+    private final RoomServiceImpl roomService;
+    private final CommentServiceImpl commentService;
+    private final SnapshotServiceImpl snapshotService;
+    private final CheckUpServiceImpl checkUpService;
     private ConcurrentHashMap<UUID, String> cacheMap = new ConcurrentHashMap<>();
 
     @MessageMapping("/share-code")
