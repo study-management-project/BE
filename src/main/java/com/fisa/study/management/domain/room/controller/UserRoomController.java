@@ -1,7 +1,7 @@
 package com.fisa.study.management.domain.room.controller;
 
 import com.fisa.study.management.domain.room.dto.RoomResponseByUserDTO;
-import com.fisa.study.management.domain.room.service.RoomService;
+import com.fisa.study.management.domain.room.service.RoomServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +12,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserRoomController {
 
-    private final RoomService roomService;
+    private final RoomServiceImpl roomService;
 
     @GetMapping("/room/{uuid}")
     public RoomResponseByUserDTO getRoomByUuId(@PathVariable UUID uuid) {

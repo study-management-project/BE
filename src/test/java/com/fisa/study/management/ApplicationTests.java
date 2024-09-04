@@ -1,9 +1,7 @@
 package com.fisa.study.management;
 
-import com.fisa.study.management.domain.room.dto.RoomRequestDTO;
-import com.fisa.study.management.domain.room.service.RoomService;
-import com.fisa.study.management.domain.snapshot.dto.RegSnapshotDTO;
-import com.fisa.study.management.domain.snapshot.service.SnapshotService;
+import com.fisa.study.management.domain.room.service.RoomServiceImpl;
+import com.fisa.study.management.domain.snapshot.service.SnapshotServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,9 +11,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 class ApplicationTests {
 
 	@Autowired
-	private SnapshotService snapshotService;
+	private SnapshotServiceImpl snapshotService;
 	@Autowired
-	private RoomService roomService;
+	private RoomServiceImpl roomService;
 
 	@Test
 	void contextLoads() {

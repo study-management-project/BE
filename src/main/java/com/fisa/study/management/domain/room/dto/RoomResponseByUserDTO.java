@@ -18,8 +18,4 @@ public class RoomResponseByUserDTO {
     private String name;
     private String description;
     private String content;
-    private List<ResSnapshotDTO> snapshotList;
-    private List<String> commentList;
-    private Integer[] haveSnapshotDate;
-    private CheckUpDTO checkUpDTO;
 }
