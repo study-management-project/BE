@@ -7,6 +7,6 @@ server:
     session:
       cookie:
         same-site: none
-        http-only: true
+        http-only: false
         secure: false
       timeout: 5h
