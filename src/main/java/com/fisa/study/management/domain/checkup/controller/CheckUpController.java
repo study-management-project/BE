@@ -1,5 +1,6 @@
 package com.fisa.study.management.domain.checkup.controller;
 
+import com.fisa.study.management.domain.checkup.dto.CheckUpDTO;
 import com.fisa.study.management.domain.checkup.dto.SendCheckUpDTO;
 import com.fisa.study.management.domain.checkup.service.CheckUpService;
 import com.fisa.study.management.global.argumentresolver.Login;
@@ -16,6 +17,11 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CheckUpController {
     private final CheckUpService checkUpService;
+
+    @GetMapping("/get")
+    public ResponseEntity<?> getCheckUp(@PathVariable UUID uuid) {
+        return checkUpService.getCheckUp(uuid);
+    }
 
     @GetMapping("/OK")
     public ResponseEntity<?> OIncrease(@PathVariable UUID uuid){

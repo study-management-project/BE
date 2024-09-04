@@ -12,4 +12,5 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>
                 (new ErrorDTO(ex.getErrorCode().getStatus(), ex.getErrorCode().getMessage()), ex.getErrorCode().getStatus());
     }
+
 }

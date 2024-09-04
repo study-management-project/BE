@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+//여기는 서비스 이용할때 로그인 체그 클래스
 @Slf4j
 public class LoginCheckInterceptor implements HandlerInterceptor {
 

@@ -59,6 +59,7 @@ public class MemberService {
             if (BCrypt.checkpw(dto.getPassword(), loginMember.getPassword())) {
                 // 세션이 있으면 기존 세션반환, 없으면 생성해서 반환
                 HttpSession session = request.getSession();
+                session.setMaxInactiveInterval(7 * 24 * 60 * 60);
                 // 세션에 로그인 회원 정보 보관
                 session.setAttribute(SessionConst.LOGIN_MEMBER, loginMember.getId());
                 return entityToResponseDTO(loginMember);

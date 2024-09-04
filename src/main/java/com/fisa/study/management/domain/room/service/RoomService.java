@@ -70,34 +70,29 @@ public class RoomService {
 
         Room room = roomRepository.findByUuidWithComments(uuid)
                 .orElseThrow(() -> new EntityNotFoundException("Room not found"));
-        LocalDate now =LocalDate.now();
-        int year= now.getYear();
-        int month= now.getMonthValue();
-        int day= now.getDayOfMonth();
-        List<String> commentDTOS = room.getCommentList()
-                .stream()
-                .map(Comment::getContent).
-                toList();
+//        LocalDate now =LocalDate.now();
+//        int year= now.getYear();
+//        int month= now.getMonthValue();
+//        int day= now.getDayOfMonth();
+//        List<String> commentDTOS = room.getCommentList()
+//                .stream()
+//                .map(Comment::getContent).
+//                toList();
+//
+//        List<ResSnapshotDTO> resSnapshotDTOS =
+//                snapshotRepository.findCreatedDateByRoomIdAndDay(room.getId(), year,month,day)
+//                .stream().map(this::EntityToSendSnapshotDTO).toList();
+//
+//        Integer[] dayList=
+//                snapshotRepository.findDistinctCreatedDatesByRoomIdAndMonth(room.getId(),year,month)
+//                .stream().map(LocalDateTime::getDayOfMonth).distinct().toArray(Integer[]::new);
 
-        List<ResSnapshotDTO> resSnapshotDTOS =
-                snapshotRepository.findCreatedDateByRoomIdAndDay(room.getId(), year,month,day)
-                .stream().map(this::EntityToSendSnapshotDTO).toList();
-
-        Integer[] dayList=
-                snapshotRepository.findDistinctCreatedDatesByRoomIdAndMonth(room.getId(),year,month)
-                .stream().map(LocalDateTime::getDayOfMonth).distinct().toArray(Integer[]::new);
-
-        Optional<CheckUp> checkUp= checkUpRepository.findTopByRoomIdOrderByIdDesc(room.getId());
-//        log.info("로그입니다"+checkUp.get().getIsOpen()+checkUp.get().getTitle());
-        CheckUpDTO checkUpDTO = EntityToTestCheckUpDTO(checkUp,room.getUuid());
+//        Optional<CheckUp> checkUp= checkUpRepository.findTopByRoomIdOrderByIdDesc(room.getId());
+//        CheckUpDTO checkUpDTO = EntityToTestCheckUpDTO(checkUp,room.getUuid());
         return RoomResponseByUserDTO.builder()
                 .name(room.getName())
                 .description(room.getDescription())
                 .content(room.getContent())
-                .snapshotList(resSnapshotDTOS)
-                .commentList(commentDTOS)
-                .haveSnapshotDate(dayList)
-                .checkUpDTO(checkUpDTO)
                 .build();
     }
 
@@ -108,20 +103,5 @@ public class RoomService {
                 .createdDate(snapshot.getCreatedDate())
                 .build();
     }
-    CheckUpDTO EntityToTestCheckUpDTO(Optional<CheckUp> checkUp,UUID uuid) {
-        if (checkUp.isPresent()) {
-            return CheckUpDTO.builder()
-                    .uuid(uuid)
-                    .title(checkUp.get().getTitle())
-                    .isOpen(checkUp.get().getIsOpen())
-                    .build();
-        }
-        else {
-            return CheckUpDTO.builder()
-                    .title("현재 이해도 조사가 없습니다")
-                    .uuid(uuid)
-                    .isOpen(false)
-                    .build();
-        }
-    }
+
 }
