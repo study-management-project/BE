@@ -42,6 +42,11 @@ public class RoomServiceImpl implements RoomService {
     }
 
     public Room updateRoom(UUID uuid, String content) {
+//        roomRepository.findByUuid(uuid).ifPresentOrElse(room -> {
+//            room.setContent(content);
+//            roomRepository.save(room);
+//        },()->new EntityNotFoundException("엔티티없음"));
+//
         Room room = roomRepository.findByUuid(uuid).orElse(null);
         if (room != null) {
             room.setContent(content);

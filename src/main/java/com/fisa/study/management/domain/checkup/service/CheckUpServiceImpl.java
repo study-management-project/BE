@@ -69,19 +69,17 @@ public class CheckUpServiceImpl implements CheckUpService {
                 .build();
     }
     CheckUpDTO EntityToTestCheckUpDTO(Optional<CheckUp> checkUp,UUID uuid) {
-        if (checkUp.isPresent()) {
-            return CheckUpDTO.builder()
-                    .uuid(uuid)
-                    .title(checkUp.get().getTitle())
-                    .isOpen(checkUp.get().getIsOpen())
-                    .build();
-        }
-        else {
-            return CheckUpDTO.builder()
-                    .title("현재 이해도 조사가 없습니다")
-                    .uuid(uuid)
-                    .isOpen(false)
-                    .build();
-        }
+
+        return checkUp.map(checkUp1 ->
+                        CheckUpDTO.builder()
+                                .uuid(uuid)
+                                .title(checkUp1.getTitle())
+                                .isOpen(checkUp1.getIsOpen())
+                                .build())
+                .orElse(CheckUpDTO.builder()
+                        .uuid(uuid)
+                        .title("현재 이해도 조사가 없습니다")
+                        .isOpen(false)
+                        .build());
     }
 }
