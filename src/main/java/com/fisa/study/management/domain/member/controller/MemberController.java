@@ -73,7 +73,7 @@ public class MemberController {
                                                    HttpServletRequest request, HttpServletResponse response) {
         MemberResponseDTO result = memberService.login(requestDTO, request, response);
 
-        if (result != null) return ResponseEntity.ok(result);
+        if (result != null) return ResponseEntity.ok("로그인 성공");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("로그인 실패");
     }
 
