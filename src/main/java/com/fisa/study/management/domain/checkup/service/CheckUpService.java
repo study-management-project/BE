@@ -7,13 +7,13 @@ import org.springframework.http.ResponseEntity;
 import java.util.UUID;
 
 public interface CheckUpService {
-    ResponseEntity<?> getCheckUp(UUID uuid);
+    CheckUpDTO getCheckUp(UUID uuid);
 
     void registerCheckUpForRoom(CheckUpDTO checkUpDTO) ;
 
     SendCheckUpDTO getCheckUpResult(UUID uuid);
 
-    ResponseEntity<?> resentCheckUpOIncrease(UUID uuid);
+    String resentCheckUpOIncrease(UUID uuid);
 
-    ResponseEntity<?> resentCheckUpXIncrease(UUID uuid);
+    String resentCheckUpXIncrease(UUID uuid);
 }

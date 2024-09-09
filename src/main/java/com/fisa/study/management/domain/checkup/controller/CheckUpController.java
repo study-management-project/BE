@@ -1,5 +1,6 @@
 package com.fisa.study.management.domain.checkup.controller;
 
+import com.fisa.study.management.domain.checkup.dto.CheckUpDTO;
 import com.fisa.study.management.domain.checkup.service.CheckUpServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,16 +18,20 @@ public class CheckUpController {
 
     @GetMapping("/get")
     public ResponseEntity<?> getCheckUp(@PathVariable UUID uuid) {
-        return checkUpService.getCheckUp(uuid);
+
+        CheckUpDTO checkUpDTO= checkUpService.getCheckUp(uuid);
+        return ResponseEntity.ok(checkUpDTO);
     }
 
     @GetMapping("/OK")
     public ResponseEntity<?> OIncrease(@PathVariable UUID uuid){
-        return checkUpService.resentCheckUpOIncrease(uuid);
+        String result =checkUpService.resentCheckUpOIncrease(uuid);
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/NO")
     public ResponseEntity<?> XIncrease(@PathVariable UUID uuid){
-        return checkUpService.resentCheckUpXIncrease(uuid);
+        String result =checkUpService.resentCheckUpXIncrease(uuid);
+        return ResponseEntity.ok(result);
     }
 }
