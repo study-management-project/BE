@@ -6,6 +6,8 @@ import com.fisa.study.management.domain.member.dto.MemberResponseDTO;
 import com.fisa.study.management.domain.member.entity.Member;
 import com.fisa.study.management.domain.member.entity.Role;
 import com.fisa.study.management.domain.member.repository.MemberRepository;
+import com.fisa.study.management.global.error.CustomException;
+import com.fisa.study.management.global.error.ErrorCode;
 import com.fisa.study.management.global.session.SessionConst;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,9 +30,9 @@ public class MemberServiceImpl implements MemberService {
 
     // 회원가입
     @Transactional
-    public ResponseEntity<?> register(MemberRegisterDTO dto) {
+    public void register(MemberRegisterDTO dto) {
         if (memberRepository.findByEmail(dto.getEmail()).isPresent()) {
-            return ResponseEntity.status(432).body("이미 존재하는 이메일입니다.");
+            throw new CustomException(ErrorCode.EMAIL_ALREADY_EXISTS);
         }
         String encodedPassword = BCrypt.hashpw(dto.getPassword(), BCrypt.gensalt()); // 비밀번호 암호화
 
@@ -42,7 +44,6 @@ public class MemberServiceImpl implements MemberService {
                 .build();
 
         memberRepository.save(member);
-        return ResponseEntity.ok("성공");
     }
 
     public MemberResponseDTO login(MemberLoginDTO dto, HttpServletRequest request, HttpServletResponse response) {

@@ -28,6 +28,7 @@ public class AdminRoomController {
     // 방 생성
     @PostMapping("/room")
     public ResponseEntity<?> createRoom(@Login Long userId, @RequestBody RoomRequestDTO roomRequestDTO) {
-        return roomService.createRoom(userId, roomRequestDTO);
+        roomService.createRoom(userId, roomRequestDTO);
+        return ResponseEntity.ok("방 생성 성공");
     }
 }

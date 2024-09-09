@@ -11,7 +11,6 @@ public interface SnapshotService {
     Snapshot regSnapshot(RegSnapshotDTO dto);
 
     Integer[] getSnapshotDateByDate(UUID uuid, int year, int month);
+
     List<ResSnapshotDTO> findSnapShotByRoomIdAndDay(UUID uuid, int year, int month, int day);
-
-
 }

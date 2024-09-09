@@ -25,13 +25,13 @@ public class CheckUpController {
 
     @GetMapping("/OK")
     public ResponseEntity<?> OIncrease(@PathVariable UUID uuid){
-        String result =checkUpService.resentCheckUpOIncrease(uuid);
-        return ResponseEntity.ok(result);
+        checkUpService.resentCheckUpOIncrease(uuid);
+        return ResponseEntity.ok("O증가 성공");
     }
 
     @GetMapping("/NO")
     public ResponseEntity<?> XIncrease(@PathVariable UUID uuid){
-        String result =checkUpService.resentCheckUpXIncrease(uuid);
-        return ResponseEntity.ok(result);
+        checkUpService.resentCheckUpXIncrease(uuid);
+        return ResponseEntity.ok("X 증가 성공");
     }
 }

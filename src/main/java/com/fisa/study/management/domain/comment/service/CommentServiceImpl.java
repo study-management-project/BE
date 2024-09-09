@@ -5,6 +5,8 @@ import com.fisa.study.management.domain.comment.entity.Comment;
 import com.fisa.study.management.domain.comment.repository.CommentRepository;
 import com.fisa.study.management.domain.room.entity.Room;
 import com.fisa.study.management.domain.room.repository.RoomRepository;
+import com.fisa.study.management.global.error.CustomException;
+import com.fisa.study.management.global.error.ErrorCode;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +20,11 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final RoomRepository roomRepository;
 
-    public String regCommentByRoomId(CommentDTO commentDTO)  {
+    public void regCommentByRoomId(CommentDTO commentDTO)  {
         Room room = roomRepository.findByUuid(commentDTO.getUuid())
-                .orElseThrow(() -> new EntityNotFoundException("Room Not Found"));
+                .orElseThrow(() ->new CustomException(ErrorCode.ROOM_NOT_FOUND));
         commentRepository.save(DTOToEntityWithRoom(room,commentDTO));
-        return "코멘트 등록 성공";
+
     }
 
     Comment DTOToEntityWithRoom(Room room,CommentDTO commentDTO){

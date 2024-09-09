@@ -7,6 +7,8 @@ import com.fisa.study.management.domain.room.dto.RoomResponseByAdminDTO;
 import com.fisa.study.management.domain.room.dto.RoomResponseByUserDTO;
 import com.fisa.study.management.domain.room.entity.Room;
 import com.fisa.study.management.domain.room.repository.RoomRepository;
+import com.fisa.study.management.global.error.CustomException;
+import com.fisa.study.management.global.error.ErrorCode;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,33 +32,23 @@ public class RoomServiceImpl implements RoomService {
         return roomRepository.findByAdminId(userId);
     }
 
-    public ResponseEntity<?> createRoom(Long userId, RoomRequestDTO roomRequestDTO) {
-        Optional<Member> optionalMember = memberRepository.findById(userId);
-        if (optionalMember.isEmpty()) {
-            return ResponseEntity.badRequest().body("존재하지 않는 유저");
-        }
-        Member member = optionalMember.get();
+    public void createRoom(Long userId, RoomRequestDTO roomRequestDTO) {
+        Member member= memberRepository.findById(userId)
+                .orElseThrow(()->new CustomException(ErrorCode.MEMBER_NOT_FOUND));
         Room room = roomRequestDTO.toEntity(member);
-        Room savedRoom = roomRepository.save(room);
-        return ResponseEntity.ok(savedRoom.getUuid().toString());
+        roomRepository.save(room);
     }
 
-    public Room updateRoom(UUID uuid, String content) {
-//        roomRepository.findByUuid(uuid).ifPresentOrElse(room -> {
-//            room.setContent(content);
-//            roomRepository.save(room);
-//        },()->new EntityNotFoundException("엔티티없음"));
-//
-        Room room = roomRepository.findByUuid(uuid).orElse(null);
-        if (room != null) {
-            room.setContent(content);
-            return roomRepository.save(room);
-        }
-        return null;
+    public void updateRoom(UUID uuid, String content) {
+        Room room = roomRepository.findByUuid(uuid)
+                .orElseThrow(()->new CustomException(ErrorCode.ROOM_NOT_FOUND));
+        room.setContent(content);
+        roomRepository.save(room);
     }
 
     public RoomResponseByUserDTO getRoomDetails(UUID uuid){
-        Room room = roomRepository.findByUuid(uuid).orElseThrow(()->new EntityNotFoundException("엔티티없음"));
+        Room room = roomRepository.findByUuid(uuid)
+                .orElseThrow(()->new CustomException(ErrorCode.ROOM_NOT_FOUND));
         return RoomResponseByUserDTO.builder()
                 .name(room.getName())
                 .description(room.getDescription())

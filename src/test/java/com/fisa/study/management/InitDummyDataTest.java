@@ -91,8 +91,8 @@ public class InitDummyDataTest {
                 .password("1")
                 .build();
 
-        ResponseEntity<?> register = memberService.register(dto);
-        log.info("Order 1 {}", register.toString());
+        memberService.register(dto);
+        log.info("Order 1 {}","성공");
     }
 
     @Test
