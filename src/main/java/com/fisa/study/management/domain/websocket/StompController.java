@@ -5,6 +5,7 @@ import com.fisa.study.management.domain.checkup.dto.SendCheckUpDTO;
 import com.fisa.study.management.domain.checkup.service.CheckUpServiceImpl;
 import com.fisa.study.management.domain.comment.dto.CommentDTO;
 import com.fisa.study.management.domain.comment.service.CommentServiceImpl;
+import com.fisa.study.management.domain.member.repository.MemberRepository;
 import com.fisa.study.management.domain.room.dto.CodeDTO;
 import com.fisa.study.management.domain.room.entity.Room;
 import com.fisa.study.management.domain.room.service.RoomServiceImpl;
@@ -12,6 +13,9 @@ import com.fisa.study.management.domain.snapshot.dto.RegSnapshotDTO;
 import com.fisa.study.management.domain.snapshot.dto.ResSnapshotDTO;
 import com.fisa.study.management.domain.snapshot.entity.Snapshot;
 import com.fisa.study.management.domain.snapshot.service.SnapshotServiceImpl;
+import com.fisa.study.management.global.argumentresolver.Login;
+import com.fisa.study.management.global.error.CustomException;
+import com.fisa.study.management.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.MessageHeaders;
@@ -37,6 +41,7 @@ public class StompController {
     private final RoomServiceImpl roomService;
     private final CommentServiceImpl commentService;
     private final SnapshotServiceImpl snapshotService;
+    private final MemberRepository memberRepository;
     private final CheckUpServiceImpl checkUpService;
     private ConcurrentHashMap<UUID, String> cacheMap = new ConcurrentHashMap<>();
 
@@ -78,10 +83,13 @@ public class StompController {
     }
 
     @MessageMapping("/share-snapshot")
-    public void shareSnapshot(@Payload RegSnapshotDTO dto) {
-        Snapshot snapshot = snapshotService.regSnapshot(dto);
-        ResSnapshotDTO resSnapshotDTO = snapshotService.entityToSendSnapshotDTO(snapshot);
-        sendingOperations.convertAndSend("/topic/" + dto.getUuid() + "/snapshot", resSnapshotDTO);
+    public void shareSnapshot(@Payload RegSnapshotDTO dto,SimpMessageHeaderAccessor headerAccessor) {
+        log.info("세션 확인"+(String) headerAccessor.getSessionAttributes().get("sessionId"));
+        if(headerAccessor.getSessionAttributes().get("sessionId")!="none"){
+            Snapshot snapshot = snapshotService.regSnapshot(dto);
+            ResSnapshotDTO resSnapshotDTO = snapshotService.entityToSendSnapshotDTO(snapshot);
+            sendingOperations.convertAndSend("/topic/" + dto.getUuid() + "/snapshot", resSnapshotDTO);
+        }
     }
 
     @MessageMapping("/share-checkup")
