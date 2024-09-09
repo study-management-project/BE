@@ -23,9 +23,11 @@ public class SnapshotServiceImpl implements SnapshotService {
 
     public Snapshot regSnapshot(RegSnapshotDTO dto) {
         Room room= roomRepository.findByUuid(dto.getUuid()).orElseThrow(() -> new EntityNotFoundException("Room not found"));
-        return snapshotRepository.save(regSnapshotDTOToEntity(room, dto));
+        Snapshot snapshot= RegSnapshotDTO.from(dto);
+        snapshot.setRoom(room);
+        snapshotRepository.save(snapshot);
+        return snapshot;
     }
-
 
     public Integer[] getSnapshotDateByDate(UUID uuid, int year,int month) {
         return  snapshotRepository
@@ -35,32 +37,6 @@ public class SnapshotServiceImpl implements SnapshotService {
 
     public List<ResSnapshotDTO> findSnapShotByRoomIdAndDay(UUID uuid,int year,int month,int day)  {
         List<Snapshot> snapshots = snapshotRepository.findCreatedDateByRoomUuidAndDay(uuid,year,month,day);
-        return snapshots.stream().map(this::EntityToResSnapShotDTO).collect(Collectors.toList());
-    }
-
-    ResSnapshotDTO EntityToResSnapShotDTO(Snapshot snapshot) {
-        return ResSnapshotDTO.builder()
-                .title(snapshot.getTitle())
-                .content(snapshot.getContent())
-                .createdDate(snapshot.getCreatedDate())
-                .build();
-    }
-
-    Snapshot regSnapshotDTOToEntity(Room room, RegSnapshotDTO regSnapshotDTO) {
-        Snapshot snapshot= Snapshot.builder()
-                .content(regSnapshotDTO.getContent())
-                .title(regSnapshotDTO.getTitle())
-                .room(room)
-                .build();
-        snapshot.setRoom(room);
-        return snapshot;
-    }
-
-    public ResSnapshotDTO entityToSendSnapshotDTO(Snapshot snapshot) {
-        return ResSnapshotDTO.builder()
-                .title(snapshot.getTitle())
-                .content(snapshot.getContent())
-                .createdDate(snapshot.getCreatedDate())
-                .build();
+        return snapshots.stream().map(ResSnapshotDTO::from).collect(Collectors.toList());
     }
 }

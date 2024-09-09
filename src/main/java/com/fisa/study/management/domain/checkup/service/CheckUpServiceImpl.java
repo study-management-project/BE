@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 import java.util.UUID;
 
+
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -29,13 +31,14 @@ public class CheckUpServiceImpl implements CheckUpService {
         roomRepository.findByUuid(uuid)
                 .orElseThrow(() -> new CustomException(ErrorCode.ROOM_NOT_FOUND));
         Optional<CheckUp> checkUp= checkUpRepository.findTopByRoomUuidOrderByIdDesc(uuid);
-        return EntityToTestCheckUpDTO(checkUp,uuid);
+
+        return CheckUpDTO.from(checkUp,uuid);
     }
 
     public void registerCheckUpForRoom(CheckUpDTO checkUpDTO) {
         Room room= roomRepository.findByUuid(checkUpDTO.getUuid())
                 .orElseThrow(() -> new CustomException(ErrorCode.ROOM_NOT_FOUND));
-        checkUpRepository.save(DTOToEntityWithRoom(room, checkUpDTO));
+        checkUpRepository.save(checkUpDTO.toEntity(room));
     }
 
     public SendCheckUpDTO getCheckUpResult(UUID uuid) {
@@ -43,46 +46,20 @@ public class CheckUpServiceImpl implements CheckUpService {
                 .orElseThrow(() -> new CustomException(ErrorCode.ROOM_NOT_FOUND));
         checkUp.setIsOpen(false);
         checkUpRepository.save(checkUp);
-        return EntityToDTO(checkUp);
+        return SendCheckUpDTO.from(checkUp);
     }
+
     public void resentCheckUpOIncrease(UUID uuid)  {
         CheckUp checkUp= checkUpRepository.findTopByRoomUuidOrderByIdDesc(uuid)
                 .orElseThrow(() -> new CustomException(ErrorCode.CHECKUP_NOT_FOUND));
         checkUp.addO();
         checkUpRepository.save(checkUp);
     }
+
     public void resentCheckUpXIncrease(UUID uuid)  {
         CheckUp checkUp= checkUpRepository.findTopByRoomUuidOrderByIdDesc(uuid)
                 .orElseThrow(() -> new CustomException(ErrorCode.CHECKUP_NOT_FOUND));
         checkUp.addX();
         checkUpRepository.save(checkUp);
-    }
-    CheckUp DTOToEntityWithRoom(Room room, CheckUpDTO checkUpDTO){
-        CheckUp checkUp= CheckUp.builder()
-                .title(checkUpDTO.getTitle())
-                .isOpen(checkUpDTO.getIsOpen())
-                .build();
-        checkUp.setRoom(room);
-        return checkUp;
-    }
-    SendCheckUpDTO EntityToDTO(CheckUp checkUp){
-        return SendCheckUpDTO.builder()
-                .O(checkUp.getOx().getO())
-                .X(checkUp.getOx().getX())
-                .build();
-    }
-    CheckUpDTO EntityToTestCheckUpDTO(Optional<CheckUp> checkUp,UUID uuid) {
-
-        return checkUp.map(checkUp1 ->
-                        CheckUpDTO.builder()
-                                .uuid(uuid)
-                                .title(checkUp1.getTitle())
-                                .isOpen(checkUp1.getIsOpen())
-                                .build())
-                .orElse(CheckUpDTO.builder()
-                        .uuid(uuid)
-                        .title("현재 이해도 조사가 없습니다")
-                        .isOpen(false)
-                        .build());
     }
 }

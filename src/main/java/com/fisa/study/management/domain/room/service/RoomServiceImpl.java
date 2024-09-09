@@ -49,10 +49,6 @@ public class RoomServiceImpl implements RoomService {
     public RoomResponseByUserDTO getRoomDetails(UUID uuid){
         Room room = roomRepository.findByUuid(uuid)
                 .orElseThrow(()->new CustomException(ErrorCode.ROOM_NOT_FOUND));
-        return RoomResponseByUserDTO.builder()
-                .name(room.getName())
-                .description(room.getDescription())
-                .content(room.getContent())
-                .build();
+        return RoomResponseByUserDTO.from(room);
     }
 }
