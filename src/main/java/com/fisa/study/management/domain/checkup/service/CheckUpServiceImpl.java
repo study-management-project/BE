@@ -10,7 +10,6 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -24,10 +23,9 @@ public class CheckUpServiceImpl implements CheckUpService {
     private final CheckUpRepository checkUpRepository;
     private final RoomRepository roomRepository;
 
-    public ResponseEntity<?> getCheckUp(UUID uuid){
+    public CheckUpDTO getCheckUp(UUID uuid){
         Optional<CheckUp> checkUp= checkUpRepository.findTopByRoomUuidOrderByIdDesc(uuid);
-        CheckUpDTO checkUpDTO = EntityToTestCheckUpDTO(checkUp,uuid);
-        return ResponseEntity.ok(checkUpDTO);
+        return EntityToTestCheckUpDTO(checkUp,uuid);
     }
 
     public void registerCheckUpForRoom(CheckUpDTO checkUpDTO) {
@@ -41,18 +39,18 @@ public class CheckUpServiceImpl implements CheckUpService {
         checkUpRepository.save(checkUp);
         return EntityToDTO(checkUp);
     }
-    public ResponseEntity<?> resentCheckUpOIncrease(UUID uuid)  {
+    public String resentCheckUpOIncrease(UUID uuid)  {
         CheckUp checkUp= checkUpRepository.findTopByRoomUuidOrderByIdDesc(uuid).orElseThrow(() -> new EntityNotFoundException("Checkup not found"));
         checkUp.addO();
         checkUpRepository.save(checkUp);
-        return ResponseEntity.ok("O증가 성공");
+        return "O증가 성공";
 
     }
-    public ResponseEntity<?> resentCheckUpXIncrease(UUID uuid)  {
+    public String resentCheckUpXIncrease(UUID uuid)  {
         CheckUp checkUp= checkUpRepository.findTopByRoomUuidOrderByIdDesc(uuid).orElseThrow(() -> new EntityNotFoundException("Checkup not found"));
         checkUp.addX();
         checkUpRepository.save(checkUp);
-        return ResponseEntity.ok("증가 성공");
+        return "증가 성공";
     }
     CheckUp DTOToEntityWithRoom(Room room, CheckUpDTO checkUpDTO){
         CheckUp checkUp= CheckUp.builder()

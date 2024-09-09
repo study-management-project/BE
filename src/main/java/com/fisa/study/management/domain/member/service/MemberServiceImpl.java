@@ -30,7 +30,7 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public ResponseEntity<?> register(MemberRegisterDTO dto) {
         if (memberRepository.findByEmail(dto.getEmail()).isPresent()) {
-            return ResponseEntity.status(432).body("이미 존재하는 이메일입니다.") ;
+            return ResponseEntity.status(432).body("이미 존재하는 이메일입니다.");
         }
         String encodedPassword = BCrypt.hashpw(dto.getPassword(), BCrypt.gensalt()); // 비밀번호 암호화
 

@@ -31,7 +31,7 @@ import java.util.UUID;
 @Rollback(value = false)
 @Slf4j
 @TestInstance(TestInstance.Lifecycle.PER_CLASS) // @BeforeAll을 인스턴스 메서드로 사용하기 위함
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class) //junit5에서는 순서지정하려면 이거 써야함
 public class InitDummyDataTest {
 
     @Autowired

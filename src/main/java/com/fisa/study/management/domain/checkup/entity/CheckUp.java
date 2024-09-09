@@ -1,22 +1,20 @@
 package com.fisa.study.management.domain.checkup.entity;
 
+
 import com.fisa.study.management.domain.room.entity.Room;
-import com.fisa.study.management.domain.snapshot.entity.Snapshot;
 import com.fisa.study.management.global.base.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Table(name = "check_up")
 public class CheckUp extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
