@@ -6,6 +6,8 @@ import com.fisa.study.management.domain.checkup.entity.CheckUp;
 import com.fisa.study.management.domain.checkup.repository.CheckUpRepository;
 import com.fisa.study.management.domain.room.entity.Room;
 import com.fisa.study.management.domain.room.repository.RoomRepository;
+import com.fisa.study.management.global.error.CustomException;
+import com.fisa.study.management.global.error.ErrorCode;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -24,33 +26,36 @@ public class CheckUpServiceImpl implements CheckUpService {
     private final RoomRepository roomRepository;
 
     public CheckUpDTO getCheckUp(UUID uuid){
+        roomRepository.findByUuid(uuid)
+                .orElseThrow(() -> new CustomException(ErrorCode.ROOM_NOT_FOUND));
         Optional<CheckUp> checkUp= checkUpRepository.findTopByRoomUuidOrderByIdDesc(uuid);
         return EntityToTestCheckUpDTO(checkUp,uuid);
     }
 
     public void registerCheckUpForRoom(CheckUpDTO checkUpDTO) {
-        Room room= roomRepository.findByUuid(checkUpDTO.getUuid()).orElseThrow(() -> new EntityNotFoundException("Room not found"));
+        Room room= roomRepository.findByUuid(checkUpDTO.getUuid())
+                .orElseThrow(() -> new CustomException(ErrorCode.ROOM_NOT_FOUND));
         checkUpRepository.save(DTOToEntityWithRoom(room, checkUpDTO));
     }
 
     public SendCheckUpDTO getCheckUpResult(UUID uuid) {
-        CheckUp checkUp= checkUpRepository.findTopByRoomUuidOrderByIdDesc(uuid).orElseThrow(() -> new EntityNotFoundException("entity not found"));
+        CheckUp checkUp= checkUpRepository.findTopByRoomUuidOrderByIdDesc(uuid)
+                .orElseThrow(() -> new CustomException(ErrorCode.ROOM_NOT_FOUND));
         checkUp.setIsOpen(false);
         checkUpRepository.save(checkUp);
         return EntityToDTO(checkUp);
     }
-    public String resentCheckUpOIncrease(UUID uuid)  {
-        CheckUp checkUp= checkUpRepository.findTopByRoomUuidOrderByIdDesc(uuid).orElseThrow(() -> new EntityNotFoundException("Checkup not found"));
+    public void resentCheckUpOIncrease(UUID uuid)  {
+        CheckUp checkUp= checkUpRepository.findTopByRoomUuidOrderByIdDesc(uuid)
+                .orElseThrow(() -> new CustomException(ErrorCode.CHECKUP_NOT_FOUND));
         checkUp.addO();
         checkUpRepository.save(checkUp);
-        return "O증가 성공";
-
     }
-    public String resentCheckUpXIncrease(UUID uuid)  {
-        CheckUp checkUp= checkUpRepository.findTopByRoomUuidOrderByIdDesc(uuid).orElseThrow(() -> new EntityNotFoundException("Checkup not found"));
+    public void resentCheckUpXIncrease(UUID uuid)  {
+        CheckUp checkUp= checkUpRepository.findTopByRoomUuidOrderByIdDesc(uuid)
+                .orElseThrow(() -> new CustomException(ErrorCode.CHECKUP_NOT_FOUND));
         checkUp.addX();
         checkUpRepository.save(checkUp);
-        return "증가 성공";
     }
     CheckUp DTOToEntityWithRoom(Room room, CheckUpDTO checkUpDTO){
         CheckUp checkUp= CheckUp.builder()

@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 
 public interface MemberService {
-    ResponseEntity<?> register(MemberRegisterDTO dto);
+    void register(MemberRegisterDTO dto);
 
     MemberResponseDTO login(MemberLoginDTO dto, HttpServletRequest request, HttpServletResponse response);
 }

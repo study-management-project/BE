@@ -7,6 +7,8 @@ import com.fisa.study.management.domain.member.entity.Member;
 import com.fisa.study.management.domain.member.repository.MemberRepository;
 import com.fisa.study.management.domain.member.service.MemberServiceImpl;
 import com.fisa.study.management.global.argumentresolver.Login;
+import com.fisa.study.management.global.error.CustomException;
+import com.fisa.study.management.global.error.ErrorCode;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -54,9 +56,9 @@ public class MemberController {
                     String errorMessage = fieldError.getDefaultMessage();
 
                     if ("password".equals(fieldName)) {
-                        return ResponseEntity.status(431).body("알맞은 비밀번호 형식을 사용하세요");
+                        throw new CustomException(ErrorCode.INVALID_PASSWORD_FORMAT);
                     } else if ("email".equals(fieldName)) {
-                        return ResponseEntity.status(433).body("알맞은 이메일 형식을 사용하세요");
+                        throw new CustomException(ErrorCode.INVALID_EMAIL_FORMAT);
                     } else {
                         return ResponseEntity.badRequest().body(errorMessage);
                     }
@@ -65,7 +67,8 @@ public class MemberController {
                 }
             }
         }
-        return memberService.register(requestDTO);
+        memberService.register(requestDTO);
+        return ResponseEntity.ok("성공");
     }
 
     @PostMapping("/login")

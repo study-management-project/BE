@@ -13,7 +13,7 @@ public interface CheckUpService {
 
     SendCheckUpDTO getCheckUpResult(UUID uuid);
 
-    String resentCheckUpOIncrease(UUID uuid);
+    void resentCheckUpOIncrease(UUID uuid);
 
-    String resentCheckUpXIncrease(UUID uuid);
+    void resentCheckUpXIncrease(UUID uuid);
 }

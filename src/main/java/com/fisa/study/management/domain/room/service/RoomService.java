@@ -12,9 +12,9 @@ import java.util.UUID;
 public interface RoomService {
     List<RoomResponseByAdminDTO> getAllRoomsByUserId(Long userId);
 
-    ResponseEntity<?> createRoom(Long userId, RoomRequestDTO roomRequestDTO);
+    void createRoom(Long userId, RoomRequestDTO roomRequestDTO);
 
-    Room updateRoom(UUID uuid, String content);
+    void updateRoom(UUID uuid, String content);
 
     RoomResponseByUserDTO getRoomDetails(UUID uuid);
 }

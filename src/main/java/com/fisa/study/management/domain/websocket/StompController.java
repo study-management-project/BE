@@ -59,7 +59,7 @@ public class StompController {
         log.info("Cache Miss");
 
         // 메시지를 받은 후 해당 Room의 content를 업데이트
-        Room room = roomService.updateRoom(roomId, newContent);
+        roomService.updateRoom(roomId, newContent);
 
         // 캐시 업데이트
         cacheMap.put(roomId, newContent);

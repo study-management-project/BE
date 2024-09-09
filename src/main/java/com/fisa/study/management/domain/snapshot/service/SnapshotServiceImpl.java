@@ -55,6 +55,7 @@ public class SnapshotServiceImpl implements SnapshotService {
         snapshot.setRoom(room);
         return snapshot;
     }
+
     public ResSnapshotDTO entityToSendSnapshotDTO(Snapshot snapshot) {
         return ResSnapshotDTO.builder()
                 .title(snapshot.getTitle())

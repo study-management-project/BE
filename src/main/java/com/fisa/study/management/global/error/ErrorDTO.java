@@ -1,18 +1,17 @@
 package com.fisa.study.management.global.error;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 
-@Data
+@Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+
 public class ErrorDTO {
 
-    private HttpStatus status;
+    private String code;
 
     private String message;
 }
