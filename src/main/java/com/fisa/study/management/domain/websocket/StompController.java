@@ -84,11 +84,10 @@ public class StompController {
 
     @MessageMapping("/share-snapshot")
     public void shareSnapshot(@Payload RegSnapshotDTO dto,SimpMessageHeaderAccessor headerAccessor) {
-        log.info("세션 확인"+(String) headerAccessor.getSessionAttributes().get("sessionId"));
+        log.info("세션 확인"+headerAccessor.getSessionAttributes().get("sessionId"));
         if(headerAccessor.getSessionAttributes().get("sessionId")!="none"){
             Snapshot snapshot = snapshotService.regSnapshot(dto);
-            ResSnapshotDTO resSnapshotDTO = snapshotService.entityToSendSnapshotDTO(snapshot);
-            sendingOperations.convertAndSend("/topic/" + dto.getUuid() + "/snapshot", resSnapshotDTO);
+            sendingOperations.convertAndSend("/topic/" + dto.getUuid() + "/snapshot", ResSnapshotDTO.from(snapshot));
         }
     }
 

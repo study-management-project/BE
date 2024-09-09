@@ -58,18 +58,9 @@ public class MemberServiceImpl implements MemberService {
                 // 세션에 로그인 회원 정보 보관
                 session.setAttribute(SessionConst.LOGIN_MEMBER, loginMember.getId());
                 log.info(session.getAttribute(SessionConst.LOGIN_MEMBER).toString()+"로그인");
-                return entityToResponseDTO(loginMember);
+                return MemberResponseDTO.from((loginMember));
             }
         }
         return null;
-    }
-
-    MemberResponseDTO entityToResponseDTO(Member member) {
-        return MemberResponseDTO.builder()
-                .userId(member.getId())
-                .username(member.getUsername())
-                .email(member.getEmail())
-                .role(member.getRole())
-                .build();
     }
 }

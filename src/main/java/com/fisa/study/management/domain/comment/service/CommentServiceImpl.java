@@ -23,16 +23,8 @@ public class CommentServiceImpl implements CommentService {
     public void regCommentByRoomId(CommentDTO commentDTO)  {
         Room room = roomRepository.findByUuid(commentDTO.getUuid())
                 .orElseThrow(() ->new CustomException(ErrorCode.ROOM_NOT_FOUND));
-        commentRepository.save(DTOToEntityWithRoom(room,commentDTO));
 
-    }
-
-    Comment DTOToEntityWithRoom(Room room,CommentDTO commentDTO){
-        Comment comment= Comment.builder()
-                .content(commentDTO.getContent())
-                .room(room)
-                .build();
-        comment.setRoom(room);
-        return comment;
+        Comment comment = commentDTO.toEntity(room);
+        commentRepository.save(comment);
     }
 }
