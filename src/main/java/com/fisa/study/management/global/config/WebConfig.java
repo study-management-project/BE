@@ -2,6 +2,7 @@ package com.fisa.study.management.global.config;
 
 import com.fisa.study.management.global.argumentresolver.LoginArgumentResolver;
 import com.fisa.study.management.global.interceptor.LoginCheckInterceptor;
+import com.fisa.study.management.global.interceptor.UUIDInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -34,6 +35,10 @@ public class WebConfig implements WebMvcConfigurer {
                 .addPathPatterns("/rooms/**", "/room",
                         "/room/**/snapshot/register",
                         "/room/**/checkup/register",
-                        "/check");
+                        "/room/**/checkup/get");
+        registry.addInterceptor(new UUIDInterceptor())
+                .order(2)
+                .addPathPatterns("/room/*/**");
     }
+
 }
