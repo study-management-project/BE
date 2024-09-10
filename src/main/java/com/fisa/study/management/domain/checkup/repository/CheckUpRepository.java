@@ -8,7 +8,5 @@ import java.util.UUID;
 
 public interface CheckUpRepository extends JpaRepository<CheckUp,Long> {
 
-    Optional<CheckUp> findTopByRoomIdOrderByIdDesc(Long roomId);
-
     Optional<CheckUp> findTopByRoomUuidOrderByIdDesc(UUID uuid);
 }

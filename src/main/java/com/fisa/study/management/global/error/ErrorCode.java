@@ -3,6 +3,7 @@ package com.fisa.study.management.global.error;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 
 import static org.springframework.http.HttpStatus.*;
 

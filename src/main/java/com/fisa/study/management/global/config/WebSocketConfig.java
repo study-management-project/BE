@@ -21,6 +21,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void configureWebSocketTransport(WebSocketTransportRegistration registration) {
         registration.setDecoratorFactories(agentWebSocketHandlerDecoratorFactory());
+//        registration.setMessageSizeLimit(1024 * 1024); // 메시지 크기를 1MB로 설정
+//        registration.setSendBufferSizeLimit(1024 * 1024); // 보낼 수 있는 최대 버퍼 크기 설정
+//        registration.setSendTimeLimit(20 * 1000); // 메시지 전송 제한 시간 설정 (밀리초)
     }
 
     @Override

@@ -22,7 +22,8 @@ public class SnapshotServiceImpl implements SnapshotService {
     private final RoomRepository roomRepository;
 
     public Snapshot regSnapshot(RegSnapshotDTO dto) {
-        Room room= roomRepository.findByUuid(dto.getUuid()).orElseThrow(() -> new EntityNotFoundException("Room not found"));
+        Room room= roomRepository.findByUuid(dto.getUuid())
+                .orElseThrow(() -> new EntityNotFoundException("Room not found"));
         Snapshot snapshot= RegSnapshotDTO.from(dto);
         snapshot.setRoom(room);
         snapshotRepository.save(snapshot);

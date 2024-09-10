@@ -87,8 +87,10 @@ public class StompController {
         log.info("세션 확인"+headerAccessor.getSessionAttributes().get("sessionId"));
         if(headerAccessor.getSessionAttributes().get("sessionId")!="none"){
             Snapshot snapshot = snapshotService.regSnapshot(dto);
-            sendingOperations.convertAndSend("/topic/" + dto.getUuid() + "/snapshot", ResSnapshotDTO.from(snapshot));
+            ResSnapshotDTO resSnapshotDTO = ResSnapshotDTO.from(snapshot);
+            sendingOperations.convertAndSend("/topic/" + dto.getUuid() + "/snapshot", resSnapshotDTO);
         }
+
     }
 
     @MessageMapping("/share-checkup")
