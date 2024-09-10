@@ -2,8 +2,6 @@ package com.fisa.study.management.domain.member.entity;
 
 import com.fisa.study.management.domain.room.entity.Room;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -15,7 +13,7 @@ import java.util.List;
 @ToString(exclude = {"password", "roomList"})
 @Builder
 @Entity
-public class Member{
+public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,7 +34,7 @@ public class Member{
     @Column(nullable = false)
     private Role role;
 
-    @OneToMany(mappedBy = "member",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     @Builder.Default
-    private List<Room> roomList= new ArrayList<>();
+    private List<Room> roomList = new ArrayList<>();
 }

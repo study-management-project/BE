@@ -10,13 +10,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class ApplicationTests {
 
-	@Autowired
-	private SnapshotServiceImpl snapshotService;
-	@Autowired
-	private RoomServiceImpl roomService;
+    @Autowired
+    private SnapshotServiceImpl snapshotService;
+    @Autowired
+    private RoomServiceImpl roomService;
 
-	@Test
-	void contextLoads() {
+    @Test
+    void contextLoads() {
 //		RoomRequestDTO roomRequestDTO= RoomRequestDTO.builder()
 //				.name("test용")
 //				.description("테스트테스트")
@@ -31,6 +31,6 @@ class ApplicationTests {
 //						.content("test3")
 //						.build());
 
-	}
+    }
 
 }

@@ -14,7 +14,7 @@ public class SendCheckUpDTO {
     private int O;
     private int X;
 
-    public static SendCheckUpDTO from(CheckUp checkUp){
+    public static SendCheckUpDTO from(CheckUp checkUp) {
         return SendCheckUpDTO.builder()
                 .O(checkUp.getOx().getO())
                 .X(checkUp.getOx().getX())

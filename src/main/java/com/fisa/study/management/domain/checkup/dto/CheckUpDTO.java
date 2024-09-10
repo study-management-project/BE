@@ -19,14 +19,15 @@ public class CheckUpDTO {
     private String title;
     private Boolean isOpen;
 
-    public CheckUp toEntity(Room room){
-        CheckUp checkUp= CheckUp.builder()
+    public CheckUp toEntity(Room room) {
+        CheckUp checkUp = CheckUp.builder()
                 .title(this.title)
                 .isOpen(true)
                 .build();
         checkUp.setRoom(room);
         return checkUp;
     }
+
     public static CheckUpDTO from(Optional<CheckUp> checkUp, UUID uuid) {
         return checkUp.map(checkUp1 ->
                         CheckUpDTO.builder()

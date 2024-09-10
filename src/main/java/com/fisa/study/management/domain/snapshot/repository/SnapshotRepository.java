@@ -5,18 +5,17 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-public interface SnapshotRepository extends JpaRepository<Snapshot,Long> {
+public interface SnapshotRepository extends JpaRepository<Snapshot, Long> {
     @Query("select s from Snapshot s where s.room.uuid = :uuid " +
             "and FUNCTION('MONTH', s.createdDate) =  :month " +
-            "and FUNCTION('YEAR', s.createdDate) =  :year "+
+            "and FUNCTION('YEAR', s.createdDate) =  :year " +
             "and FUNCTION('DAY', s.createdDate) =  :day ")
-    List<Snapshot> findCreatedDateByRoomUuidAndDay(@Param("uuid") UUID uuid, @Param("year") int year ,
-                                                 @Param("month") int month, @Param("day") int day);
+    List<Snapshot> findCreatedDateByRoomUuidAndDay(@Param("uuid") UUID uuid, @Param("year") int year,
+                                                   @Param("month") int month, @Param("day") int day);
 
     @Query("SELECT s.createdDate FROM Snapshot s " +
             "WHERE s.room.uuid = :uuid " +

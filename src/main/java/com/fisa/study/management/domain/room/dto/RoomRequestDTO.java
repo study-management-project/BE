@@ -2,7 +2,10 @@ package com.fisa.study.management.domain.room.dto;
 
 import com.fisa.study.management.domain.member.entity.Member;
 import com.fisa.study.management.domain.room.entity.Room;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
