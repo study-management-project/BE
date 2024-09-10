@@ -5,17 +5,12 @@ import com.fisa.study.management.domain.checkup.dto.SendCheckUpDTO;
 import com.fisa.study.management.domain.checkup.service.CheckUpServiceImpl;
 import com.fisa.study.management.domain.comment.dto.CommentDTO;
 import com.fisa.study.management.domain.comment.service.CommentServiceImpl;
-import com.fisa.study.management.domain.member.repository.MemberRepository;
 import com.fisa.study.management.domain.room.dto.CodeDTO;
-import com.fisa.study.management.domain.room.entity.Room;
 import com.fisa.study.management.domain.room.service.RoomServiceImpl;
 import com.fisa.study.management.domain.snapshot.dto.RegSnapshotDTO;
 import com.fisa.study.management.domain.snapshot.dto.ResSnapshotDTO;
 import com.fisa.study.management.domain.snapshot.entity.Snapshot;
 import com.fisa.study.management.domain.snapshot.service.SnapshotServiceImpl;
-import com.fisa.study.management.global.argumentresolver.Login;
-import com.fisa.study.management.global.error.CustomException;
-import com.fisa.study.management.global.error.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.MessageHeaders;
@@ -41,9 +36,8 @@ public class StompController {
     private final RoomServiceImpl roomService;
     private final CommentServiceImpl commentService;
     private final SnapshotServiceImpl snapshotService;
-    private final MemberRepository memberRepository;
     private final CheckUpServiceImpl checkUpService;
-    private ConcurrentHashMap<UUID, String> cacheMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<UUID, String> cacheMap = new ConcurrentHashMap<>();
 
     @MessageMapping("/share-code")
     public void shareCode(@Payload CodeDTO dto) {
@@ -83,9 +77,9 @@ public class StompController {
     }
 
     @MessageMapping("/share-snapshot")
-    public void shareSnapshot(@Payload RegSnapshotDTO dto,SimpMessageHeaderAccessor headerAccessor) {
-        log.info("세션 확인"+headerAccessor.getSessionAttributes().get("sessionId"));
-        if(headerAccessor.getSessionAttributes().get("sessionId")!="none"){
+    public void shareSnapshot(@Payload RegSnapshotDTO dto, SimpMessageHeaderAccessor headerAccessor) {
+        log.info("세션 확인" + headerAccessor.getSessionAttributes().get("sessionId"));
+        if (headerAccessor.getSessionAttributes().get("sessionId") != "none") {
             Snapshot snapshot = snapshotService.regSnapshot(dto);
             ResSnapshotDTO resSnapshotDTO = ResSnapshotDTO.from(snapshot);
             sendingOperations.convertAndSend("/topic/" + dto.getUuid() + "/snapshot", resSnapshotDTO);
@@ -96,18 +90,20 @@ public class StompController {
     @MessageMapping("/share-checkup")
     public void shareCheckUp(@Payload CheckUpDTO dto) {
         checkUpService.registerCheckUpForRoom(dto);
-        sendingOperations.convertAndSend("/topic/" + dto.getUuid() + "/checkup",dto);
-    }
-    @MessageMapping("/end-checkup")
-    public void endCheckUp(@Payload CheckUpDTO dto, @Header("simpSessionId") String sessionId) {
-        SendCheckUpDTO sendCheckUpDTO= checkUpService.getCheckUpResult(dto.getUuid());
-        messagingTemplate.convertAndSendToUser(sessionId, "/queue/" + dto.getUuid() + "/result/checkup", sendCheckUpDTO,createHeaders(sessionId));
         sendingOperations.convertAndSend("/topic/" + dto.getUuid() + "/checkup", dto);
     }
 
-    private MessageHeaders createHeaders(String sessionId){
-        SimpMessageHeaderAccessor headerAccessor= SimpMessageHeaderAccessor.create(SimpMessageType.MESSAGE);
-        if(sessionId !=null) headerAccessor.setSessionId(sessionId);
+    @MessageMapping("/end-checkup")
+    public void endCheckUp(@Payload CheckUpDTO dto, @Header("simpSessionId") String sessionId) {
+        SendCheckUpDTO sendCheckUpDTO = checkUpService.getCheckUpResult(dto.getUuid());
+        messagingTemplate.convertAndSendToUser(sessionId, "/queue/" + dto.getUuid() + "/result/checkup",
+                sendCheckUpDTO, createHeaders(sessionId));
+        sendingOperations.convertAndSend("/topic/" + dto.getUuid() + "/checkup", dto);
+    }
+
+    private MessageHeaders createHeaders(String sessionId) {
+        SimpMessageHeaderAccessor headerAccessor = SimpMessageHeaderAccessor.create(SimpMessageType.MESSAGE);
+        if (sessionId != null) headerAccessor.setSessionId(sessionId);
         headerAccessor.setLeaveMutable(true);
         return headerAccessor.getMessageHeaders();
     }

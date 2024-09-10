@@ -2,10 +2,6 @@ package com.fisa.study.management.global.error;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
-
-import static org.springframework.http.HttpStatus.*;
 
 @AllArgsConstructor
 @Getter
@@ -19,9 +15,9 @@ public enum ErrorCode {
     MEMBER_NOT_FOUND(404, "존재하지 않는 사용자 ID 입니다."),
     SNAPSHOT_NOT_FOUND(404, "존재하지 않는 스냅샷 ID 입니다."),
 
-    INVALID_EMAIL_FORMAT(431,"이메일 형식 잘못되었습니다."),
-    EMAIL_ALREADY_EXISTS(432,"존재하는 이메일입니다."),
-    INVALID_PASSWORD_FORMAT(433,"비밀번호 형식이 잘못되었습니다."),
+    INVALID_EMAIL_FORMAT(431, "이메일 형식 잘못되었습니다."),
+    EMAIL_ALREADY_EXISTS(432, "존재하는 이메일입니다."),
+    INVALID_PASSWORD_FORMAT(433, "비밀번호 형식이 잘못되었습니다."),
 
     SERVER_ERROR(500, "서버 에러입니다. 서버 팀에 연락주세요!");
 

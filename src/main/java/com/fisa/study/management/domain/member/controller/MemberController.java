@@ -46,7 +46,7 @@ public class MemberController {
     }
 
     @PostMapping("/register")
-    public  ResponseEntity<?> loginArgumentResolver( @RequestBody @Valid MemberRegisterDTO requestDTO, Errors errors) {
+    public ResponseEntity<?> loginArgumentResolver(@RequestBody @Valid MemberRegisterDTO requestDTO, Errors errors) {
         if (errors.hasErrors()) {
             // 모든 에러를 검사
             for (ObjectError error : errors.getAllErrors()) {
@@ -83,7 +83,7 @@ public class MemberController {
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        if(session != null) {
+        if (session != null) {
             session.invalidate();
         }
         return ResponseEntity.ok("로그아웃 성공");

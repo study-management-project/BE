@@ -1,13 +1,11 @@
 package com.fisa.study.management.domain.snapshot.dto;
 
-import com.fisa.study.management.domain.room.entity.Room;
 import com.fisa.study.management.domain.snapshot.entity.Snapshot;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data

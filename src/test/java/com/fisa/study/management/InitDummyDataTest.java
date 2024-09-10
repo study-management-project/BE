@@ -18,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
@@ -92,7 +91,7 @@ public class InitDummyDataTest {
                 .build();
 
         memberService.register(dto);
-        log.info("Order 1 {}","성공");
+        log.info("Order 1 {}", "성공");
     }
 
     @Test
@@ -144,9 +143,9 @@ public class InitDummyDataTest {
 
     @Test
     @Order(5)
-    public void insertComment(){
+    public void insertComment() {
         for (int i = 1; i <= 3; i++) {
-            CommentDTO dto= CommentDTO.builder()
+            CommentDTO dto = CommentDTO.builder()
                     .uuid(uuid)
                     .content("테스트용 코멘트")
                     .build();

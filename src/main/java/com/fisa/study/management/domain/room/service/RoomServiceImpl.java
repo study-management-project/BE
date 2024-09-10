@@ -9,15 +9,12 @@ import com.fisa.study.management.domain.room.entity.Room;
 import com.fisa.study.management.domain.room.repository.RoomRepository;
 import com.fisa.study.management.global.error.CustomException;
 import com.fisa.study.management.global.error.ErrorCode;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -33,22 +30,22 @@ public class RoomServiceImpl implements RoomService {
     }
 
     public void createRoom(Long userId, RoomRequestDTO roomRequestDTO) {
-        Member member= memberRepository.findById(userId)
-                .orElseThrow(()->new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+        Member member = memberRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
         Room room = roomRequestDTO.toEntity(member);
         roomRepository.save(room);
     }
 
     public void updateRoom(UUID uuid, String content) {
         Room room = roomRepository.findByUuid(uuid)
-                .orElseThrow(()->new CustomException(ErrorCode.ROOM_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.ROOM_NOT_FOUND));
         room.setContent(content);
         roomRepository.save(room);
     }
 
-    public RoomResponseByUserDTO getRoomDetails(UUID uuid){
+    public RoomResponseByUserDTO getRoomDetails(UUID uuid) {
         Room room = roomRepository.findByUuid(uuid)
-                .orElseThrow(()->new CustomException(ErrorCode.ROOM_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.ROOM_NOT_FOUND));
         return RoomResponseByUserDTO.from(room);
     }
 }

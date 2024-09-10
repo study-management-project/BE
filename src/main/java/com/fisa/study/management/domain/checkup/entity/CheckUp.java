@@ -20,11 +20,11 @@ public class CheckUp extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title ;
+    private String title;
 
     @Embedded
     @Builder.Default
-    private OX ox=new OX();
+    private OX ox = new OX();
 
     @ManyToOne
     @JoinColumn(name = "room_id")
@@ -33,18 +33,19 @@ public class CheckUp extends BaseTimeEntity {
     @Setter
     private Boolean isOpen;
 
-    public void addO(){
+    public void addO() {
         this.ox.addO();
     }
-    public void addX(){
+
+    public void addX() {
         this.ox.addX();
     }
 
-    public void setRoom(Room room){
-        if(this.room !=null){
+    public void setRoom(Room room) {
+        if (this.room != null) {
             this.room.getCheckUpList().remove(this);
         }
-        this.room=room;
+        this.room = room;
         room.getCheckUpList().add(this);
     }
 

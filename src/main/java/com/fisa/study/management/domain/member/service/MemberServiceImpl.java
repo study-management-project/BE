@@ -15,9 +15,8 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
@@ -57,7 +56,7 @@ public class MemberServiceImpl implements MemberService {
 
                 // 세션에 로그인 회원 정보 보관
                 session.setAttribute(SessionConst.LOGIN_MEMBER, loginMember.getId());
-                log.info(session.getAttribute(SessionConst.LOGIN_MEMBER).toString()+"로그인");
+                log.info(session.getAttribute(SessionConst.LOGIN_MEMBER).toString() + "로그인");
                 return MemberResponseDTO.from((loginMember));
             }
         }

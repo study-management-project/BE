@@ -7,9 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-
-import java.time.LocalDateTime;
 
 
 @Entity
@@ -32,11 +29,11 @@ public class Snapshot extends BaseTimeEntity {
     @JoinColumn(name = "room_id")
     private Room room;
 
-    public void setRoom(Room room){
-        if(this.room !=null){
+    public void setRoom(Room room) {
+        if (this.room != null) {
             this.room.getSnapshotList().remove(this);
         }
-        this.room=room;
+        this.room = room;
         room.getSnapshotList().add(this);
     }
 }
