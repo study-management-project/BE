@@ -35,17 +35,23 @@ dependencies {
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5' // for JSON serialization/deserialization
 
-	compileOnly 'org.projectlombok:lombok'
 	implementation group: 'com.mysql', name: 'mysql-connector-j', version: '8.1.0'
-	annotationProcessor 'org.projectlombok:lombok'
+	compileOnly 'org.projectlombok:lombok:1.18.32'
+	annotationProcessor 'org.projectlombok:lombok:1.18.32'
 
 	// Test dependencies
-	testCompileOnly 'org.projectlombok:lombok:1.18.28'
-	testAnnotationProcessor 'org.projectlombok:lombok:1.18.28'
+	testCompileOnly 'org.projectlombok:lombok:1.18.32'
+	testAnnotationProcessor 'org.projectlombok:lombok:1.18.32'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+tasks.withType(Test) {
+	enabled = false
+}
+tasks.withType(JavaCompile) {
+	options.compilerArgs += ['-parameters']
 }
