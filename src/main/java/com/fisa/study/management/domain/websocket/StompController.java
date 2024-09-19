@@ -79,7 +79,8 @@ public class StompController {
     @MessageMapping("/share-snapshot")
     public void shareSnapshot(@Payload RegSnapshotDTO dto, SimpMessageHeaderAccessor headerAccessor) {
         log.info("세션 확인" + headerAccessor.getSessionAttributes().get("sessionId"));
-        if (headerAccessor.getSessionAttributes().get("sessionId") != "none") {
+//        if (headerAccessor.getSessionAttributes().get("sessionId") != "none") {
+        if(true){
             Snapshot snapshot = snapshotService.regSnapshot(dto);
             ResSnapshotDTO resSnapshotDTO = ResSnapshotDTO.from(snapshot);
             sendingOperations.convertAndSend("/topic/" + dto.getUuid() + "/snapshot", resSnapshotDTO);
