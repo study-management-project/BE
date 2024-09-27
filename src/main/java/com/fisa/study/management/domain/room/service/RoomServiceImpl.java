@@ -2,6 +2,7 @@ package com.fisa.study.management.domain.room.service;
 
 import com.fisa.study.management.domain.member.entity.Member;
 import com.fisa.study.management.domain.member.repository.MemberRepository;
+import com.fisa.study.management.domain.room.dto.RoomModifyRequestDTO;
 import com.fisa.study.management.domain.room.dto.RoomRequestDTO;
 import com.fisa.study.management.domain.room.dto.RoomResponseByAdminDTO;
 import com.fisa.study.management.domain.room.dto.RoomResponseByUserDTO;
@@ -43,9 +44,23 @@ public class RoomServiceImpl implements RoomService {
         roomRepository.save(room);
     }
 
+    public void modifyRoom(RoomModifyRequestDTO roomModifyRequestDTO) {
+        Room room = roomRepository.findByUuid(roomModifyRequestDTO.getUuid())
+                .orElseThrow(() -> new CustomException(ErrorCode.ROOM_NOT_FOUND));
+        room.modify(roomModifyRequestDTO.getDescription(), roomModifyRequestDTO.getName());
+        roomRepository.save(room);
+
+    }
+
     public RoomResponseByUserDTO getRoomDetails(UUID uuid) {
         Room room = roomRepository.findByUuid(uuid)
                 .orElseThrow(() -> new CustomException(ErrorCode.ROOM_NOT_FOUND));
         return RoomResponseByUserDTO.from(room);
+    }
+
+    public void deleteRoom(UUID uuid) {
+        Room room = roomRepository.findByUuid(uuid)
+                .orElseThrow(() -> new CustomException(ErrorCode.ROOM_NOT_FOUND));
+        roomRepository.delete(room);
     }
 }

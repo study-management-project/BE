@@ -15,4 +15,6 @@ public interface RoomService {
     void updateRoom(UUID uuid, String content);
 
     RoomResponseByUserDTO getRoomDetails(UUID uuid);
+
+    void deleteRoom(UUID uuid);
 }

@@ -50,4 +50,9 @@ public class Room {
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
+
+    public void modify(String description, String name) {
+        this.description = description;
+        this.name = name;
+    }
 }
