@@ -38,9 +38,11 @@ public class SnapshotController {
     }
 
     @PutMapping("/modify/{id}")
-    public ResponseEntity<?> modifySnapshot(@PathVariable UUID uuid, ReqModifySnapshotDTO reqModifySnapshotDTO) {
+    public ResponseEntity<?> modifySnapshot(@PathVariable UUID uuid,@RequestBody ReqModifySnapshotDTO reqModifySnapshotDTO) {
+        log.info("여기요"+reqModifySnapshotDTO.toString());
         snapshotService.modifySnapshot(reqModifySnapshotDTO);
-        return ResponseEntity.ok("스냅샷 삭제 성공");
+
+        return ResponseEntity.ok("스냅샷 수정 성공");
     }
 }
 

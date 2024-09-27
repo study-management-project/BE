@@ -59,6 +59,8 @@ public class RoomServiceImpl implements RoomService {
     }
 
     public void deleteRoom(UUID uuid) {
-        roomRepository.deleteByUuid(uuid);
+        Room room = roomRepository.findByUuid(uuid)
+                .orElseThrow(() -> new CustomException(ErrorCode.ROOM_NOT_FOUND));
+        roomRepository.delete(room);
     }
 }

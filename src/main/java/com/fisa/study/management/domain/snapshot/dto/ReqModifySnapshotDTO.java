@@ -17,5 +17,4 @@ public class ReqModifySnapshotDTO {
     private Long id;
     private String title;
     private String content;
-
 }

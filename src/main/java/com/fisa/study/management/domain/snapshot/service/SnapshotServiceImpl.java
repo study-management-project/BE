@@ -7,9 +7,12 @@ import com.fisa.study.management.domain.snapshot.dto.ReqModifySnapshotDTO;
 import com.fisa.study.management.domain.snapshot.dto.ResSnapshotDTO;
 import com.fisa.study.management.domain.snapshot.entity.Snapshot;
 import com.fisa.study.management.domain.snapshot.repository.SnapshotRepository;
+import com.fisa.study.management.global.error.CustomException;
+import com.fisa.study.management.global.error.ErrorCode;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -26,7 +29,7 @@ public class SnapshotServiceImpl implements SnapshotService {
 
     public Snapshot regSnapshot(RegSnapshotDTO dto) {
         Room room = roomRepository.findByUuid(dto.getUuid())
-                .orElseThrow(() -> new EntityNotFoundException("Room not found"));
+                .orElseThrow( () -> new CustomException(ErrorCode.ROOM_NOT_FOUND));
         Snapshot snapshot = RegSnapshotDTO.from(dto);
         snapshot.setRoom(room);
         snapshotRepository.save(snapshot);
@@ -45,11 +48,14 @@ public class SnapshotServiceImpl implements SnapshotService {
     }
 
     public void deleteSnapshot(Long id) {
-        snapshotRepository.deleteById(id);
+        Snapshot snapshot= snapshotRepository.findById(id).orElseThrow(
+                () -> new CustomException(ErrorCode.SNAPSHOT_NOT_FOUND)
+        );
+        snapshotRepository.delete(snapshot);
     }
     public void modifySnapshot(ReqModifySnapshotDTO reqModifySnapshotDTO){
         Snapshot snapshot=snapshotRepository.findById(reqModifySnapshotDTO.getId())
-                .orElseThrow(() -> new EntityNotFoundException("Snapshot not found"));
+                .orElseThrow( () -> new CustomException(ErrorCode.SNAPSHOT_NOT_FOUND));
         snapshot.modify(reqModifySnapshotDTO.getTitle(),reqModifySnapshotDTO.getContent());
         snapshotRepository.save(snapshot);
     }
