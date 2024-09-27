@@ -75,17 +75,41 @@ public class StompController {
         log.info(dto.toString());
         sendingOperations.convertAndSend("/topic/" + dto.getUuid() + "/comment", dto.getContent());
     }
+//    @MessageMapping("/delete-comment")
+//    public void deleteComment(@Payload DeleteCommentDTO dto) {
+//        commentService.remove(dto.getId());
+//        log.info(dto.toString());
+//        WebSocketMessage message = new WebSocketMessage() {
+//            @Override
+//            public Object getPayload() {
+//                return null;
+//            }
+//
+//            @Override
+//            public int getPayloadLength() {
+//                return 0;
+//            }
+//
+//            @Override
+//            public boolean isLast() {
+//                return false;
+//            }
+//        };
+//        message.setType("DELETE"); // DELETE 타입 명시
+//        message.setCommentId(dto.getId());
+//        message.setUuid(dto.getUuid());
+//        sendingOperations.convertAndSend("/topic/" + dto.getUuid() + "/comment", message);
+//    }
 
     @MessageMapping("/share-snapshot")
     public void shareSnapshot(@Payload RegSnapshotDTO dto, SimpMessageHeaderAccessor headerAccessor) {
         log.info("세션 확인" + headerAccessor.getSessionAttributes().get("sessionId"));
 //        if (headerAccessor.getSessionAttributes().get("sessionId") != "none") {
-        if(true){
+        if (true) {
             Snapshot snapshot = snapshotService.regSnapshot(dto);
             ResSnapshotDTO resSnapshotDTO = ResSnapshotDTO.from(snapshot);
             sendingOperations.convertAndSend("/topic/" + dto.getUuid() + "/snapshot", resSnapshotDTO);
         }
-
     }
 
     @MessageMapping("/share-checkup")
