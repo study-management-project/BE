@@ -13,12 +13,14 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResSnapshotDTO {
+    private Long id;
     private String title;
     private String content;
     private LocalDateTime createdDate;
 
     public static ResSnapshotDTO from(Snapshot snapshot) {
         return ResSnapshotDTO.builder()
+                .id(snapshot.getId())
                 .title(snapshot.getTitle())
                 .content(snapshot.getContent())
                 .createdDate(snapshot.getCreatedDate())

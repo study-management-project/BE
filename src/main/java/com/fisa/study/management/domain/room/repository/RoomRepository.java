@@ -13,12 +13,11 @@ import java.util.UUID;
 public interface RoomRepository extends JpaRepository<Room, Long> {
     Optional<Room> findByUuid(UUID uuid);
 
-    Optional<Room> findById(Long id);
-
     @Query("SELECT new com.fisa.study.management.domain.room.dto.RoomResponseByAdminDTO(r.id, r.uuid, r.name, r" +
             ".description) " +
             "FROM Room r WHERE r.member.id = :adminId")
     List<RoomResponseByAdminDTO> findByAdminId(@Param("adminId") Long adminId);
 
+    void deleteByUuid(UUID uuid);
 }
 

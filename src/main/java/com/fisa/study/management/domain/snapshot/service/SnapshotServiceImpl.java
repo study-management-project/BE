@@ -3,6 +3,7 @@ package com.fisa.study.management.domain.snapshot.service;
 import com.fisa.study.management.domain.room.entity.Room;
 import com.fisa.study.management.domain.room.repository.RoomRepository;
 import com.fisa.study.management.domain.snapshot.dto.RegSnapshotDTO;
+import com.fisa.study.management.domain.snapshot.dto.ReqModifySnapshotDTO;
 import com.fisa.study.management.domain.snapshot.dto.ResSnapshotDTO;
 import com.fisa.study.management.domain.snapshot.entity.Snapshot;
 import com.fisa.study.management.domain.snapshot.repository.SnapshotRepository;
@@ -41,5 +42,15 @@ public class SnapshotServiceImpl implements SnapshotService {
     public List<ResSnapshotDTO> findSnapShotByRoomIdAndDay(UUID uuid, int year, int month, int day) {
         List<Snapshot> snapshots = snapshotRepository.findCreatedDateByRoomUuidAndDay(uuid, year, month, day);
         return snapshots.stream().map(ResSnapshotDTO::from).collect(Collectors.toList());
+    }
+
+    public void deleteSnapshot(Long id) {
+        snapshotRepository.deleteById(id);
+    }
+    public void modifySnapshot(ReqModifySnapshotDTO reqModifySnapshotDTO){
+        Snapshot snapshot=snapshotRepository.findById(reqModifySnapshotDTO.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Snapshot not found"));
+        snapshot.modify(reqModifySnapshotDTO.getTitle(),reqModifySnapshotDTO.getContent());
+        snapshotRepository.save(snapshot);
     }
 }

@@ -36,5 +36,9 @@ public class Snapshot extends BaseTimeEntity {
         this.room = room;
         room.getSnapshotList().add(this);
     }
+    public void modify(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 }
 

@@ -35,7 +35,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     public List<CommentContent> findByUuid(UUID uuid) {
-        return commentRepository.findByUuid(uuid)
+        return commentRepository.findByRoomUuid(uuid)
                 .stream().map(CommentContent::from).toList();
     }
 }
