@@ -29,9 +29,6 @@ public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
         HttpSession session = request.getSession(false);
         //세션 기간 정하기
 
-        log.info(session.getAttribute(SessionConst.LOGIN_MEMBER) + "이겁니다");
-        log.info(session.toString());
-
         if (session == null) {
             return null;
         } else {
