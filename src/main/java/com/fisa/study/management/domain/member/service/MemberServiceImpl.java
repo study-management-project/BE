@@ -15,6 +15,8 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
@@ -61,5 +63,15 @@ public class MemberServiceImpl implements MemberService {
             }
         }
         return null;
+    }
+    public MemberResponseDTO check(Long userId){
+        if (userId == null)
+            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+        Optional<Member> byId = memberRepository.findById(userId);
+        if (byId.isEmpty())
+            throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+        MemberResponseDTO memberResponseDTO= MemberResponseDTO.from(byId.get());
+        log.info("인증 성공 member = {}", memberResponseDTO);
+        return memberResponseDTO;
     }
 }

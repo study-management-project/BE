@@ -37,12 +37,8 @@ public class MemberController {
     // login Check
     @GetMapping("/check")
     public ResponseEntity<?> loginArgumentResolver(@Login Long userId) {
-        if (userId == null) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 실패");
-        Optional<Member> byId = memberRepository.findById(userId);
-        if (byId.isEmpty()) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 실패");
-        Member member = byId.get();
-        log.info("인증 성공 member = {}", member.toString());
-        return ResponseEntity.ok("성공, 유저 정보 : " + member.toString());
+        MemberResponseDTO memberResponseDTO= memberService.check(userId);
+        return ResponseEntity.ok("성공, 유저 정보 : " + memberResponseDTO);
     }
 
     @PostMapping("/register")
