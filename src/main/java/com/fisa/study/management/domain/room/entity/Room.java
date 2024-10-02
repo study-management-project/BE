@@ -47,7 +47,7 @@ public class Room {
 //    @BatchSize(size = 20)
     private List<CheckUp> checkUpList = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
