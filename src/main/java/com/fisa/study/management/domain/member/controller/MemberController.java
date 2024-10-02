@@ -80,7 +80,7 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("로그인 실패");
     }
 
-    @PostMapping("/logout")
+    @GetMapping("/logout")
     public ResponseEntity<?> logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session != null) {
