@@ -4,6 +4,7 @@ import com.fisa.study.management.domain.room.dto.RoomResponseByUserDTO;
 import com.fisa.study.management.domain.room.service.RoomServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +19,7 @@ public class UserRoomController {
     private final RoomServiceImpl roomService;
 
     @GetMapping("/room/{uuid}")
-    public RoomResponseByUserDTO getRoomByUuId(@PathVariable UUID uuid) {
-        return roomService.getRoomDetails(uuid);
+    public ResponseEntity<RoomResponseByUserDTO>  getRoomByUuId(@PathVariable UUID uuid) {
+        return ResponseEntity.ok(roomService.getRoomDetails(uuid));
     }
 }

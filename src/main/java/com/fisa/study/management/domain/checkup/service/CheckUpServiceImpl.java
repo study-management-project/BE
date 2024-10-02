@@ -26,9 +26,9 @@ public class CheckUpServiceImpl implements CheckUpService {
     private final RoomRepository roomRepository;
 
     public CheckUpDTO getCheckUp(UUID uuid) {
-        roomRepository.findByUuid(uuid)
-                .orElseThrow(() -> new CustomException(ErrorCode.ROOM_NOT_FOUND));
-        Optional<CheckUp> checkUp = checkUpRepository.findTopByRoomUuidOrderByIdDesc(uuid);
+//        roomRepository.findByUuid(uuid)
+//                .orElseThrow(() -> new CustomException(ErrorCode.ROOM_NOT_FOUND));
+        Optional<CheckUp> checkUp = checkUpRepository.findTopWithRoomByRoomUuidOrderByIdDesc(uuid);
 
         return CheckUpDTO.from(checkUp, uuid);
     }
@@ -52,6 +52,7 @@ public class CheckUpServiceImpl implements CheckUpService {
                 .orElseThrow(() -> new CustomException(ErrorCode.CHECKUP_NOT_FOUND));
         checkUp.addO();
         checkUpRepository.save(checkUp);
+//        checkUpRepository.incrementOByRoomUuid(uuid);
     }
 
     public void resentCheckUpXIncrease(UUID uuid) {
@@ -59,5 +60,7 @@ public class CheckUpServiceImpl implements CheckUpService {
                 .orElseThrow(() -> new CustomException(ErrorCode.CHECKUP_NOT_FOUND));
         checkUp.addX();
         checkUpRepository.save(checkUp);
+//        checkUpRepository.incrementXByRoomUuid(uuid);
+
     }
 }
