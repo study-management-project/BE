@@ -65,11 +65,15 @@ public class MemberServiceImpl implements MemberService {
         return null;
     }
     public MemberResponseDTO check(Long userId){
-        if (userId == null)
+        if (userId == null) {
+            log.info("아이디가 없슈");
             throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+        }
         Optional<Member> byId = memberRepository.findById(userId);
-        if (byId.isEmpty())
+        if (byId.isEmpty()) {
+            log.info("아무것도 업슈");
             throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
+        }
         MemberResponseDTO memberResponseDTO= MemberResponseDTO.from(byId.get());
         log.info("인증 성공 member = {}", memberResponseDTO);
         return memberResponseDTO;
