@@ -119,11 +119,12 @@ public class StompController {
     }
 
     @MessageMapping("/end-checkup")
-    public void endCheckUp(@Payload CheckUpDTO dto, @Header("simpSessionId") String sessionId) {
-        SendCheckUpDTO sendCheckUpDTO = checkUpService.getCheckUpResult(dto.getUuid());
-        messagingTemplate.convertAndSendToUser(sessionId, "/queue/" + dto.getUuid() + "/result/checkup",
+    public void endCheckUp(@Payload UUID uuid, @Header("simpSessionId") String sessionId) {
+        SendCheckUpDTO sendCheckUpDTO = checkUpService.getCheckUpResult(uuid);
+        CheckUpDTO dto =checkUpService.getCheckUp(uuid);
+        messagingTemplate.convertAndSendToUser(sessionId, "/queue/" + uuid + "/result/checkup",
                 sendCheckUpDTO, createHeaders(sessionId));
-        sendingOperations.convertAndSend("/topic/" + dto.getUuid() + "/checkup", dto);
+        sendingOperations.convertAndSend("/topic/" + uuid + "/checkup", dto);
     }
 
     private MessageHeaders createHeaders(String sessionId) {
