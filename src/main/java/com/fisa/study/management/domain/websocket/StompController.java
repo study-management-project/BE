@@ -1,6 +1,7 @@
 package com.fisa.study.management.domain.websocket;
 
 import com.fisa.study.management.domain.checkup.dto.CheckUpDTO;
+import com.fisa.study.management.domain.checkup.dto.EndCheckUpDTO;
 import com.fisa.study.management.domain.checkup.dto.SendCheckUpDTO;
 import com.fisa.study.management.domain.checkup.service.CheckUpServiceImpl;
 import com.fisa.study.management.domain.comment.dto.CommentDTO;
@@ -119,12 +120,12 @@ public class StompController {
     }
 
     @MessageMapping("/end-checkup")
-    public void endCheckUp(@Payload UUID uuid, @Header("simpSessionId") String sessionId) {
-        SendCheckUpDTO sendCheckUpDTO = checkUpService.getCheckUpResult(uuid);
-        CheckUpDTO dto =checkUpService.getCheckUp(uuid);
-        messagingTemplate.convertAndSendToUser(sessionId, "/queue/" + uuid + "/result/checkup",
+    public void endCheckUp(@Payload EndCheckUpDTO endCheckUpDTO, @Header("simpSessionId") String sessionId) {
+        SendCheckUpDTO sendCheckUpDTO = checkUpService.getCheckUpResult(endCheckUpDTO.getUuid());
+        CheckUpDTO dto =checkUpService.getCheckUp(endCheckUpDTO.getUuid());
+        messagingTemplate.convertAndSendToUser(sessionId, "/queue/" + endCheckUpDTO.getUuid() + "/result/checkup",
                 sendCheckUpDTO, createHeaders(sessionId));
-        sendingOperations.convertAndSend("/topic/" + uuid + "/checkup", dto);
+        sendingOperations.convertAndSend("/topic/" + endCheckUpDTO.getUuid() + "/checkup", dto);
     }
 
     private MessageHeaders createHeaders(String sessionId) {
