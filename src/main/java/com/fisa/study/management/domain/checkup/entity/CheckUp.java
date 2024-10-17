@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter;
 @Entity
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Table(name = "check_up")
 public class CheckUp extends BaseTimeEntity {

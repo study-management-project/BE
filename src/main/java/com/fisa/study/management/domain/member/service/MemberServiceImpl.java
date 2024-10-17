@@ -9,6 +9,7 @@ import com.fisa.study.management.domain.member.repository.MemberRepository;
 import com.fisa.study.management.global.error.CustomException;
 import com.fisa.study.management.global.error.ErrorCode;
 import com.fisa.study.management.global.session.SessionConst;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -19,6 +20,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 
 import java.util.Optional;
 
@@ -64,7 +68,8 @@ public class MemberServiceImpl implements MemberService {
         }
         return null;
     }
-    public MemberResponseDTO check(Long userId){
+
+    public MemberResponseDTO checkLogin(Long userId){
         if (userId == null) {
             log.info("아이디가 없슈");
             throw new CustomException(ErrorCode.MEMBER_NOT_FOUND);
@@ -78,4 +83,26 @@ public class MemberServiceImpl implements MemberService {
         log.info("인증 성공 member = {}", memberResponseDTO);
         return memberResponseDTO;
     }
+
+    public void checkValid(Errors errors){
+        if (errors.hasErrors()) {
+            // 모든 에러를 검사
+            for (ObjectError error : errors.getAllErrors()) {
+                if (error instanceof FieldError fieldError) {
+                    // 필드 이름과 에러 메시지 추출
+                    String fieldName = fieldError.getField();
+                    if ("password".equals(fieldName)) {
+                        throw new CustomException(ErrorCode.INVALID_PASSWORD_FORMAT);
+                    } else if ("email".equals(fieldName)) {
+                        throw new CustomException(ErrorCode.INVALID_EMAIL_FORMAT);
+                    } else {
+                        throw new CustomException(ErrorCode.INVALID_PARAMETER);
+                    }
+                } else {
+                    throw new CustomException(ErrorCode.INVALID_PARAMETER);
+                }
+            }
+        }
+    }
+
 }

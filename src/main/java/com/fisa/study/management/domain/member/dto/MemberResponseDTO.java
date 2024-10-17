@@ -2,10 +2,14 @@ package com.fisa.study.management.domain.member.dto;
 
 import com.fisa.study.management.domain.member.entity.Member;
 import com.fisa.study.management.domain.member.entity.Role;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class MemberResponseDTO {
     private Long userId;

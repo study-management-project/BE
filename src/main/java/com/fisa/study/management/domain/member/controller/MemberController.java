@@ -34,37 +34,17 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberServiceImpl memberService;
-    private final MemberRepository memberRepository;
 
     // login Check
     @GetMapping("/check")
     public ResponseEntity<?> loginArgumentResolver(@Login Long userId) {
-        MemberResponseDTO memberResponseDTO= memberService.check(userId);
+        MemberResponseDTO memberResponseDTO= memberService.checkLogin(userId);
         return ResponseEntity.ok(memberResponseDTO);
     }
 
     @PostMapping("/register")
     public ResponseEntity<?> loginArgumentResolver(@RequestBody @Valid MemberRegisterDTO requestDTO, Errors errors) {
-        if (errors.hasErrors()) {
-            // 모든 에러를 검사
-            for (ObjectError error : errors.getAllErrors()) {
-                if (error instanceof FieldError fieldError) {
-                    // 필드 이름과 에러 메시지 추출
-                    String fieldName = fieldError.getField();
-                    String errorMessage = fieldError.getDefaultMessage();
-
-                    if ("password".equals(fieldName)) {
-                        throw new CustomException(ErrorCode.INVALID_PASSWORD_FORMAT);
-                    } else if ("email".equals(fieldName)) {
-                        throw new CustomException(ErrorCode.INVALID_EMAIL_FORMAT);
-                    } else {
-                        return ResponseEntity.badRequest().body(errorMessage);
-                    }
-                } else {
-                    return ResponseEntity.badRequest().body(error.getDefaultMessage());
-                }
-            }
-        }
+        memberService.checkValid(errors);
         memberService.register(requestDTO);
         return ResponseEntity.ok("성공");
     }
