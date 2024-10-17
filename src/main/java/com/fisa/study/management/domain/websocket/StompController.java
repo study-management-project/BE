@@ -38,20 +38,22 @@ public class StompController {
     private final CommentServiceImpl commentService;
     private final SnapshotServiceImpl snapshotService;
     private final CheckUpServiceImpl checkUpService;
+    //ConcurrentHashMap는 동기화 블록이 작게 나뉘어 있어 성능을 유지하면서도 스레드 안전성을 보장
     private final ConcurrentHashMap<UUID, String> cacheMap = new ConcurrentHashMap<>();
 
     @MessageMapping("/share-code")
+    //@Payloads는 WebSocket 메시지 처리하기 위해 body를 파라미터로 바인드
     public void shareCode(@Payload CodeDTO dto) {
-        UUID roomId = dto.getUuid();
+        UUID roomUuid = dto.getUuid();
         String newContent = dto.getContent();
 
         // 캐시에서 현재 콘텐츠를 가져옴
-        String cachedContent = cacheMap.get(roomId);
+        String cachedContent = cacheMap.get(roomUuid);
 
         if (cachedContent != null && cachedContent.equals(newContent)) {
             // 캐시 히트: 캐시된 내용과 동일하면 바로 반환
             log.info("Cache Hit");
-            sendingOperations.convertAndSend("/topic/" + roomId + "/code/", cachedContent);
+            sendingOperations.convertAndSend("/topic/" + roomUuid + "/code/", cachedContent);
             return;
         }
 
@@ -59,15 +61,15 @@ public class StompController {
         log.info("Cache Miss");
 
         // 메시지를 받은 후 해당 Room의 content를 업데이트
-        roomService.updateRoom(roomId, newContent);
+        roomService.updateRoom(roomUuid, newContent);
 
         // 캐시 업데이트
-        cacheMap.put(roomId, newContent);
+        cacheMap.put(roomUuid, newContent);
 
         // 현재 방의 구독자 수 확인
 
         // 업데이트된 content를 topic 구독자들에게 뿌림
-        sendingOperations.convertAndSend("/topic/" + roomId + "/code", newContent);
+        sendingOperations.convertAndSend("/topic/" + roomUuid + "/code", newContent);
     }
 
     @MessageMapping("/share-comment")
@@ -106,11 +108,10 @@ public class StompController {
     public void shareSnapshot(@Payload RegSnapshotDTO dto, SimpMessageHeaderAccessor headerAccessor) {
         log.info("세션 확인" + headerAccessor.getSessionAttributes().get("sessionId"));
 //        if (headerAccessor.getSessionAttributes().get("sessionId") != "none") {
-        if (true) {
-            Snapshot snapshot = snapshotService.regSnapshot(dto);
-            ResSnapshotDTO resSnapshotDTO = ResSnapshotDTO.from(snapshot);
-            sendingOperations.convertAndSend("/topic/" + dto.getUuid() + "/snapshot", resSnapshotDTO);
-        }
+
+        Snapshot snapshot = snapshotService.regSnapshot(dto);
+        ResSnapshotDTO resSnapshotDTO = ResSnapshotDTO.from(snapshot);
+        sendingOperations.convertAndSend("/topic/" + dto.getUuid() + "/snapshot", resSnapshotDTO);
     }
 
     @MessageMapping("/share-checkup")
@@ -123,6 +124,7 @@ public class StompController {
     public void endCheckUp(@Payload EndCheckUpDTO endCheckUpDTO, @Header("simpSessionId") String sessionId) {
         SendCheckUpDTO sendCheckUpDTO = checkUpService.getCheckUpResult(endCheckUpDTO.getUuid());
         CheckUpDTO dto =checkUpService.getCheckUp(endCheckUpDTO.getUuid());
+        //헤더에는 세션 ID가 포함되어 있어, 해당 사용자가 올바르게 식별하기 위해 createHeaders 사용
         messagingTemplate.convertAndSendToUser(sessionId, "/queue/" + endCheckUpDTO.getUuid() + "/result/checkup",
                 sendCheckUpDTO, createHeaders(sessionId));
         sendingOperations.convertAndSend("/topic/" + endCheckUpDTO.getUuid() + "/checkup", dto);

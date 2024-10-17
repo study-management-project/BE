@@ -6,6 +6,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum ErrorCode {
+
     INVALID_PARAMETER(400, "파라미터 값을 확인해주세요."),
 
     CHECKUP_NOT_FOUND(404, "존재하지 않는 이해도조사 ID 입니다."),

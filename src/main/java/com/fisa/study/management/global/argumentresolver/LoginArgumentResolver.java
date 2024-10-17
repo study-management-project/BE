@@ -34,7 +34,7 @@ public class LoginArgumentResolver implements HandlerMethodArgumentResolver {
         } else {
             System.out.println(session.getAttribute(SessionConst.LOGIN_MEMBER));
         }
-
+        //각 사용자세션에서 LOGIN_MEMBER에 해당하는 LOGIN_MEMBER:id 에서 id를 가져옴
         return session.getAttribute(SessionConst.LOGIN_MEMBER);
     }
 }
